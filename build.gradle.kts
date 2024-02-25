@@ -7,5 +7,5 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
 }
 ext {
-    this["version"] = "1.2.3"
+    this["version"] = "1.0.0"
 }
