@@ -8,8 +8,6 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
 import com.kiylx.compose_lib.pref_component.FilledEditTextPreference
 import com.kiylx.compose_lib.pref_component.HorizontalDivider
 import com.kiylx.compose_lib.pref_component.MenuDivider
