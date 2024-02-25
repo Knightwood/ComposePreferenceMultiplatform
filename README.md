@@ -15,6 +15,15 @@
 这个专为android平台维护，支持datastore,sharedpreference,mmkv等
 
 # 若希望构建一个跨平台应用
+## 版本 [![](https://jitpack.io/v/Knightwood/ComposePreferenceMultiplatform.svg)](https://jitpack.io/#Knightwood/ComposePreferenceMultiplatform)
+
+```
+implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi-android:1.0.0")
+implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi-desktop:1.0.0")
+//下面这个不用依赖
+implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi:1.0.0")
+
+```
 
 ## 运行示例应用：
 
@@ -34,6 +43,7 @@
 
 ## 使用：
 
+
 1. 手动生成DataStore文件，获取DataStorePreferenceHolder
 
 ```
@@ -45,8 +55,9 @@ val dataStore = getDataStore("/home/kiylxf/桌面/新建文件夹/ee.preferences
 val holder = DataStorePreferenceHolder.instance(dataStore)
 ```
 
-2. 构建preference页面
 
+2. 构建preference页面
+构建preference页面与[此库]:https://github.com/Knightwood/ComposePreference相同
 ```
 PreferencesScope(holder = holder) {
         val customNodeName = "customNode"
