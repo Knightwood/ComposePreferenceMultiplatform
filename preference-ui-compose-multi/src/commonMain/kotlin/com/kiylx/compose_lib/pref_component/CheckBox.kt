@@ -1,0 +1,280 @@
+package com.kiylx.compose_lib.pref_component
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.kiylx.compose_lib.pref_component.Typography.preferenceMediumTitle
+import kotlinx.coroutines.launch
+
+private const val TAG = "PrefCheckBoxGroup"
+
+/**
+ * @param keyName 标识存储偏好值的key的名称，也是启用状态的节点名称
+ * @param enabled 是否启用
+ * @param dependenceKey 若为null,则启用状态依照enable值，若不为null,则启用状态依赖dependenceKey指向的节点
+ * @param labels 每个条目的显示名称，而且会按照显示名称在数组中的顺序生成"存储值label"
+ * @param left checkbox位于左侧或是右侧
+ * @param paddingValues 调整边框的padding
+ * @param changed "存储值label"初始化或更新后，会通过此参数通知
+ */
+@JvmName("PreferenceCheckBoxGroup2")
+@Composable
+fun PreferenceCheckBoxGroup(
+    keyName: String,
+    labels: List<String>,
+    enabled: Boolean = true,
+    dependenceKey: String? = null,
+    left: Boolean = true,
+    paddingValues: PaddingValues = PaddingValues(
+        horizontal = Dimens.all.horizontal_start.dp,
+        vertical = Dimens.small.dp
+    ),
+    changed: (newIndex: List<Int>) -> Unit = {},
+) {
+    val labels2 = labels.mapIndexed { index, s ->
+        s to index
+    }
+    PreferenceCheckBoxGroup(keyName, labels2, enabled, dependenceKey, left, paddingValues, changed)
+}
+
+/**
+ * @param keyName 标识存储偏好值的key的名称，也是启用状态的节点名称
+ * @param enabled 是否启用
+ * @param dependenceKey 若为null,则启用状态依照enable值，若不为null,则启用状态依赖dependenceKey指向的节点
+ * @param labelPairs :Pair<text,int> 包含着每个可选条目的显示文本和"存储值label"
+ * @param left checkbox位于左侧或是右侧
+ * @param paddingValues 调整边框的padding
+ * @param changed "存储的偏好值label"初始化或更新后，会通过此参数通知
+ */
+@Composable
+fun PreferenceCheckBoxGroup(
+    keyName: String,
+    labelPairs: List<Pair<String, Int>>,
+    enabled: Boolean = true,
+    dependenceKey: String? = null,
+    left: Boolean = true,
+    paddingValues: PaddingValues = PaddingValues(
+        horizontal = Dimens.all.horizontal_start.dp,
+        vertical = Dimens.small.dp
+    ),
+    changed: (newIndex: List<Int>) -> Unit = {},
+) {
+    if (labelPairs.isEmpty()){
+        throw IllegalArgumentException("labels cannot empty")
+    }
+    fun getStr(list: List<Int>): String {
+        return list.joinToString(",")
+    }
+
+    fun genList(s: String): List<Int> {
+        return try {
+            if (s.isEmpty()) {
+                emptyList()
+            } else {
+                val tmp = s.split(",").map { it.toInt() }
+                tmp
+            }
+        } catch (e: Exception) {
+//            Log.e(TAG, "genList: $e")
+            emptyList()
+        }
+
+    }
+
+    val scope = rememberCoroutineScope()
+    val prefStoreHolder = LocalPrefs.current
+    val pref = prefStoreHolder.getReadWriteTool(keyName = keyName, defaultValue = "")
+    //注册自身节点，并且获取目标节点的状态
+    val dependenceState = prefStoreHolder.getDependence(
+        keyName,
+        enabled,
+        dependenceKey
+    ).enableStateFlow.collectAsState()
+
+    val selectedList = remember {
+        mutableStateListOf<Int>()
+    }
+    //读取prefs
+    LaunchedEffect(key1 = Unit, block = {
+        pref.read().collect { s ->
+            selectedList.clear()
+            selectedList.addAll(genList(s))//根据字符串重新生成list
+            changed(selectedList)
+        }
+    })
+
+    //写入prefs
+    fun write() {
+        scope.launch {
+            pref.write(getStr(selectedList))
+        }
+    }
+
+    Column {
+        repeat(labelPairs.size) { pos: Int ->
+            val checked by remember {
+                derivedStateOf {
+                    selectedList.contains(labelPairs[pos].second)
+                }
+            }
+            if (left) {
+                PreferenceCheckBoxItem(
+                    text = labelPairs[pos].first,
+                    selected = checked,
+                    enabled = dependenceState.value,
+                    paddingValues = paddingValues,
+                    onCheckedChanged = { bol ->
+                        if (bol) {
+                            selectedList.add(labelPairs[pos].second)
+                        } else {
+                            selectedList.remove(labelPairs[pos].second)
+                        }
+                        write()
+                    }
+                )
+            } else {
+                PreferenceCheckBoxItemRight(
+                    text = labelPairs[pos].first,
+                    selected = checked,
+                    enabled = dependenceState.value,
+                    paddingValues = paddingValues,
+
+                    onCheckedChanged = { bol ->
+                        if (bol) {
+                            selectedList.add(labelPairs[pos].second)
+                        } else {
+                            selectedList.remove(labelPairs[pos].second)
+                        }
+                        write()
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PreferenceCheckBoxItem(
+    text: String,
+    selected: Boolean,
+    enabled: Boolean,
+    paddingValues: PaddingValues = PaddingValues(
+        horizontal = Dimens.all.horizontal_start.dp,
+        vertical = Dimens.small.dp
+    ),
+    onCheckedChanged: (newValue: Boolean) -> Unit
+) {
+    var checked = selected
+    Surface(
+        modifier = Modifier.toggleable(
+            value = checked,
+            enabled = enabled,
+        ) {
+            checked = it
+            onCheckedChanged(checked)
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            Checkbox(
+                checked = checked,
+                enabled = enabled,
+                onCheckedChange = {
+                    checked = it
+                    onCheckedChanged(checked)
+                },
+                modifier = Modifier
+                    .clearAndSetSemantics { },
+            )
+
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = Dimens.text.end.dp),
+                text = text,
+                maxLines = 1,
+                style = preferenceMediumTitle,
+                color = MaterialTheme.colorScheme.onSurface.applyOpacity(enabled),
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+fun PreferenceCheckBoxItemRight(
+    text: String,
+    selected: Boolean,
+    enabled: Boolean,
+    paddingValues: PaddingValues = PaddingValues(
+        horizontal = Dimens.all.horizontal_start.dp,
+        vertical = Dimens.small.dp
+    ),
+    onCheckedChanged: (newValue: Boolean) -> Unit
+) {
+    var checked = selected
+    Surface(
+        modifier = Modifier.toggleable(
+            value = checked,
+            enabled = enabled,
+        ) {
+            checked = it
+            onCheckedChanged(checked)
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues = paddingValues),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = Dimens.text.start.dp, end = Dimens.text.end.dp),
+                text = text,
+                maxLines = 1,
+                style = preferenceMediumTitle,
+                color = MaterialTheme.colorScheme.onSurface.applyOpacity(enabled),
+                overflow = TextOverflow.Ellipsis
+            )
+            Checkbox(
+                checked = checked,
+                enabled = enabled,
+                onCheckedChange = {
+                    checked = it
+                    onCheckedChanged(checked)
+                },
+                modifier = Modifier
+                    .padding()
+                    .clearAndSetSemantics { },
+            )
+        }
+    }
+}
