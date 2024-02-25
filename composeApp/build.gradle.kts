@@ -33,8 +33,6 @@ kotlin {
             implementation(compose.ui)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
-//            api(libs.preference.data.core)
-
             implementation(project(":preference-ui-compose-multi"))
         }
         desktopMain.dependencies {

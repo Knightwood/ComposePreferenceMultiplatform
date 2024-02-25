@@ -26,7 +26,7 @@ plugins {
 }
 
 group = "com.github.knightwood"
-version = "1.0.0"
+version = rootProject.ext["version"].toString()
 
 kotlin {
 //     iosX64()
@@ -128,6 +128,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            //withJavadocJar()
+        }
+    }
 }
 
 //compose.desktop {
@@ -135,3 +141,60 @@ android {
 //        mainClass = "MainKt"
 //    }
 //}
+
+
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
+
+fun getExtraString(name: String) = ext[name]?.toString()
+
+afterEvaluate {
+
+    publishing {
+        // Configure maven central repository
+        repositories {
+            maven("https://jitpack.io")
+        }
+
+        // Configure all publications
+        publications {
+            withType<MavenPublication> {
+                // Stub javadoc.jar artifact
+                artifact(javadocJar.get())
+                // Provide artifacts information requited by Maven Central
+                pom {
+                    name.set("ComposePreferenceMultiplatform")
+                    description.set("ComposePreferenceMultiplatform")
+                    url.set("https://github.com/Knightwood/ComposePreferenceMultiplatform")
+
+//            licenses {
+//                license {
+//                    name.set("MIT")
+//                    url.set("https://opensource.org/licenses/MIT")
+//                }
+//            }
+//            developers {
+//                developer {
+//                    id.set("KaterinaPetrova")
+//                    name.set("Ekaterina Petrova")
+//                    email.set("ekaterina.petrova@jetbrains.com")
+//                }
+//            }
+//            scm {
+//                url.set("https://github.com/KaterinaPetrova/mpp-sample-lib")
+//            }
+
+                }
+            }
+            create<MavenPublication>("release") {
+                groupId = "com.github.knightwood"
+                artifactId = "preference-ui-compose-multi-android"
+                version = rootProject.ext["version"].toString()
+                afterEvaluate {
+                    from(components["release"])
+                }
+            }
+        }
+    }
+}

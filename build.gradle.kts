@@ -6,3 +6,6 @@ plugins {
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
 }
+ext {
+    this["version"] = "1.2.3"
+}
