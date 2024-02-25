@@ -8,13 +8,14 @@
 
 # 若是仅在android平台使用
 
-若是仅为android平台构建应用，可以使用另一个库
+若是仅为android平台构建应用，可以使用
 
-[github]:https://github.com/Knightwood/ComposePreference
-
-这个专为android平台维护，支持datastore,sharedpreference,mmkv等
+[纯android版本](https://github.com/Knightwood/ComposePreference) 专为android平台维护，支持datastore,sharedpreference,mmkv等
 
 # 若希望构建一个跨平台应用
+
+
+
 ## 版本 [![](https://jitpack.io/v/Knightwood/ComposePreferenceMultiplatform.svg)](https://jitpack.io/#Knightwood/ComposePreferenceMultiplatform)
 
 ```
@@ -57,7 +58,7 @@ val holder = DataStorePreferenceHolder.instance(dataStore)
 
 
 2. 构建preference页面
-构建preference页面与[此库]:https://github.com/Knightwood/ComposePreference相同
+构建preference页面等功能与[纯android版](https://github.com/Knightwood/ComposePreference) 相同
 ```
 PreferencesScope(holder = holder) {
         val customNodeName = "customNode"
