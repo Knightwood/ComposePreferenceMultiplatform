@@ -4,24 +4,31 @@
 
 理论上也支持mac，ios等平台，但我没有mac，ios等设备，因此没有为其构建并测试打包。
 
+# 图片
+
+| ![](PicsRaw/README.assets/1.png)             |
+| -------------------------------------------- |
+| ![](PicsRaw/README.assets/2.png)             |
+| ![](PicsRaw/README.assets/3.png)             |
+| ![](PicsRaw/README.assets/1708912026637.png) |
+| ![](PicsRaw/README.assets/1708912021301.png) |
+
 
 
 # 若是仅在android平台使用
 
-若是仅为android平台构建应用，可以使用
+由于本库是跨平台库，因此，相关依赖会与`android版本`有所差别，并内置了datastore读写实现。
+因此若是仅为android平台构建应用，也可以使用
 
-[纯android版本](https://github.com/Knightwood/ComposePreference) 专为android平台维护，支持datastore,sharedpreference,mmkv等
+[android版本](https://github.com/Knightwood/ComposePreference) 专为android平台维护，支持datastore,sharedpreference,mmkv等。
 
 # 若希望构建一个跨平台应用
-
-
 
 ## 版本 [![](https://jitpack.io/v/Knightwood/ComposePreferenceMultiplatform.svg)](https://jitpack.io/#Knightwood/ComposePreferenceMultiplatform)
 
 ```
 implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi-android:1.0.0")
 implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi-desktop:1.0.0")
-//下面这个不用依赖
 implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi:1.0.0")
 
 ```
@@ -44,6 +51,8 @@ implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-
 
 ## 使用：
 
+本库与[android版](https://github.com/Knightwood/ComposePreference)使用同一个读写接口，因此，在使用跨平台android依赖时，也可以依赖[android版](https://github.com/Knightwood/ComposePreference)中的mmkv和sharedpreference读写工具。
+
 
 1. 手动生成DataStore文件，获取DataStorePreferenceHolder
 
@@ -58,7 +67,7 @@ val holder = DataStorePreferenceHolder.instance(dataStore)
 
 
 2. 构建preference页面
-构建preference页面等功能与[纯android版](https://github.com/Knightwood/ComposePreference) 相同
+构建preference页面等功能与[android版](https://github.com/Knightwood/ComposePreference) 相同
 ```
 PreferencesScope(holder = holder) {
         val customNodeName = "customNode"

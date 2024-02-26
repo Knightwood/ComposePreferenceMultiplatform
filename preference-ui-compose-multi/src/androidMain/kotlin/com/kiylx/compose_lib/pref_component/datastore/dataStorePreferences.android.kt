@@ -1,5 +1,6 @@
 package com.kiylx.compose_lib.pref_component.datastore
 
+import android.content.Context
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -8,8 +9,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
+/**
+ * Get data store
+ *
+ * @param fileName should be end with ".preferences_pb"
+ * @param corruptionHandler
+ * @param coroutineScope
+ * @param migrations
+ * @return
+ */
 fun getDataStore(
-    filePath: String,
+    context: Context,
+    fileName: String,
     corruptionHandler: ReplaceFileCorruptionHandler<Preferences>? = null,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
     migrations: List<DataMigration<Preferences>> = emptyList(),
@@ -18,6 +29,6 @@ fun getDataStore(
     migrations = migrations,
     coroutineScope = coroutineScope,
     path = {
-        filePath
+        context.filesDir.resolve(fileName).absolutePath
     }
 )

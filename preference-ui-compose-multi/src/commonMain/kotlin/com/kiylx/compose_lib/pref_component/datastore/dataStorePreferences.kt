@@ -15,6 +15,14 @@ object DataStoreConfig {
     private lateinit var dataStore: DataStore<Preferences>
     private val lock = SynchronizedObject()
 
+    fun checkFileName(name: String): String {
+        return if (!name.endsWith(".preferences_pb")) {
+            throw IllegalArgumentException("should be end with \".preferences_pb\"")
+        } else {
+            name
+        }
+    }
+
     /** Gets the singleton DataStore instance, creating it if necessary. */
     fun getDataStore(
         corruptionHandler: ReplaceFileCorruptionHandler<Preferences>? = null,

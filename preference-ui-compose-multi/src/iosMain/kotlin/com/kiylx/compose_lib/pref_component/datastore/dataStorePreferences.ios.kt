@@ -6,12 +6,21 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Get data store
+ *
+ * @param fileName should be end with ".preferences_pb"
+ * @param corruptionHandler
+ * @param coroutineScope
+ * @param migrations
+ * @return
+ */
 @OptIn(ExperimentalForeignApi::class)
-fun dataStorePreferences(
+fun getDataStore(
     fileName:String,
-    corruptionHandler: ReplaceFileCorruptionHandler<Preferences>?=null,
-    coroutineScope: CoroutineScope,
-    migrations: List<DataMigration<Preferences>>,
+    corruptionHandler: ReplaceFileCorruptionHandler<Preferences>? = null,
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+    migrations: List<DataMigration<Preferences>> = emptyList(),
 ): DataStore<Preferences> = createDataStoreWithDefaults(
     corruptionHandler = corruptionHandler,
     migrations = migrations,
