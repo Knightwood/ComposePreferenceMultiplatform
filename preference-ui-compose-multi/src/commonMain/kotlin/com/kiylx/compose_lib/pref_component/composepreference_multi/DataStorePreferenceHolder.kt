@@ -19,7 +19,7 @@ package com.kiylx.compose_lib.pref_component.composepreference_multi;
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.kiylx.libx.pref_component.core.IPreferenceReadWrite
+import com.kiylx.libx.pref_component.core.IPreferenceEditor
 import com.kiylx.libx.pref_component.core.PreferenceHolder
 
 /** 向界面提供、管理PreferenceProvider */
@@ -28,14 +28,14 @@ class DataStorePreferenceHolder internal constructor(
 ) : PreferenceHolder() {
     private fun dataStore() = datastore
 
-    override fun <T : Any> getReadWriteTool(
+    override fun <T : Any> getSingleDataEditor(
         keyName: String,
         defaultValue: T,
-    ): IPreferenceReadWrite<T> {
+    ): IPreferenceEditor<T> {
         return hashMap[keyName]?.let {
-            it as IPreferenceReadWrite<T>
+            it as IPreferenceEditor<T>
         } ?: let {
-            val tmp = DataStoreReadWritePrefTool(keyName, defaultValue, dataStore())
+            val tmp = DataStoreEditor(keyName, defaultValue, dataStore())
             hashMap[keyName] = tmp
             tmp
         }

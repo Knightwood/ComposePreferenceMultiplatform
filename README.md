@@ -2,7 +2,8 @@
 
 本库是跨平台库，可以运行在android,linux,window等平台。
 
-理论上也支持mac，ios等平台，但我没有mac，ios等设备，因此没有为其构建并测试打包。
+理论上也支持mac，ios等平台，也写了相关代码，但我没有mac，ios等设备，因此就将相关依赖注释起来了，没有为其构建并测试打包。
+如果你希望支持mac，ios等平台，可以将相关gradle中的注释放开进行构建和测试。
 
 # 图片
 
@@ -32,6 +33,10 @@ implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-
 implementation("com.github.Knightwood.ComposePreferenceMultiplatform:preference-ui-compose-multi:1.0.0")
 
 ```
+
+* 一些破坏性改动
+ * 方法名 getReadWriteTool 改为 getSingleDataEditor
+ * 接口名 IPreferenceReadWrite 改为 IPreferenceEditor
 
 ## 运行示例应用：
 
