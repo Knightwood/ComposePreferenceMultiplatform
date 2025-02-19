@@ -2,12 +2,12 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.vanniktech.mavenPublish)
+//    alias(libs.plugins.ksp)
 //     alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.androidLibrary)
-//     alias(libs.plugins.skie)
-    alias(libs.plugins.jetbrainsCompose)
-    id("maven-publish")
 }
 
 group = "com.github.knightwood"
@@ -43,32 +43,33 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                //kotlin
+                implementation(libs.kotlin.coroutines.core)
+                //compose
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.ui)
                 implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodel.compose)
+                implementation(libs.androidx.lifecycle.runtime.compose)
 
-                api(libs.androidx.datastore.core.okio)
-                api(libs.androidx.datastore.preferences.core)
+                api(libs.androidx.datastore)
+                api(libs.androidx.datastore.preferences)
                 api(libs.preference.data.core)
                 implementation(libs.github.knightwood.m3ColorUtilities)
-                implementation(libs.kotlin.coroutines.core)
             }
         }
-//        val commonTest by getting {
-//            dependencies {
-//                implementation(libs.kotlin.test)
-//            }
-//        }
         val desktopMain by getting
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlin.coroutines.swing)
+            implementation(compose.desktop.currentOs){
+                exclude("org.jetbrains.compose.material")
+            }
         }
         val androidMain by getting
         androidMain {
-//            dependencies {
-//                api(libs.androidx.startup.runtime)
-//            }
         }
 
 //        val androidUnitTest by getting
@@ -96,7 +97,7 @@ kotlin {
 
 android {
     compileSdk = 34
-    namespace = "com.kiylx.compose_lib.pref_component"
+    namespace = "androidy.compose.preference"
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     buildFeatures {
         buildConfig = false
@@ -134,7 +135,7 @@ val javadocJar by tasks.registering(Jar::class) {
 
 fun getExtraString(name: String) = ext[name]?.toString()
 
-afterEvaluate {
+/*afterEvaluate {
 
     publishing {
         // Configure maven central repository
@@ -164,4 +165,40 @@ afterEvaluate {
             }
         }
     }
+}*/
+
+val groupId = "com.github.knightwood"
+val artifactId = "kmp-preference"
+val githubUrl="https://github.com/Knightwood/kmp-preference"
+group = groupId
+version = "1.0.0"
+
+mavenPublishing {
+    publishToMavenCentral()
+//    signAllPublications()
+    coordinates(group.toString(), artifactId, version.toString())
+
+    pom {
+        name = artifactId
+        description = "android like desktop runtime"
+        inceptionYear = "2024"
+        url = "https://github.com/kotlin/multiplatform-library-template/"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "knightwood"
+                name = "knightwood"
+                email = "33772264+Knightwood@users.noreply.github.com"
+            }
+        }
+        scm {
+            url = githubUrl
+        }
+    }
 }
+
