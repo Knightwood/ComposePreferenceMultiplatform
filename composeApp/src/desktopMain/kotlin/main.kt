@@ -15,19 +15,42 @@
  *
  */
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidy.compose.datastore.DataStorePreferenceHolder
+import androidy.compose.datastore.asDataFlow
 import androidy.compose.datastore.getDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlin.random.Random
 
 fun main() = application {
     val desktopPath = System.getProperty("user.home") + "/Desktop"
     val dataStore = getDataStore("$desktopPath/ee.preferences_pb")
     val holder = DataStorePreferenceHolder.instance(dataStore)
-    Window(onCloseRequest = ::exitApplication, title = "ComposePreference-Multi") {
+//    val scope = CoroutineScope(Dispatchers.IO)
+//    var username by dataStore.getting(11, scope)
 
+    Window(onCloseRequest = ::exitApplication, title = "ComposePreference-Multi") {
         MaterialTheme {
+            /*
+            val va = dataStore.asDataFlow<Int>("username").collectAsState(initial = 11)
+            Column {
+                Button(onClick = {
+                    val randoms = Random.nextInt(0, 11)
+                    username = randoms
+                    println(username)
+                }) {
+                    Text("Random")
+                }
+                Text("value:${va.value}")
+            }*/
 //            NewComponents()
             NewComponents2(holder)
         }
