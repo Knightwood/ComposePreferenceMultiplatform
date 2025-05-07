@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 
 object Preferences {
+    @Deprecated("Deprecated")
     val style
         @Composable
         get() = LocalPreferenceStyle.current

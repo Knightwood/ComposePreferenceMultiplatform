@@ -67,7 +67,7 @@ fun PreferenceItem(
     desc: String? = null,
     enabled: Boolean = true,
     end: @Composable (BoxScope.() -> Unit)? = null,
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
 ) = SamplePreference(
     modifier = modifier,
     title = title, icon = icon, desc = desc,

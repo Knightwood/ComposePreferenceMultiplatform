@@ -90,7 +90,7 @@ fun SamplePreference(
 }
 
 @Composable
-fun PreferenceRow(
+internal fun PreferenceRow(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: (() -> Unit)?,
