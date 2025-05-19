@@ -17,11 +17,11 @@
 
 package androidy.compose.datastore
 
-import DataStoreProvider
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 
 /**
@@ -55,6 +55,11 @@ inline fun <reified T> DataStore<Preferences>.asDataFlow(
 }
 
 fun <T> DataStore<Preferences>.getKey(keyName: String, cls: KClass<*>): Preferences.Key<T> {
+    return getKeyInternal(keyName, cls)
+
+}
+
+fun <T> getKeyInternal(keyName: String, cls: KClass<*>): Preferences.Key<T> {
     return (when (cls) {
         Int::class -> {
             intPreferencesKey(keyName)
@@ -95,3 +100,38 @@ fun <T> DataStore<Preferences>.getKey(keyName: String, cls: KClass<*>): Preferen
 inline fun <reified T> DataStore<Preferences>.getKey(keyName: String): Preferences.Key<T> {
     return getKey(keyName, T::class)
 }
+
+/**
+ * 使用委托的方式生成datastore的key
+ *
+ * ```
+ * //使用扩展函数版
+ * private val keyName by dataStore.key<String>()
+ * //实际上也有非扩展函数版，他两个没什么本质上的区别，无非就是加上datastore形式上好看一点
+ * private val keyName by dataStoreKey<String>()
+ *
+ * ```
+ */
+class DataStoreKeyProvider<T>(
+    private val type: KClass<*>
+) {
+    companion object {
+        inline fun <reified T> of(): DataStoreKeyProvider<T> {
+            return DataStoreKeyProvider(T::class)
+        }
+    }
+
+    operator fun provideDelegate(thisRef: Any?, property: kotlin.reflect.KProperty<*>): DataStoreKeyHolder<T> {
+        return DataStoreKeyHolder(getKeyInternal<T>(property.name, type))
+    }
+}
+class DataStoreKeyHolder<T>(private val key: Preferences.Key<T>) : ReadOnlyProperty<Any?, Preferences.Key<T>> {
+    override fun getValue(thisRef: Any?, property: kotlin.reflect.KProperty<*>): Preferences.Key<T> {
+        return key
+    }
+}
+
+inline fun <reified T> dataStoreKey() = DataStoreKeyProvider.of<T>()
+inline fun <reified T> DataStore<Preferences>.key() = DataStoreKeyProvider.of<T>()
+
+
