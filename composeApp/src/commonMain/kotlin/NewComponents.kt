@@ -20,35 +20,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidy.compose.preference.component.cross.PreferenceCheckBox
-import androidy.compose.preference.component.cross.PreferenceCollapseItem
-import androidy.compose.preference.component.cross.PreferenceItem
-import androidy.compose.preference.component.cross.PreferenceRadio
-import androidy.compose.preference.component.cross.PreferenceSlider
-import androidy.compose.preference.component.cross.PreferenceSubTitle
-import androidy.compose.preference.component.cross.PreferenceSwitch
-import androidy.compose.preference.component.cross.PreferenceSwitchWithContainer
-import androidy.compose.preference.component.cross.PreferenceWithDividerSwitch
-import androidy.compose.preference.component.cross.PreferencesCautionCard
-import androidy.compose.preference.theme.PreferenceIconStyle
-import androidy.compose.preference.theme.Preferences
+import androidy.preference.ui.component.PreferenceCheckBox
+import androidy.preference.ui.component.PreferenceCollapseItem
+import androidy.preference.ui.component.PreferenceItem
+import androidy.preference.ui.component.PreferenceRadio
+import androidy.preference.ui.component.PreferenceSlider
+import androidy.preference.ui.component.PreferenceSubTitle
+import androidy.preference.ui.component.PreferenceSwitch
+import androidy.preference.ui.component.PreferenceSwitchWithContainer
+import androidy.preference.ui.component.PreferenceWithDividerSwitch
+import androidy.preference.ui.component.PreferencesCautionCard
+import androidy.preference.ui.theme.PreferenceIconStyle
+import androidy.preference.ui.theme.Preferences
 
 @Composable
 fun NewComponents() {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Preferences.SetTheme(
+    Preferences.SetTheme(
 //            boxStyle = defaultPreferenceBoxStyle.copy(
 //                color = MaterialTheme.colorScheme.secondaryContainer
 //            ),
-            iconStyle = PreferenceIconStyle(
-                paddingValues = PaddingValues(8.dp),
-                tint = MaterialTheme.colorScheme.onPrimary,
-                backgroundColor = MaterialTheme.colorScheme.primary,
-            )
+        iconStyle = PreferenceIconStyle(
+            paddingValues = PaddingValues(8.dp),
+            tint = MaterialTheme.colorScheme.onPrimary,
+            backgroundColor = MaterialTheme.colorScheme.primary,
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             PreferenceItemTest()
             PreferenceSubTitle(

@@ -17,21 +17,54 @@
 
 package com.github.knight.composepreference_multi
 
+import MainScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidy.compose.datastore.getDataStore
 import NewComponents2
-import androidy.compose.datastore.DataStorePreferenceHolder
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.datastore.dataStore
+import androidy.preference.data.datastore.DataStorePreferenceHolder
+import androidy.preference.data.mmkv.MMKVPreferenceHolder
+import androidy.preference.helper.datastore.getDataStore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dataStore = getDataStore(applicationContext,"ee.preferences_pb")
-        val holder = DataStorePreferenceHolder.instance(dataStore)
+        enableEdgeToEdge()
+        val holder = getHolder()
         setContent {
-//            NewComponents()
-            NewComponents2(holder)
+            MaterialTheme {
+                MainScreen(holder)
+            }
         }
+    }
+
+    fun getHolder(): DataStorePreferenceHolder {
+        //1. 使用dataStore存储偏好值
+        val ds = getDataStore(applicationContext, "test.pb")
+        val holder = DataStorePreferenceHolder.instance(ds)
+
+        //2. 使用mmkv存储偏好值
+//        val holder = MMKVPreferenceHolder.instance(MMKV.defaultMMKV())
+
+        //3. 使用sharedprefrence存储偏好值
+//        val holder =
+//            OldPreferenceHolder.instance(
+//                AppCtx.instance.getSharedPreferences(
+//                    "ddd",
+//                    Context.MODE_PRIVATE
+//                )
+//            )
+        return holder
     }
 }

@@ -1,11 +1,23 @@
 plugins {
-    // this is necessary to avoid the plugins to be loaded multiple times
-    // in each subproject's classloader
-    alias(libs.plugins.androidApplication) apply false
-    alias(libs.plugins.androidLibrary) apply false
-    alias(libs.plugins.composeMultiplatform) apply false
-    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.compose.multiplatform) apply false
+
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+
+    alias(libs.plugins.vanniktech.mavenPublish) apply false
+
 }
+val jarGroup = "com.github.knightwood.kmp-preference"
+val jarVersion = "2.0.0"
+
 ext {
-    this["version"] = "1.0.0"
+    this["group"] =jarGroup
+    this["version"] = jarVersion
 }
+

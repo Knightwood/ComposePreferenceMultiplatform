@@ -1,0 +1,28 @@
+package androidy.preference.ui.component
+
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.material3.Checkbox
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidy.preference.ui.basic.SamplePreference
+
+@Composable
+fun PreferenceCheckBox(
+    modifier: Modifier = Modifier,
+    title: String,
+    desc: String? = null,
+    checked: Boolean,
+    enabled: Boolean = true,
+    end: @Composable (BoxScope.() -> Unit)? = null,
+    onChecked: (Boolean) -> Unit = {},
+) = SamplePreference(
+    modifier = modifier,
+    title = title, desc = desc, icon = Any(), enabled = enabled,
+    onClick = {
+        onChecked(!checked)
+    },
+    start = {
+        Checkbox(checked = checked, enabled = enabled, onCheckedChange = onChecked)
+    },
+    end = end,
+)
