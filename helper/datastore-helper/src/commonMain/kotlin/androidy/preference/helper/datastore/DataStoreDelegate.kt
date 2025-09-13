@@ -1,6 +1,6 @@
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import androidy.preference.helper.datastore.getKey
+import androidy.preference.helper.datastore.getKeyInternal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -58,7 +58,7 @@ class DataStoreProvider<T>(
     }
 
     operator fun provideDelegate(thisRef: Any?, property: kotlin.reflect.KProperty<*>): DataStoreDelegate<T> {
-        return DataStoreDelegate(scope, dataStore, dataStore.getKey<T>(property.name, type), defaultValue)
+        return DataStoreDelegate(scope, dataStore, getKeyInternal(property.name, type), defaultValue)
     }
 }
 
