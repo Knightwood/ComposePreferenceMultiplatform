@@ -25,11 +25,11 @@ import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import okio.Path.Companion.toPath
+import java.io.File
 
-object DataStoreConfig {
+
+object SingletonDataStoreFactory {
     private lateinit var dataStore: DataStore<Preferences>
-
     fun checkFileName(name: String): String {
         return if (!name.endsWith(".preferences_pb")) {
             throw IllegalArgumentException("should be end with \".preferences_pb\"")
@@ -38,30 +38,27 @@ object DataStoreConfig {
         }
     }
 
-    /** Gets the singleton DataStore instance, creating it if necessary. */
-    fun getDataStore(
+    /**
+     * Gets the singleton DataStore instance, creating it if necessary.
+     */
+    fun singleDataStore(
         corruptionHandler: ReplaceFileCorruptionHandler<Preferences>? = null,
         coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
         migrations: List<DataMigration<Preferences>> = emptyList(),
-        path: () -> String,
+        file: () -> File,
     ): DataStore<Preferences> {
-        return synchronized(this::class.java) {
-            if (DataStoreConfig::dataStore.isInitialized) {
-                dataStore
-            } else {
-                PreferenceDataStoreFactory
-                    .createWithPath(
-                        corruptionHandler = corruptionHandler,
-                        scope = coroutineScope,
-                        migrations = migrations,
-                        produceFile = {
-                            path().toPath()
-                        }
-                    )
-                    .also {
-                        dataStore = it
-                    }
-            }
+        return if (this::dataStore.isInitialized) {
+            dataStore
+        } else {
+            PreferenceDataStoreFactory
+                .create(
+                    corruptionHandler = corruptionHandler,
+                    scope = coroutineScope,
+                    migrations = migrations,
+                    produceFile = file
+                ).also {
+                    dataStore = it
+                }
         }
     }
 }

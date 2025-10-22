@@ -20,7 +20,6 @@ package androidy.preference.helper.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.core.PreferencesSerializer.defaultValue
-import androidy.preference.helper.datastore.DataStoreConfig.getDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -125,7 +124,7 @@ fun <T> DataStore<Preferences>.readNullable(
     key: Preferences.Key<T>,
 ): T? {
     val ds = this
-    return runBlocking { ds.data.first()[key]  }
+    return runBlocking { ds.data.first()[key] }
 }
 
 /**
@@ -166,6 +165,26 @@ suspend inline fun <reified T> DataStore<Preferences>.save(keyname: String, valu
     val key = getKey<T>(keyname)
     this.edit {
         it[key] = value
+    }
+}
+
+inline fun <reified T> MutablePreferences.saveOrRemove(keyname: String, value: T?) {
+    val key = getKeyInternal<T>(keyname, T::class)
+    saveOrRemove(key, value)
+}
+
+inline fun <reified T> MutablePreferences.saveOrRemove(key: Preferences.Key<T>, value: T?) {
+    if (value != null) {
+        this[key] = value
+    } else {
+        this.remove(key)
+    }
+}
+
+suspend inline fun <reified T> DataStore<Preferences>.remove(keyname: String) {
+    val key = getKey<T>(keyname)
+    this.edit {
+        it.remove(key)
     }
 }
 

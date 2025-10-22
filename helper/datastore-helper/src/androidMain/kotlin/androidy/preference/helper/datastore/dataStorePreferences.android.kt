@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,13 +31,15 @@ import kotlinx.coroutines.SupervisorJob
  * Get data store
  *
  * 如果不喜欢此方法，你可以使用如下代码获取
+ *
  * ```
  * val Context.store by preferencesDataStore(name = "test")
  *
  * fun example(context: Context){
  *     val holder = DataStorePreferenceHolder.instance(context.store)
  * }
- *```
+ * ```
+ *
  * @param fileName should be end with ".preferences_pb"
  * @param corruptionHandler
  * @param coroutineScope
@@ -49,11 +52,11 @@ fun getDataStore(
     corruptionHandler: ReplaceFileCorruptionHandler<Preferences>? = null,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
     migrations: List<DataMigration<Preferences>> = emptyList(),
-): DataStore<Preferences> = DataStoreConfig.getDataStore(
+): DataStore<Preferences> = PreferenceDataStoreFactory.create(
     corruptionHandler = corruptionHandler,
+    scope = coroutineScope,
     migrations = migrations,
-    coroutineScope = coroutineScope,
-    path = {
-        context.filesDir.resolve(fileName).absolutePath
+    produceFile = {
+        context.filesDir.resolve(fileName)
     }
 )
