@@ -28,7 +28,7 @@ fun PreferenceItem(
     icon: Any? = null,
     desc: String? = null,
     enabled: Boolean = true,
-    dependenceKey: String?=null,
+    dependenceKey: String? = null,
     end: @Composable (BoxScope.() -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
@@ -56,11 +56,12 @@ fun PreferenceCollapseItem(
     end: @Composable (BoxScope.() -> Unit) = {
         ParseIcon(
             model = if (!expand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
-            contentDescription = "icon"
+            contentDescription = "icon",
+            enabled = enabled,
         )
     },
     stateChanged: (expand: Boolean) -> Unit = {},
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     PreferenceNodeBase(dependenceKey = dependenceKey, enabled = enabled) { scope, state ->
         FossPreferenceCollapseItem(
