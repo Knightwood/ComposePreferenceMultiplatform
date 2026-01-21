@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
 
     alias(libs.plugins.vanniktech.mavenPublish) apply false
+    alias(libs.plugins.ksp) apply false
 
 }
 val jarGroup = "com.github.knightwood.kmp-preference"

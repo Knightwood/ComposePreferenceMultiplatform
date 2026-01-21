@@ -1,10 +1,11 @@
 [versions]
 agp = "8.5.1"
-kotlin = "2.1.0"
+kotlin = "2.2.10"
 coroutines = "1.10.1"
 android-compileSdk = "34"
 android-minSdk = "26"
 android-targetSdk = "34"
+ksp = "2.2.10-2.0.2"
 
 androidx_core = "1.12.0"
 appcompat = "1.6.1"
@@ -20,7 +21,12 @@ mmkv = "1.3.0"
 androidx_preference = "1.2.0"
 
 m3ColorUtilities="1.0"
-
+autoServiceKsp = "1.2.0"
+autoService = "1.1.1"
+#koin
+koin-bom = "4.0.2"
+koin-annotation = "2.0.0"
+okio = "3.10.2"
 [libraries]
 #AndroidX核心库
 androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -46,6 +52,25 @@ github-knightwood-m3ColorUtilities = { module = "com.github.knightwood:MaterialC
 
 mavenPublish = { group = "com.vanniktech.maven.publish", name = "com.vanniktech.maven.publish.gradle.plugin", version = "0.34.0" }
 
+autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoServiceKsp" }
+autoService-annoations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoService" }
+
+# koin -kotlin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-core-coroutines = { module = "io.insert-koin:koin-core-coroutines" }
+# koin -android
+koin-core-android = { module = "io.insert-koin:koin-android" }
+#koin -compose -compose multiplatform
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
+# koin 注解。 android或是ktor中使用的
+koin-annotations-bom = { module = "io.insert-koin:koin-annotations-bom", version.ref = "koin-annotation" }
+koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotation" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotation" }
+
+
 [plugins]
 # kotlin
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -62,6 +87,7 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 # 多平台库发布插件
 vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 kotlins-android = ["kotlin-coroutines-core", "kotlin-coroutines-android"]

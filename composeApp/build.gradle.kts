@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -25,23 +26,26 @@ kotlin {
             implementation(projects.impl.dataMmkv)
             implementation(projects.impl.dataPreference)
         }
-        commonMain.dependencies {
-            implementation(libs.kotlin.coroutines.core)
-            implementation(compose.runtime)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+        commonMain {
+            kotlin.srcDir("build/generated/ksp/main/kotlin")
+            dependencies {
+                implementation(libs.kotlin.coroutines.core)
+                implementation(compose.runtime)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodel.compose)
+                implementation(libs.androidx.lifecycle.runtime.compose)
 
-            implementation(projects.impl.ui)
-            implementation(projects.impl.uiAuto)
-            implementation(projects.impl.dataCore)
-            implementation(projects.impl.dataDatastore)
+                implementation(projects.impl.ui)
+                implementation(projects.impl.uiAuto)
+                implementation(projects.impl.dataCore)
+                implementation(projects.impl.dataDatastore)
 
+            }
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs) {
@@ -83,6 +87,14 @@ android {
     dependencies {
 //        debugImplementation(libs.compose.ui.tooling)
     }
+}
+
+dependencies {
+    implementation(project(":aop:floor-core"))//引入刚才新建的ksp model
+    val aop = ":aop:floor-core"
+    //https://kotlinlang.org/docs/ksp-multiplatform.html
+    add("kspCommonMainMetadata", project(aop))
+    add("kspDesktop", project(aop))
 }
 
 compose.desktop {

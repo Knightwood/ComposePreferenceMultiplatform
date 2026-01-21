@@ -35,6 +35,9 @@ include(":impl:data-preference")
 include(":helper:datastore-helper")
 include(":helper:mmkv-helper")
 include(":helper:preference-helper")
+//aop
+include(":aop:floor-core")
+include(":aop:floor-datastore")
 
 //  前缀               +组件库名       +module名 +版本号
 //com.github.knightwood.kmp-preference:ui       :1.0.0

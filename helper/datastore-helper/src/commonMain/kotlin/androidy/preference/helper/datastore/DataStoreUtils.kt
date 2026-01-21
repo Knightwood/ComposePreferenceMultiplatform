@@ -188,6 +188,17 @@ suspend inline fun <reified T> DataStore<Preferences>.remove(keyname: String) {
     }
 }
 
+/**
+ * 设置新值，如果为null则删除该key
+ */
+fun <T> MutablePreferences.setOrRemove(key: Preferences.Key<T>, value: T?) {
+    if (value != null) {
+        set(key, value)
+    } else {
+        remove(key)
+    }
+}
+
 //<editor-fold desc="获取 datastore key">
 /**
  * ```
