@@ -4,8 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.google.auto.service.AutoService
-import knightwood.kv.aop.floorcore.writer.IPreferenceDao
+import knightwood.kv.aop.floorcore.core.IPreferenceDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -23,7 +22,6 @@ import org.koin.core.parameter.parametersOf
  * 2. 每个data class的属性，都对应一个字段
  * 2. 使用koin提供不同datastore实例
  */
-@AutoService(IPreferenceDao::class)
 abstract class DatastoreDao<T : Any>(val key: String? = null) : IPreferenceDao<T>, KoinComponent {
     private val kv_store_ds: DataStore<Preferences> by inject { parametersOf(key) }
     protected val ds: DataStore<Preferences> get() = if (key == null) DatastoreFloor.db else kv_store_ds

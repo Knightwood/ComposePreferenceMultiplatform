@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -40,10 +41,15 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodel.compose)
                 implementation(libs.androidx.lifecycle.runtime.compose)
 
+                implementation(libs.androidx.datastore)
+                implementation(libs.androidx.datastore.preferences)
+
                 implementation(projects.impl.ui)
                 implementation(projects.impl.uiAuto)
                 implementation(projects.impl.dataCore)
                 implementation(projects.impl.dataDatastore)
+                implementation(projects.aop.floorCore)
+                implementation(projects.aop.floorDatastore)
 
             }
         }
@@ -90,11 +96,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":aop:floor-core"))//引入刚才新建的ksp model
-    val aop = ":aop:floor-core"
     //https://kotlinlang.org/docs/ksp-multiplatform.html
+    val aop = ":aop:floor-core-ksp"
     add("kspCommonMainMetadata", project(aop))
     add("kspDesktop", project(aop))
+
+    val datastoreAop = ":aop:floor-datastore-ksp"
+    add("kspCommonMainMetadata", project(datastoreAop))
+    add("kspDesktop", project(datastoreAop))
 }
 
 compose.desktop {

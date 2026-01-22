@@ -20,7 +20,7 @@ dataStore = "1.1.2"
 mmkv = "1.3.0"
 androidx_preference = "1.2.0"
 
-m3ColorUtilities="1.0"
+m3ColorUtilities = "1.0"
 autoServiceKsp = "1.2.0"
 autoService = "1.1.1"
 #koin
@@ -70,6 +70,16 @@ koin-annotations-bom = { module = "io.insert-koin:koin-annotations-bom", version
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotation" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotation" }
 
+ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+kotlin-poet-ksp = { module = "com.squareup:kotlinpoet-ksp", version = "2.2.0" }
+kotlin-poet = { module = "com.squareup:kotlinpoet", version = "2.2.0" }
+
+# 日志输出。
+slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.15" }
+# android平台也可以使用原版logback，也可以使用logback-android，一个第三方作者写的。
+# 注意android 12开始才支持java 11，如果使用原版logback，需要使用1.3.15版本
+slf4j-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.12" }
+slf4j-api-kotlin = { module = "com.github.knightwood:slf4j-api-kotlin", version = "0.0.7" }
 
 [plugins]
 # kotlin
@@ -91,3 +101,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 kotlins-android = ["kotlin-coroutines-core", "kotlin-coroutines-android"]
+log = ["slf4j-api", "slf4j-api-kotlin", "slf4j-logback"]

@@ -2,7 +2,7 @@ package knightwood.kv.aop.floordatastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import knightwood.kv.aop.floorcore.writer.KVStore
+import knightwood.kv.aop.floorcore.core.KVStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

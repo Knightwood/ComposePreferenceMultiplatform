@@ -4,22 +4,35 @@ includeBuild("./build-logic")
 
 pluginManagement {
     repositories {
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        google()
-        gradlePluginPortal()
+        mavenLocal()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
+        gradlePluginPortal()
+        maven("https://maven.aliyun.com/repository/public/")
+        maven("https://maven.aliyun.com/repository/central")
         maven("https://www.jitpack.io")
+        maven("./build-logic/repo")
     }
 }
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://www.jitpack.io")
+        maven("https://maven.aliyun.com/repository/public/")
+        maven("https://maven.aliyun.com/repository/central")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
+
 }
 
 include(":composeApp")
@@ -37,7 +50,9 @@ include(":helper:mmkv-helper")
 include(":helper:preference-helper")
 //aop
 include(":aop:floor-core")
+include(":aop:floor-core-ksp")
 include(":aop:floor-datastore")
+include(":aop:floor-datastore-ksp")
 
 //  前缀               +组件库名       +module名 +版本号
 //com.github.knightwood.kmp-preference:ui       :1.0.0
