@@ -2,7 +2,7 @@ package knightwood.kv.aop.floordatastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import knightwood.kv.aop.floorcore.core.KVStore
+import knightwood.kv.aop.floorcore.core.KVDB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -22,7 +22,7 @@ import kotlin.properties.Delegates
  * 用于初始化Datastore，提供默认数据库实例
  *
  */
-object DatastoreFloor : KVStore<DataStore<Preferences>>() {
+object DatastoreFloor : KVDB<DataStore<Preferences>>() {
     internal var db: DataStore<Preferences> by Delegates.notNull()
 
     override fun provideDefaultDb(db: DataStore<Preferences>) {

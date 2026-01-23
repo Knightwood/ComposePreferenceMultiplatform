@@ -55,7 +55,7 @@ suspend inline fun <reified T> DataStore<Preferences>.putAll(vararg pairs: Prefe
  */
 inline fun <reified T> DataStore<Preferences>.asDataFlow(
     key: Preferences.Key<T>,
-    defaultValue: T
+    defaultValue: T,
 ): Flow<T> {
     return this.data.map { preferences ->
         // No type safety.
@@ -106,7 +106,7 @@ fun <T> DataStore<Preferences>.read(
  */
 inline fun <reified T> DataStore<Preferences>.read(
     keyname: String,
-    defaultValue: T
+    defaultValue: T,
 ): T {
     val key = getKey<T>(keyname)
     return read(key, defaultValue)
@@ -208,6 +208,7 @@ fun <T> MutablePreferences.setOrRemove(key: Preferences.Key<T>, value: T?) {
  *
  * @param T
  * @param keyName
+ * @receiver 接受者类型没用到，统一、好看而已
  * @return
  */
 inline fun <reified T> DataStore<Preferences>.getKey(keyName: String): Preferences.Key<T> {
@@ -228,7 +229,11 @@ inline fun <reified T> dataStoreKey() = DataStoreKeyProvider.of<T>()
  * val keyName by dataStore.key<String>()
  * ```
  *
+ * same as [dataStoreKey]
+ *
  * @param T
+ *
+ * @receiver 接受者类型没用到，统一、好看而已
  */
 inline fun <reified T> DataStore<Preferences>.key() = DataStoreKeyProvider.of<T>()
 
@@ -285,7 +290,7 @@ internal fun <T> getKeyInternal(keyName: String, cls: KClass<*>): Preferences.Ke
  * ```
  */
 class DataStoreKeyProvider<T>(
-    private val type: KClass<*>
+    private val type: KClass<*>,
 ) {
     companion object {
         inline fun <reified T> of(): DataStoreKeyProvider<T> {

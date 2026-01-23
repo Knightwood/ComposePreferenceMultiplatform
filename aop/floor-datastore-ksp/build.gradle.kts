@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.ksp.api)
     //将ksp的符号类型转换成kotlinpoet的符号类型
     implementation(libs.kotlin.poet.ksp)
+    implementation(libs.kotlin.poet)
 
     //使用autoService就不用手动注册service了
     ksp(libs.autoService.ksp)

@@ -44,6 +44,9 @@ kotlin {
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastore.preferences)
 
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.koin.core)
+
                 implementation(projects.impl.ui)
                 implementation(projects.impl.uiAuto)
                 implementation(projects.impl.dataCore)

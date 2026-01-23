@@ -11,20 +11,22 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 /**
- * @param key 存储库在koin中的key
+ * @param dbFileName 存储库在koin中的key
  *
  * 设计：
  * 1. 每个标记了KVStore的data class，都对应一个DatastoreDao实例。
  *  注解包含字段：可提供Datastore实例
  * 2. 每个data class的属性，都对应一个字段
  * 2. 使用koin提供不同datastore实例
+ *
+ * @param dbFileName DataStore文件名、在koin中的名
  */
-abstract class DatastoreDao<T : Any>(val key: String? = null) : IPreferenceDao<T>, KoinComponent {
-    private val kv_store_ds: DataStore<Preferences> by inject { parametersOf(key) }
-    protected val ds: DataStore<Preferences> get() = if (key == null) DatastoreFloor.db else kv_store_ds
+abstract class DatastoreDao<T : Any>(val dbFileName: String? = null) : IPreferenceDao<T>, KoinComponent {
+    private val kv_store_ds: DataStore<Preferences> by inject(named(dbFileName!!))
+    protected val ds: DataStore<Preferences> get() = if (dbFileName == null) DatastoreFloor.db else kv_store_ds
 
     override val flow: Flow<T>
         get() = ds.data.map { value -> value.asT() }

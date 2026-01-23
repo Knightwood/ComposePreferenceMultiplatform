@@ -8,19 +8,7 @@ plugins {
 kotlin {
     jvmToolchain(17)
 }
-ksp {
-    // 方式1：为所有处理器指定输出目录
-    arg("ksp.output.dir", "${project.buildDir}/generated/ksp")
-//    arg("logLevel", "VERBOSE")
-//    arg("verbose", "true")
-//    // 方式2：使用 Gradle 配置
-//    outputDirectory.set(file("${project.buildDir}/generated/ksp"))
-//
-//    // 方式3：单独配置每个源集
-//    sourceSets["main"].kotlin {
-//        srcDir("${buildDir}/generated/ksp/main/kotlin")
-//    }
-}
+
 dependencies {
     //kotlin
     implementation(libs.kotlin.coroutines.core)
