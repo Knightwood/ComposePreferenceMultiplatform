@@ -27,7 +27,7 @@ import androidy.preference.helper.datastore.getDataStore
 import floor.UserIdBean
 import com.knightwood.floor.core.core.KVFloor
 import com.knightwood.floor.datastore.DatastoreFloor
-import floor.UserIdBean_Dao
+//import floor.UserIdBean_Dao
 import java.util.UUID
 
 fun main() = application {
@@ -60,8 +60,8 @@ fun main() = application {
     }
 }
 
-suspend fun UserIdBeanTest() {
-    val dao = UserIdBean_Dao()
-    val userId = dao.value
-    dao.update(UserIdBean(UUID.randomUUID()))
-}
+//suspend fun UserIdBeanTest() {
+//    val dao = UserIdBean_Dao()
+//    val userId = dao.value
+//    dao.update(UserIdBean(UUID.randomUUID()))
+//}

@@ -22,8 +22,10 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import com.knightwood.floor.core.annotation.KVStore
+import com.knightwood.floor.core.ksp.processor.isNullable
 import com.knightwood.floor.core.ksp.writer.IDaoGenerator
 import com.knightwood.floor.core.ksp.writer.KVAnnotationUtils
+import com.knightwood.floor.core.ksp.writer.nullable
 import com.knightwood.floor.datastore.DataStoreUtils
 import com.knightwood.floor.datastore.DatastoreDao
 import org.slf4j.Logger
@@ -212,16 +214,19 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                         //val age: Int,
                         //数据类字段的类型
                         val propertyClsName = propertyDeclaration.type.resolve().toClassName()
+                        //数据类字段去除“?”。数据类字段类型可能是 Int?、String?等带"?"的，有时候需要去除"?"
+                        val noNullPropertyClsName = ClassName(propertyClsName.packageName, propertyClsName.simpleName)
                         //数据类字段名称
                         val propertyName = propertyDeclaration.simpleName.asString()
+                        val propertyNullable = propertyDeclaration.isNullable()
                         val isBasicType = TypeSupportUtils.isSupport(propertyClsName)
                         //生成数据键
                         if (isBasicType) {
                             builder.addProperty(
                                 PropertySpec
                                     .builder(
-                                        keyName,
-                                        preferenceKeyClassName.parameterizedBy(propertyClsName),
+                                        name = keyName,
+                                        type = preferenceKeyClassName.parameterizedBy(noNullPropertyClsName),
                                         KModifier.PUBLIC,
                                     )
                                     .mutable(false)
@@ -229,31 +234,54 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                                     .build()
                             )
                             asTFunction.append("        $propertyName = this[Keys.$keyName]$defaultValueStr,\n")
-                            modifyFunction.append("     this[Keys.$keyName] = $propertyName\n")
+                            if (propertyNullable) {
+                                // DataStoreUtils.setOrRemove<Int>(this,Keys.age,age)
+                                modifyFunction.append("     DataStoreUtils.setOrRemove<${propertyClsName.simpleName}>(this,Keys.$keyName,$propertyName)\n")
+                            } else {
+                                // this[Keys.age] = age
+                                modifyFunction.append("     this[Keys.$keyName] = $propertyName\n")
+                            }
                         } else {
                             builder.addProperty(
                                 PropertySpec
                                     .builder(
-                                        keyName,
-                                        preferenceKeyClassName
-                                            .parameterizedBy(stringClassName),
+                                        name = keyName,
+                                        type = preferenceKeyClassName.parameterizedBy(stringClassName),
                                         KModifier.PUBLIC,
                                     )
                                     .mutable(false)
                                     .initializer("DataStoreUtils.getKeyInternal(\"$keyName\",String::class)")
                                     .build()
                             )
+                            //tips:如果非基本类型数据类字段是nullable的，转换函数应该说完成如下转换： SomeCls?->String?和 String?->SomeCls?
+
+                            // 读取datastore中某key的数据给数据类字段赋值
+                            //根据数据类字段是否nullable 查找 String->SomeCls 或者 String?->SomeCls?
                             val toFieldFun = TypeSupportUtils.findFunction(
-                                stringClassName,
+                                if (propertyNullable) stringClassName.nullable() else stringClassName,
                                 propertyClsName
                             ) ?: error("${propertyClsName.simpleName} not support convert")
+
+                            // 从数据库读取出来给变量赋值，需要将String类型转换成非基本类型
+                            // 读取出来的值未必存在，默认值也未必存在。变量类型又是nullable的
+                            // 因此转换函数的入参必须是String?，返回值也自然得是Nullable的。
                             asTFunction.append("        $propertyName = ${toFieldFun.qualifiedName!!.asString()}(this[Keys.$keyName]$defaultValueStr),\n")
+
+                            // 给datastore某key赋值
+                            //根据数据类字段是否nullable 查找 SomeCls->String 或者SomeCls?->String?
                             val toBasicFun = TypeSupportUtils.findFunction(
                                 propertyClsName,
-                                stringClassName
+                                if (propertyNullable) stringClassName.nullable() else stringClassName
                             ) ?: error("${propertyClsName.simpleName} not support convert")
-                            modifyFunction.append("     this[Keys.$keyName] = ${toBasicFun.qualifiedName!!.asString()} ($propertyName)\n")
-
+                            if (propertyNullable) {
+                                // 如果数据类字段是nullable的
+                                // 转换函数入参就得是nullable的，返回值规定为String?，setOrRemove会自动处理nullable的值。
+                                // DataStoreUtils.setOrRemove<String>(this,Keys.uuid,SomeTypeConverts.nullableUUID2String(uuid))
+                                modifyFunction.append("     DataStoreUtils.setOrRemove<String>(this,Keys.$keyName,${toBasicFun.qualifiedName!!.asString()} ($propertyName))\n")
+                            } else {
+                                // this[Keys.uuid] = SomeTypeConverts.uuid2String(uuid)
+                                modifyFunction.append("     this[Keys.$keyName] = ${toBasicFun.qualifiedName!!.asString()} ($propertyName)\n")
+                            }
                         }
                         allDataStoreKeys.add(keyName)
                     }

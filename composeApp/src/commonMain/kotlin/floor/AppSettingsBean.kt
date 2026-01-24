@@ -16,7 +16,7 @@ data class AppSettingsBean(
     @KVField(defaultValue = "12", key = "fuck_age")
     val age: Int,
     @KVField()
-    val sex: Int,
+    val sex: Int?,
     @KVField()
-    val id: UUID,
+    val id: UUID?,
 )

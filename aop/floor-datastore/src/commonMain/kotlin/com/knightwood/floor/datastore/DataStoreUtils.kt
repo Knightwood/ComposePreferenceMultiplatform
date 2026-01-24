@@ -1,5 +1,6 @@
 package com.knightwood.floor.datastore
 
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.byteArrayPreferencesKey
@@ -12,6 +13,14 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlin.reflect.KClass
 
 object DataStoreUtils {
+
+    fun <T> setOrRemove(preference: MutablePreferences, key: Preferences.Key<T>, value: T?) {
+        if (value != null) {
+            preference[key] = value
+        } else {
+            preference.remove(key)
+        }
+    }
 
     /**
      *  判断属性是否原生支持，不需要TypeConvertor转换

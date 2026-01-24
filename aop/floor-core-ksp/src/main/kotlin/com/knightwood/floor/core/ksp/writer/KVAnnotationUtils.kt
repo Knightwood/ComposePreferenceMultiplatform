@@ -89,6 +89,9 @@ object KVAnnotationUtils {
                 return "!!"
             }
         } else {
+            if (!isNullable) {
+                check(tmp0.contains("null"))
+            }
             return "?:$tmp0"
         }
     }

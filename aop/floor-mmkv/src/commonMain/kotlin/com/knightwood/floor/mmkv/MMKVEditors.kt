@@ -15,7 +15,11 @@ class MMKVEditor<T>(
         return reader(mmkv, key)
     }
 
-    fun write(mmkv: MMKV, key: String, value: T): Boolean {
+    fun write(mmkv: MMKV, key: String, value: T?): Boolean {
+        if (value == null) {
+            mmkv.removeValueForKey(key)
+            return true
+        }
         return writer(mmkv, key, value)
     }
 }

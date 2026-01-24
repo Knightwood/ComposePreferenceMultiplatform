@@ -21,27 +21,12 @@ import MainScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import NewComponents2
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.datastore.dataStore
 import androidx.lifecycle.lifecycleScope
 import androidy.preference.data.datastore.DataStorePreferenceHolder
-import androidy.preference.data.mmkv.MMKVPreferenceHolder
 import androidy.preference.helper.datastore.getDataStore
-import com.knightwood.floor.core.annotation.KVField
-import com.knightwood.floor.core.core.KVFloor
-import com.knightwood.floor.mmkv.MMKVFloor
-import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -50,12 +35,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val dao = MMKVBean_Dao()
-        Log.d(TAG, "mmkv:${dao.value}")
-        lifecycleScope.launch {
-            dao.update(MMKVBean("knight", 18, UUID.randomUUID()))
-            Log.d(TAG, "mmkv:${dao.value}")
-        }
+//        val dao = MMKVBean_Dao()
+//        Log.d(TAG, "mmkv:${dao.value}")
+//        lifecycleScope.launch {
+//            dao.update(MMKVBean("knight", 18, UUID.randomUUID()))
+//            Log.d(TAG, "mmkv:${dao.value}")
+//        }
         val holder = getHolder()
         setContent {
             MaterialTheme {

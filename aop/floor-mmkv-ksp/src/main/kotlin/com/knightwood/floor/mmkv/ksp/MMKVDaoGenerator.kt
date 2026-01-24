@@ -20,8 +20,10 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import com.knightwood.floor.core.annotation.KVStore
+import com.knightwood.floor.core.ksp.processor.isNullable
 import com.knightwood.floor.core.ksp.writer.IDaoGenerator
 import com.knightwood.floor.core.ksp.writer.KVAnnotationUtils
+import com.knightwood.floor.core.ksp.writer.nullable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.StringBuilder
@@ -139,8 +141,8 @@ open class MMKVDaoGenerator public constructor() : IDaoGenerator {
                 .addFileComment("Generated at ${System.currentTimeMillis()}\n")
                 .apply {
                     this
-                        .addImport(editorClsName.packageName,editorClsName.simpleName)
-                        .addImport("com.knightwood.floor.mmkv","MMKVEditors")
+                        .addImport(editorClsName.packageName, editorClsName.simpleName)
+                        .addImport("com.knightwood.floor.mmkv", "MMKVEditors")
                         .addType(//生成Dao类
                             TypeSpec
                                 .classBuilder(daoName)
@@ -213,6 +215,9 @@ open class MMKVDaoGenerator public constructor() : IDaoGenerator {
                         val propertyClsName = propertyDeclaration.type.resolve().toClassName()
                         //数据类字段名称
                         val propertyName = propertyDeclaration.simpleName.asString()
+                        //数据类字段去除“?”
+                        val noNullPropertyClsName = ClassName(propertyClsName.packageName, propertyClsName.simpleName)
+                        val propertyNullable = propertyDeclaration.isNullable()
                         val isBasicType = TypeSupportUtils.isSupport(propertyClsName)
                         //生成数据键
                         builder.addProperty(
@@ -226,19 +231,28 @@ open class MMKVDaoGenerator public constructor() : IDaoGenerator {
                             // val id :Editor<Int> = parseEditor(Int::class.java)
                             editorsObjectBuilder.addProperty(
                                 PropertySpec
-                                    .builder(keyName, editorClsName.parameterizedBy(propertyClsName), KModifier.PUBLIC)
+                                    .builder(
+                                        name = keyName,
+                                        type = editorClsName.parameterizedBy(noNullPropertyClsName),
+                                        KModifier.PUBLIC
+                                    )
                                     .mutable(false)
-                                    .initializer("MMKVEditors.parseEditor<$propertyClsName>()")
+                                    .initializer("MMKVEditors.parseEditor<${propertyClsName.simpleName}>()")
                                     .build()
                             )
                             asTFunction.append("        $propertyName = Editors.$keyName.read(mmkv, Keys.$keyName)$defaultValueStr,\n")
+                            // Editor.write(mmkv, Keys.id, id) 已处理参数为nullable的情况
                             modifyFunction.append("     Editors.$keyName.write(mmkv, Keys.$keyName, $propertyName)\n")
                         } else {
 
                             // val id :Editor<String> = parseEditor(String::class.java)
                             editorsObjectBuilder.addProperty(
                                 PropertySpec
-                                    .builder(keyName, editorClsName.parameterizedBy(stringClassName), KModifier.PUBLIC)
+                                    .builder(
+                                        name = keyName,
+                                        type = editorClsName.parameterizedBy(stringClassName),
+                                        KModifier.PUBLIC
+                                    )
                                     .mutable(false)
                                     .initializer("MMKVEditors.parseEditor<String>()")
                                     .build()
@@ -246,7 +260,7 @@ open class MMKVDaoGenerator public constructor() : IDaoGenerator {
 
                             // id = floor.TypeConvertors.string2Uuid(Editors.id.read(mmkv, Keys.id)?:"5d14963a-2a32-4e91-ae8b-ab92a865cdc4")
                             val toFieldFun = TypeSupportUtils.findFunction(
-                                stringClassName,
+                                if (propertyNullable) stringClassName.nullable() else stringClassName,
                                 propertyClsName
                             ) ?: error("${propertyClsName.simpleName} not support convert")
                             asTFunction.append("        $propertyName = ${toFieldFun.qualifiedName!!.asString()}(Editors.$keyName.read(mmkv, Keys.$keyName)$defaultValueStr),\n")
@@ -254,8 +268,9 @@ open class MMKVDaoGenerator public constructor() : IDaoGenerator {
                             //Editors.id.write(mmkv, Keys.id, floor.TypeConvertors.uuid2String(id))
                             val toBasicFun = TypeSupportUtils.findFunction(
                                 propertyClsName,
-                                stringClassName
+                                if (propertyNullable) stringClassName.nullable() else stringClassName
                             ) ?: error("${propertyClsName.simpleName} not support convert")
+                            // Editor.write(mmkv, Keys.id, id) 已处理参数为nullable的情况
                             modifyFunction.append("     Editors.$keyName.write(mmkv, Keys.$keyName, ${toBasicFun.qualifiedName!!.asString()}($propertyName))\n")
                         }
                         allMMKVKeys.add(keyName)
