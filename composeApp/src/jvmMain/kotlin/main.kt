@@ -25,9 +25,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidy.preference.data.datastore.DataStorePreferenceHolder
 import androidy.preference.helper.datastore.getDataStore
 import floor.UserIdBean
+import com.knightwood.floor.core.core.KVFloor
+import com.knightwood.floor.datastore.DatastoreFloor
 import floor.UserIdBean_Dao
-import knightwood.kv.aop.floorcore.core.KVFloor
-import knightwood.kv.aop.floordatastore.DatastoreFloor
 import java.util.UUID
 
 fun main() = application {

@@ -7,6 +7,14 @@ plugins {
 
 kotlin {
     jvmToolchain(17)
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-receivers")
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+    }
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
@@ -14,9 +22,6 @@ dependencies {
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
-
-    implementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.core)
 
     //引入ksp
     //典型的KSP processor（包括网上大部分的例子）都是分了三个module，

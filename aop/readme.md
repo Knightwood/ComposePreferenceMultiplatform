@@ -43,7 +43,16 @@ kotlin {
     }
 }
 ```
+## 不同平台区别
 
+jvm() - 运行在 Java 虚拟机上的目标，需要 JVM 环境
+linuxX64() - 原生编译的目标，直接编译为 Linux 平台的本地代码，受 Kotlin/Native 互操作性限制
+
+* ios
+iosARM32适用于较老的iOS设备( iPhone 5和low)
+iOS ARM64用于最新的iOS设备(继iPhone 5之后)
+iOSX64则用于iOS模拟器。
+因此，imo iOSARM64将适用于大多数设备。
 
 # ksp
 

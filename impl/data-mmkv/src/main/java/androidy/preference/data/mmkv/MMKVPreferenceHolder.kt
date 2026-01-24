@@ -35,7 +35,7 @@ class MMKVPreferenceHolder internal constructor(
         return hashMap[keyName]?.let {
             it as IPreferenceEditor<T>
         } ?: let {
-            val tmp = MMKVEditor(mmkv, keyName, defaultValue)
+            val tmp = MMKVPreferenceEditor(mmkv, keyName, defaultValue)
             hashMap[keyName] = tmp
             tmp
         }

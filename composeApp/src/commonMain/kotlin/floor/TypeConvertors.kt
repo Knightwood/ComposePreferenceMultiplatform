@@ -2,10 +2,9 @@
 
 package floor
 
-import knightwood.kv.aop.floorcore.annotation.TypeConverter
+import com.knightwood.floor.core.annotation.TypeConverter
 import java.util.UUID
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 object TypeConvertors {
     @TypeConverter

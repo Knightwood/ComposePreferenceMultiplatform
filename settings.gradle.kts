@@ -53,6 +53,8 @@ include(":aop:floor-core")
 include(":aop:floor-core-ksp")
 include(":aop:floor-datastore")
 include(":aop:floor-datastore-ksp")
+include(":aop:floor-mmkv")
+include(":aop:floor-mmkv-ksp")
 
 //  前缀               +组件库名       +module名 +版本号
 //com.github.knightwood.kmp-preference:ui       :1.0.0
