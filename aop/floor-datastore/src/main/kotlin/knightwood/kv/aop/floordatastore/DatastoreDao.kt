@@ -25,8 +25,9 @@ import org.koin.core.qualifier.named
  * @param dbFileName DataStore文件名、在koin中的名
  */
 abstract class DatastoreDao<T : Any>(val dbFileName: String? = null) : IPreferenceDao<T>, KoinComponent {
-    private val kv_store_ds: DataStore<Preferences> by inject(named(dbFileName!!))
-    protected val ds: DataStore<Preferences> get() = if (dbFileName == null) DatastoreFloor.db else kv_store_ds
+    protected val ds: DataStore<Preferences> by lazy {
+        DatastoreFloor.getDb(dbFileName)
+    }
 
     override val flow: Flow<T>
         get() = ds.data.map { value -> value.asT() }

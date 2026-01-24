@@ -16,10 +16,9 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm()
 
     sourceSets {
-        val desktopMain by getting
         androidMain.dependencies {
 //            implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
@@ -56,9 +55,12 @@ kotlin {
 
             }
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs) {
-                exclude("org.jetbrains.compose.material")
+        jvmMain {
+            kotlin.srcDir("build/generated/ksp/jvm/jvmMain/kotlin")
+            dependencies {
+                implementation(compose.desktop.currentOs) {
+                    exclude("org.jetbrains.compose.material")
+                }
             }
         }
     }
@@ -102,11 +104,11 @@ dependencies {
     //https://kotlinlang.org/docs/ksp-multiplatform.html
     val aop = ":aop:floor-core-ksp"
     add("kspCommonMainMetadata", project(aop))
-    add("kspDesktop", project(aop))
+    add("kspJvm", project(aop))
 
     val datastoreAop = ":aop:floor-datastore-ksp"
     add("kspCommonMainMetadata", project(datastoreAop))
-    add("kspDesktop", project(datastoreAop))
+    add("kspJvm", project(datastoreAop))
 }
 
 compose.desktop {

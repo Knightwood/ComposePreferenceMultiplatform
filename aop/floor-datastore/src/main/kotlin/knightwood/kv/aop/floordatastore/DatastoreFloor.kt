@@ -2,11 +2,11 @@ package knightwood.kv.aop.floordatastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import knightwood.kv.aop.floorcore.core.KVDB
+import knightwood.kv.aop.floorcore.core.KVFloor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.properties.Delegates
 
 /**
  * 设计
@@ -22,15 +22,17 @@ import kotlin.properties.Delegates
  * 用于初始化Datastore，提供默认数据库实例
  *
  */
-object DatastoreFloor : KVDB<DataStore<Preferences>>() {
-    internal var db: DataStore<Preferences> by Delegates.notNull()
-
-    override fun provideDefaultDb(db: DataStore<Preferences>) {
-        this.db = db
+object DatastoreFloor : KVFloor<DataStore<Preferences>>() {
+    override fun dbProvider(dbProvider: KVDBProvider<DataStore<Preferences>>): DatastoreFloor {
+        super.dbProvider(dbProvider)
+        return this
     }
 
-    suspend fun preLoad() {
-        withContext(Dispatchers.IO) {
+    /**
+     * 此函数的调用要在[dbProvider]之后，避免调用此方法时还没有创建db实例
+     */
+    fun preLoad() {
+        coroutineScope.launch {
             db.data.first()    //预加载
         }
     }
