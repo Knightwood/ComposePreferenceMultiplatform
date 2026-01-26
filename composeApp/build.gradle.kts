@@ -25,7 +25,7 @@ kotlin {
             implementation(libs.github.mmkv)
             implementation(projects.impl.dataMmkv)
             implementation(projects.impl.dataPreference)
-            implementation(projects.aop.floorMmkv)
+//            implementation(projects.aop.floorMmkv)
 
         }
         commonMain {
@@ -53,8 +53,8 @@ kotlin {
                 implementation(projects.impl.dataCore)
                 implementation(projects.impl.dataDatastore)
 
-                implementation(projects.aop.floorCore)
-                implementation(projects.aop.floorDatastore)
+//                implementation(projects.aop.floorCore)
+//                implementation(projects.aop.floorDatastore)
 
             }
         }
@@ -104,20 +104,20 @@ android {
 }
 
 dependencies {
-    //https://kotlinlang.org/docs/ksp-multiplatform.html
-    val aop = ":aop:floor-core-ksp"
-    add("kspCommonMainMetadata", project(aop))
-    add("kspJvm", project(aop))
-    add("kspAndroid", project(aop))
-
-    val datastoreAop = ":aop:floor-datastore-ksp"
-    add("kspCommonMainMetadata", project(datastoreAop))
-    add("kspJvm", project(datastoreAop))
-    add("kspAndroid", project(datastoreAop))
-
-    val mmkvAop = ":aop:floor-mmkv-ksp"
-    add("kspCommonMainMetadata", project(mmkvAop))
-    add("kspAndroid", project(mmkvAop))
+//    //https://kotlinlang.org/docs/ksp-multiplatform.html
+//    val aop = ":aop:floor-core-ksp"
+//    add("kspCommonMainMetadata", project(aop))
+//    add("kspJvm", project(aop))
+//    add("kspAndroid", project(aop))
+//
+//    val datastoreAop = ":aop:floor-datastore-ksp"
+//    add("kspCommonMainMetadata", project(datastoreAop))
+//    add("kspJvm", project(datastoreAop))
+//    add("kspAndroid", project(datastoreAop))
+//
+//    val mmkvAop = ":aop:floor-mmkv-ksp"
+//    add("kspCommonMainMetadata", project(mmkvAop))
+//    add("kspAndroid", project(mmkvAop))
 }
 
 compose.desktop {

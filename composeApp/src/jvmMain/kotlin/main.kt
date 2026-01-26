@@ -20,35 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidy.preference.data.datastore.DataStorePreferenceHolder
 import androidy.preference.helper.datastore.getDataStore
-import floor.UserIdBean
-import com.knightwood.floor.core.core.KVFloor
-import com.knightwood.floor.datastore.DatastoreFloor
-//import floor.UserIdBean_Dao
-import java.util.UUID
 
 fun main() = application {
     val desktopPath = System.getProperty("user.home") + "/Desktop"
     val dataStore = getDataStore("$desktopPath/ee.preferences_pb")
     val holder = DataStorePreferenceHolder.instance(dataStore)
-
-    DatastoreFloor
-        .dbProvider(
-            object : KVFloor.KVDBProvider<DataStore<Preferences>> {
-                override fun get(name: String): DataStore<Preferences> {
-                    return getDataStore(name)
-                }
-
-                override fun getDefault(): DataStore<Preferences> {
-                    return dataStore
-                }
-            }
-        )
-        .preLoad()
-
     Window(
         onCloseRequest = ::exitApplication,
         title = "ComposePreference-Multi",
@@ -59,9 +37,3 @@ fun main() = application {
         }
     }
 }
-
-//suspend fun UserIdBeanTest() {
-//    val dao = UserIdBean_Dao()
-//    val userId = dao.value
-//    dao.update(UserIdBean(UUID.randomUUID()))
-//}
