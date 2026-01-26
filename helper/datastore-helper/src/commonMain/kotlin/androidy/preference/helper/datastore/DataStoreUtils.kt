@@ -89,10 +89,7 @@ inline fun <reified T> DataStore<Preferences>.asDataFlow(
  * @param defaultValue
  * @return
  */
-fun <T> DataStore<Preferences>.read(
-    key: Preferences.Key<T>,
-    defaultValue: T,
-): T {
+fun <T> DataStore<Preferences>.read(key: Preferences.Key<T>, defaultValue: T): T {
     val ds = this
     return runBlocking { ds.data.first()[key] ?: defaultValue }
 }
@@ -104,10 +101,7 @@ fun <T> DataStore<Preferences>.read(
  * @param keyname
  * @return
  */
-inline fun <reified T> DataStore<Preferences>.read(
-    keyname: String,
-    defaultValue: T,
-): T {
+inline fun <reified T> DataStore<Preferences>.read(keyname: String, defaultValue: T): T {
     val key = getKey<T>(keyname)
     return read(key, defaultValue)
 }
@@ -120,9 +114,7 @@ inline fun <reified T> DataStore<Preferences>.read(
  * @param defaultValue
  * @return
  */
-fun <T> DataStore<Preferences>.readNullable(
-    key: Preferences.Key<T>,
-): T? {
+fun <T> DataStore<Preferences>.readNullable(key: Preferences.Key<T>): T? {
     val ds = this
     return runBlocking { ds.data.first()[key] }
 }
@@ -134,9 +126,7 @@ fun <T> DataStore<Preferences>.readNullable(
  * @param keyname
  * @return
  */
-inline fun <reified T> DataStore<Preferences>.readNullable(
-    keyname: String,
-): T? {
+inline fun <reified T> DataStore<Preferences>.readNullable(keyname: String): T? {
     val key = getKey<T>(keyname)
     return readNullable(key)
 }
@@ -169,11 +159,11 @@ suspend inline fun <reified T> DataStore<Preferences>.save(keyname: String, valu
 }
 
 inline fun <reified T> MutablePreferences.saveOrRemove(keyname: String, value: T?) {
-    val key = getKeyInternal<T>(keyname, T::class)
+    val key = DataStoreKeyUtils.getKey<T>(keyname, T::class)
     saveOrRemove(key, value)
 }
 
-inline fun <reified T> MutablePreferences.saveOrRemove(key: Preferences.Key<T>, value: T?) {
+fun <T> MutablePreferences.saveOrRemove(key: Preferences.Key<T>, value: T?) {
     if (value != null) {
         this[key] = value
     } else {
@@ -191,6 +181,7 @@ suspend inline fun <reified T> DataStore<Preferences>.remove(keyname: String) {
 /**
  * 设置新值，如果为null则删除该key
  */
+@Deprecated("请使用saveOrRemove方法代替", ReplaceWith("saveOrRemove"))
 fun <T> MutablePreferences.setOrRemove(key: Preferences.Key<T>, value: T?) {
     if (value != null) {
         set(key, value)
@@ -198,118 +189,3 @@ fun <T> MutablePreferences.setOrRemove(key: Preferences.Key<T>, value: T?) {
         remove(key)
     }
 }
-
-//<editor-fold desc="获取 datastore key">
-/**
- * ```
- * val nightModeKey = ds.getKey<Int>("ms_1")
- *
- * ```
- *
- * @param T
- * @param keyName
- * @receiver 接受者类型没用到，统一、好看而已
- * @return
- */
-inline fun <reified T> DataStore<Preferences>.getKey(keyName: String): Preferences.Key<T> {
-    return getKeyInternal(keyName, T::class)
-}
-
-/**
- * ```
- * val keyName by dataStoreKey<String>()
- * ```
- *
- * @param T
- */
-inline fun <reified T> dataStoreKey() = DataStoreKeyProvider.of<T>()
-
-/**
- * ```
- * val keyName by dataStore.key<String>()
- * ```
- *
- * same as [dataStoreKey]
- *
- * @param T
- *
- * @receiver 接受者类型没用到，统一、好看而已
- */
-inline fun <reified T> DataStore<Preferences>.key() = DataStoreKeyProvider.of<T>()
-
-
-@PublishedApi
-internal fun <T> getKeyInternal(keyName: String, cls: KClass<*>): Preferences.Key<T> {
-    return (when (cls) {
-        Int::class -> {
-            intPreferencesKey(keyName)
-        }
-
-        Boolean::class -> {
-            booleanPreferencesKey(keyName)
-        }
-
-        String::class -> {
-            stringPreferencesKey(keyName)
-        }
-
-        Double::class -> {
-            doublePreferencesKey(keyName)
-        }
-
-        Float::class -> {
-            floatPreferencesKey(keyName)
-        }
-
-        Long::class -> {
-            longPreferencesKey(keyName)
-        }
-
-        Set::class -> {
-            stringSetPreferencesKey(keyName)
-        }
-
-        else -> {
-            throw IllegalArgumentException("not support")
-
-        }
-    }) as Preferences.Key<T>
-
-}
-
-
-/**
- * 使用委托的方式生成datastore的key
- *
- * ```
- * //使用扩展函数版
- * private val keyName by dataStore.key<String>()
- * //实际上也有非扩展函数版，他两个没什么本质上的区别，无非就是加上datastore形式上好看一点
- * private val keyName by dataStoreKey<String>()
- *
- * ```
- */
-class DataStoreKeyProvider<T>(
-    private val type: KClass<*>,
-) {
-    companion object {
-        inline fun <reified T> of(): DataStoreKeyProvider<T> {
-            return DataStoreKeyProvider(T::class)
-        }
-    }
-
-    operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): DataStoreKeyHolder<T> {
-        return DataStoreKeyHolder(getKeyInternal<T>(property.name, type))
-    }
-}
-
-class DataStoreKeyHolder<T>(private val key: Preferences.Key<T>) :
-    ReadOnlyProperty<Any?, Preferences.Key<T>> {
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Preferences.Key<T> {
-        return key
-    }
-}
-
-
-//</editor-fold>
-

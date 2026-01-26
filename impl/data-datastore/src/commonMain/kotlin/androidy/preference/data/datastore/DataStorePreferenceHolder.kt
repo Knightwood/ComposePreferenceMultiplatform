@@ -39,9 +39,9 @@ class DataStorePreferenceHolder internal constructor(
     override fun <T : Any> getSingleDataEditor(
         keyName: String,
         defaultValue: T,
-    ): DataStoreEditor<T> {
-        return (hashMap[keyName] as? DataStoreEditor<T>) ?: let {
-            val tmp = DataStoreEditor(keyName, defaultValue, dataStore)
+    ): DataStorePreferenceEditor<T> {
+        return (hashMap[keyName] as? DataStorePreferenceEditor<T>) ?: let {
+            val tmp = DataStorePreferenceEditor(keyName, defaultValue, dataStore)
             hashMap[keyName] = tmp
             tmp
         }

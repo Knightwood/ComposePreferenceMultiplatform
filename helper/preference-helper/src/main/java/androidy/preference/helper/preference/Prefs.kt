@@ -36,12 +36,14 @@ import kotlin.reflect.KProperty
  *
  * 注意，实际使用过程中 PrefsHelper 应该是单例。
  */
+@Deprecated("Use sp.getting() instead")
 class Prefs private constructor(){
     companion object{
 
     }
 }
 
+@Deprecated("Use sp.getting() instead")
 private inline fun <T> SharedPreferences.delegate(
     key: String? = null,
     defaultValue: T,
@@ -57,14 +59,17 @@ private inline fun <T> SharedPreferences.delegate(
         }
     }
 
+@Deprecated("Use sp.getting() instead")
 fun SharedPreferences.int(key: String? = null, defValue: Int = 0): ReadWriteProperty<Any, Int> {
     return delegate(key, defValue, SharedPreferences::getInt, Editor::putInt)
 }
 
+@Deprecated("Use sp.getting() instead")
 fun SharedPreferences.long(key: String? = null, defValue: Long = 0): ReadWriteProperty<Any, Long> {
     return delegate(key, defValue, SharedPreferences::getLong, Editor::putLong)
 }
 
+@Deprecated("Use sp.getting() instead")
 fun SharedPreferences.float(
     key: String? = null,
     defValue: Float = 0f
@@ -72,6 +77,7 @@ fun SharedPreferences.float(
     return delegate(key, defValue, SharedPreferences::getFloat, Editor::putFloat)
 }
 
+@Deprecated("Use sp.getting() instead")
 fun SharedPreferences.boolean(
     key: String? = null,
     defValue: Boolean = false
@@ -80,6 +86,7 @@ fun SharedPreferences.boolean(
 }
 
 
+@Deprecated("Use sp.getting() instead")
 fun SharedPreferences.stringSet(
     key: String? = null,
     defValue: Set<String> = emptySet()
@@ -90,6 +97,7 @@ fun SharedPreferences.stringSet(
 
 }
 
+@Deprecated("Use sp.getting() instead")
 fun SharedPreferences.string(
     key: String? = null,
     defValue: String = ""
@@ -100,14 +108,14 @@ fun SharedPreferences.string(
 }
 
 
-/** 
- * 获取sharedpreference的快捷方法 
+/**
+ * 获取sharedpreference的快捷方法
  */
 public fun getPreference(context: Context, name: String): SharedPreferences {
     return context.getSharedPreferences(name, Context.MODE_PRIVATE)
 }
 
-/** 
+/**
  * 删除某个偏好值
  */
 public fun SharedPreferences.removePreference(name: String) {

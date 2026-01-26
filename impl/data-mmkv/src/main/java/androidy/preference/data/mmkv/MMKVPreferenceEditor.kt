@@ -35,7 +35,7 @@ class MMKVPreferenceEditor<T : Any>(
     val TAG = "mmkv_tool"
 
     private val flow: MutableSharedFlow<T> = MutableSharedFlow<T>(1)
-    var readWrite: MMKVEditor<T> = MMKVEditors.parseEditor(defaultValue::class.java)
+    var readWrite: MMKVEditor<T> = MMKVEditors.parseEditor(defaultValue::class)
 
     init {
         flow.tryEmit(readWrite.read(kv, keyName)?:defaultValue)

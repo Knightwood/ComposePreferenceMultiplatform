@@ -39,8 +39,10 @@ import kotlin.reflect.KProperty
  * log.d(TAG,helper.name)*
  * ```
  */
+@Deprecated("Use mmkv.getting() instead")
 class MExt
 
+@Deprecated("Use mmkv.getting() instead")
 fun <T> MMKV.delegate(
     key: String? = null,
     defaultValue: T,
@@ -62,6 +64,7 @@ fun <T> MMKV.delegate(
  * @param defValue
  * @return
  */
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.strM(
     key: String,
     defValue: String = "",
@@ -69,6 +72,7 @@ fun MMKV.strM(
     return delegate<String>(key, defValue, MMKVEditors.stringMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.intM(
     key: String,
     defValue: Int = 0,
@@ -76,6 +80,7 @@ fun MMKV.intM(
     return delegate<Int>(key, defValue, MMKVEditors.intMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.boolM(
     key: String,
     defValue: Boolean = false,
@@ -83,6 +88,7 @@ fun MMKV.boolM(
     return delegate(key, defValue, MMKVEditors.booleanMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.longM(
     key: String,
     defValue: Long = 0L,
@@ -90,6 +96,7 @@ fun MMKV.longM(
     return delegate(key, defValue, MMKVEditors.longMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.floatM(
     key: String,
     defValue: Float = 0F,
@@ -97,6 +104,7 @@ fun MMKV.floatM(
     return delegate(key, defValue, MMKVEditors.floatMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.doubleM(
     key: String,
     defValue: Double = 0.0,
@@ -104,6 +112,7 @@ fun MMKV.doubleM(
     return delegate(key, defValue, MMKVEditors.doubleMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 fun MMKV.bytesM(
     key: String,
     defValue: ByteArray = byteArrayOf(),
@@ -111,6 +120,7 @@ fun MMKV.bytesM(
     return delegate(key, defValue, MMKVEditors.bytesMMKVEditor)
 }
 
+@Deprecated("Use mmkv.getting() instead")
 inline fun <reified T : Parcelable> MMKV.parcelableM(
     key: String,
     defValue: T,

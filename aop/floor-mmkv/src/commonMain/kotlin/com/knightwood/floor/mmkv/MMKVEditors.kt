@@ -59,33 +59,23 @@ object MMKVEditors {
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
 
-    fun <T> parseEditor(cls: Class<*>): MMKVEditor<T> {
+    fun <T> parseEditor(cls: KClass<*>): MMKVEditor<T> {
         return when (cls) {
-            Int::class.java -> MMKVEditors.intMMKVEditor
-            Long::class.java -> MMKVEditors.longMMKVEditor
-            String::class.java -> MMKVEditors.stringMMKVEditor
-            Float::class.java -> MMKVEditors.floatMMKVEditor
-            Double::class.java -> MMKVEditors.doubleMMKVEditor
-            Boolean::class.java -> MMKVEditors.booleanMMKVEditor
-            ByteArray::class.java -> MMKVEditors.bytesMMKVEditor
-            Parcelable::class.java -> MMKVEditors.parcelableMMKVEditor<Parcelable>()
+            Int::class -> MMKVEditors.intMMKVEditor
+            Long::class -> MMKVEditors.longMMKVEditor
+            String::class -> MMKVEditors.stringMMKVEditor
+            Float::class -> MMKVEditors.floatMMKVEditor
+            Double::class -> MMKVEditors.doubleMMKVEditor
+            Boolean::class -> MMKVEditors.booleanMMKVEditor
+            ByteArray::class -> MMKVEditors.bytesMMKVEditor
+            Parcelable::class -> MMKVEditors.parcelableMMKVEditor<Parcelable>()
             else -> throw IllegalArgumentException("Not support type: $cls")
         } as MMKVEditor<T>
     }
 
     inline fun <reified T> parseEditor(): MMKVEditor<T> {
-        val cls = T::class.java
-        return when (cls) {
-            Int::class.java -> MMKVEditors.intMMKVEditor
-            Long::class.java -> MMKVEditors.longMMKVEditor
-            String::class.java -> MMKVEditors.stringMMKVEditor
-            Float::class.java -> MMKVEditors.floatMMKVEditor
-            Double::class.java -> MMKVEditors.doubleMMKVEditor
-            Boolean::class.java -> MMKVEditors.booleanMMKVEditor
-            ByteArray::class.java -> MMKVEditors.bytesMMKVEditor
-            Parcelable::class.java -> MMKVEditors.parcelableMMKVEditor<Parcelable>()
-            else -> throw IllegalArgumentException("Not support type: $cls")
-        } as MMKVEditor<T>
+        val cls = T::class
+        return parseEditor<T>(cls)
     }
 
 }

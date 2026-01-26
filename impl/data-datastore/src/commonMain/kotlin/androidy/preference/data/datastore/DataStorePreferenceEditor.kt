@@ -28,6 +28,8 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidy.preference.data.core.IPreferenceEditor
+import androidy.preference.helper.datastore.DataStoreKeyDelegate
+import androidy.preference.helper.datastore.DataStoreKeyUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
@@ -37,44 +39,12 @@ private const val TAG = "DataStoreEditor"
 /**
  * 提供偏好值的读写，datastore实现功能版本
  */
-class DataStoreEditor<T>(
+class DataStorePreferenceEditor<T:Any>(
     val keyName: String,
     val defaultValue: T,
     val dataStore: DataStore<Preferences>
 ) : IPreferenceEditor<T> {
-    var key: Preferences.Key<T> = (when (defaultValue) {
-        is Int -> {
-            intPreferencesKey(keyName)
-        }
-
-        is Boolean -> {
-            booleanPreferencesKey(keyName)
-        }
-
-        is String -> {
-            stringPreferencesKey(keyName)
-        }
-
-        is Double -> {
-            doublePreferencesKey(keyName)
-        }
-
-        is Float -> {
-            floatPreferencesKey(keyName)
-        }
-
-        is Long -> {
-            longPreferencesKey(keyName)
-        }
-
-        is Set<*> -> {
-            stringSetPreferencesKey(keyName)
-        }
-
-        else -> {
-            throw IllegalArgumentException("not support")
-        }
-    }) as Preferences.Key<T>
+    var key: Preferences.Key<T> = DataStoreKeyUtils.getKey<T>(keyName,defaultValue::class)
 
     private val flow: Flow<T> = dataStore.data.map { preferences ->
         // No type safety.

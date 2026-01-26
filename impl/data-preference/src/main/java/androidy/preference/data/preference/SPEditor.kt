@@ -18,14 +18,8 @@
 package androidy.preference.data.preference
 
 import android.content.SharedPreferences
-import androidy.preference.helper.preference.SharedPreferencesUtil
-import androidy.preference.helper.preference.booleanRW
-import androidy.preference.helper.preference.floatRW
-import androidy.preference.helper.preference.intRW
-import androidy.preference.helper.preference.longRW
-import androidy.preference.helper.preference.stringRW
-import androidy.preference.helper.preference.stringSetRW
 import androidy.preference.data.core.IPreferenceEditor
+import androidy.preference.helper.preference.PrefEditors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -40,38 +34,10 @@ class SPEditor<T : Any>(
     val TAG = "prefs_tool"
 
     private val flow: MutableSharedFlow<T> = MutableSharedFlow<T>(1)
-    var readWrite: SharedPreferencesUtil<T> = (when (defaultValue) {
-        is Int -> {
-            sp.intRW(keyName, defaultValue)
-        }
-
-        is Boolean -> {
-            sp.booleanRW(keyName, defaultValue)
-        }
-
-        is String -> {
-            sp.stringRW(keyName, defaultValue)
-        }
-
-        is Float -> {
-            sp.floatRW(keyName, defaultValue)
-        }
-
-        is Long -> {
-            sp.longRW(keyName, defaultValue)
-        }
-
-        is Set<*> -> {
-            sp.stringSetRW(keyName)
-        }
-
-        else -> {
-            throw IllegalArgumentException("not support")
-        }
-    }) as SharedPreferencesUtil<T>
+    var readWrite = PrefEditors.parseEditor<T>(defaultValue::class)
 
     init {
-        flow.tryEmit(readWrite.read())
+        flow.tryEmit(readWrite.read(sp, keyName)?: defaultValue)
     }
 
     override fun flow(): Flow<T> {
@@ -79,11 +45,11 @@ class SPEditor<T : Any>(
     }
 
     override fun readValue(): T {
-        return readWrite.read()
+        return readWrite.read(sp,keyName)?: defaultValue
     }
 
     override suspend fun write(data: T) {
-        readWrite.write(data)
+        readWrite.write(sp, keyName,data)
         flow.emit(data)
     }
 }

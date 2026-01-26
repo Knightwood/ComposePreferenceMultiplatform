@@ -2,6 +2,9 @@ package androidy.preference.helper.mmkv
 
 import android.os.Parcelable
 import com.tencent.mmkv.MMKV
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 
 class MMKVEditor<T>(
@@ -55,32 +58,85 @@ object MMKVEditors {
     )
 
 
-    fun <T> parseEditor(cls: Class<*>): MMKVEditor<T> {
+    fun <T> parseEditor(cls: KClass<*>): MMKVEditor<T> {
         return when (cls) {
-            Int::class.java -> MMKVEditors.intMMKVEditor
-            Long::class.java -> MMKVEditors.longMMKVEditor
-            String::class.java -> MMKVEditors.stringMMKVEditor
-            Float::class.java -> MMKVEditors.floatMMKVEditor
-            Double::class.java -> MMKVEditors.doubleMMKVEditor
-            Boolean::class.java -> MMKVEditors.booleanMMKVEditor
-            ByteArray::class.java -> MMKVEditors.bytesMMKVEditor
-            Parcelable::class.java -> MMKVEditors.parcelableMMKVEditor<Parcelable>()
+            Int::class -> intMMKVEditor
+            Long::class -> longMMKVEditor
+            String::class -> stringMMKVEditor
+            Float::class -> floatMMKVEditor
+            Double::class -> doubleMMKVEditor
+            Boolean::class -> booleanMMKVEditor
+            ByteArray::class -> bytesMMKVEditor
+            Parcelable::class -> parcelableMMKVEditor<Parcelable>()
             else -> throw IllegalArgumentException("Not support type: $cls")
         } as MMKVEditor<T>
     }
 
     inline fun <reified T> parseEditor(): MMKVEditor<T> {
-        val cls = T::class.java
-        return when (cls) {
-            Int::class.java -> MMKVEditors.intMMKVEditor
-            Long::class.java -> MMKVEditors.longMMKVEditor
-            String::class.java -> MMKVEditors.stringMMKVEditor
-            Float::class.java -> MMKVEditors.floatMMKVEditor
-            Double::class.java -> MMKVEditors.doubleMMKVEditor
-            Boolean::class.java -> MMKVEditors.booleanMMKVEditor
-            ByteArray::class.java -> MMKVEditors.bytesMMKVEditor
-            Parcelable::class.java -> MMKVEditors.parcelableMMKVEditor<Parcelable>()
-            else -> throw IllegalArgumentException("Not support type: $cls")
-        } as MMKVEditor<T>
+        val cls = T::class
+        return parseEditor<T>(cls)
     }
+}
+
+
+open class MMKVDelegate<T>(
+    val key: String?,
+    val defaultValue: T? = null,
+    val mmkv: MMKV,
+    val editor: MMKVEditor<T>,
+) {
+    open operator fun getValue(thisRef: Any?, property: KProperty<*>): T? {
+        return editor.read(mmkv, key ?: property.name) ?: defaultValue
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
+        if (value == null) {
+            mmkv.removeValueForKey(key ?: property.name)
+        } else {
+            editor.write(mmkv, key ?: property.name, value)
+        }
+    }
+}
+
+/**
+ * 使用：
+ * ```
+ * class MMKVTest(val mmkv: MMKV) {
+ *     var seedId by mmkv.getting<Int>()
+ * }
+ * ```
+ *
+ * @param key 键，默认为属性名
+ */
+inline fun <reified T> MMKV.getting(defaultValue: T? = null, key: String? = null): MMKVDelegate<T> {
+    return MMKVDelegate(key, defaultValue, this, MMKVEditors.parseEditor<T>())
+}
+
+
+class MMKVDelegateNoNull<T>(
+    key: String?,
+    defaultValue: T,
+    mmkv: MMKV,
+    editor: MMKVEditor<T>,
+) : MMKVDelegate<T>(key, defaultValue, mmkv, editor) {
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        return (editor.read(mmkv, key ?: property.name) ?: defaultValue)!!
+    }
+
+}
+
+/**
+ * 使用：
+ * ```
+ * class MMKVTest(val mmkv: MMKV) {
+ *     var seedId by mmkv.gettingNoNull<Int>()
+ * }
+ * ```
+ *
+ * @param defaultValue 默认值
+ * @param key 键，默认为属性名
+ */
+inline fun <reified T> MMKV.gettingNoNull(defaultValue: T, key: String? = null): MMKVDelegateNoNull<T> {
+    return MMKVDelegateNoNull(key, defaultValue, this, MMKVEditors.parseEditor<T>())
 }
