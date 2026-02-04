@@ -12,6 +12,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -19,6 +22,38 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
+@Stable
+@JvmInline
+value class AnyIcon(val icon: Any)
+
+@Composable
+fun AnyIcon(
+    modifier: Modifier = Modifier,
+    iconModifier: Modifier = Modifier,
+    model: Any?,
+    contentDescription: String? = null,
+    shape: Shape = CircleShape,
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    backgroundColor: Color = Color.Transparent,
+    enabled: Boolean = true,
+    tint: Color = MaterialTheme.colorScheme.onSurfaceVariant.applyOpacity(enabled),
+) {
+    if (model == null) return
+    val icon = remember(model) {
+        AnyIcon(model)
+    }
+    AnyIcon(
+        modifier = modifier,
+        iconModifier = iconModifier,
+        model = icon,
+        contentDescription = contentDescription,
+        shape = shape,
+        paddingValues = paddingValues,
+        backgroundColor = backgroundColor,
+        enabled = enabled,
+        tint = tint
+    )
+}
 
 /**
  * icon组件
@@ -34,26 +69,26 @@ import androidx.compose.ui.unit.dp
  * @param tint
  */
 @Composable
-fun ParseIcon(
+fun AnyIcon(
     modifier: Modifier = Modifier,
     iconModifier: Modifier = Modifier,
-    model: Any?,
+    model: AnyIcon,
     contentDescription: String? = null,
     shape: Shape = CircleShape,
     paddingValues: PaddingValues = PaddingValues(0.dp),
     backgroundColor: Color = Color.Transparent,
     enabled: Boolean = true,
-    tint: Color = MaterialTheme.colorScheme.onSurfaceVariant.applyOpacity(enabled)
+    tint: Color = MaterialTheme.colorScheme.onSurfaceVariant.applyOpacity(enabled),
 ) {
     Surface(
         modifier = modifier.wrapContentSize(),
         color = backgroundColor,
         shape = shape,
     ) {
-        when (model) {
+        when (model.icon) {
             is ImageVector -> {
                 Icon(
-                    imageVector = model,
+                    imageVector = model.icon,
                     contentDescription = contentDescription,
                     modifier = iconModifier.padding(paddingValues),
                     tint = tint
@@ -62,31 +97,41 @@ fun ParseIcon(
 
             is Painter -> {
                 Icon(
-                    painter = model,
+                    painter = model.icon,
                     contentDescription = contentDescription,
                     modifier = iconModifier.padding(paddingValues),
                     tint = tint
                 )
             }
 
-//            is Int -> {
-//                Icon(
-//                    painter = painterResource(id = model),
-//                    modifier = iconModifier.padding(paddingValues),
-//                    contentDescription = contentDescription,
-//                    tint = tint
-//                )
-//            }
+            else -> {
+                platformParseIcon(
+                    model,
+                    iconModifier.padding(paddingValues),
+                    contentDescription,
+                    tint
+                )
+            }
         }
     }
-
 }
+
+/**
+ * 如果传入图标不是通用类型，则调用此方法使当前平台实现进行解析
+ */
+@Composable
+expect fun platformParseIcon(
+    model: AnyIcon,
+    modifier: Modifier,
+    contentDescription: String?,
+    tint: Color,
+)
 
 @Composable
 fun IconPreview() {
     Surface(modifier = Modifier.size(500.dp, 500.dp)) {
         Column(modifier = Modifier.padding(24.dp)) {
-            ParseIcon(
+            AnyIcon(
                 model = Icons.Filled.Settings,
                 paddingValues = PaddingValues(8.dp),
                 tint = MaterialTheme.colorScheme.onPrimary,

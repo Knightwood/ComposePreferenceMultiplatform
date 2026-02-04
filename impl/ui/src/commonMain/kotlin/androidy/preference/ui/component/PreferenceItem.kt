@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidy.preference.ui.theme.Preferences
-import androidy.preference.ui.basic.ParseIcon
+import androidy.preference.ui.basic.AnyIcon
 import androidy.preference.ui.basic.SamplePreference
 import androidy.preference.ui.basic.harmonizeWithPrimary
 
@@ -83,7 +83,7 @@ fun PreferenceCollapseItem(
     enabled: Boolean = true,
     expand: Boolean = false,
     end: @Composable (BoxScope.() -> Unit) = {
-        ParseIcon(
+        AnyIcon(
             modifier = Modifier.align(Alignment.Center),
             model = if (!expand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
             contentDescription = "icon"

@@ -12,9 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import androidy.preference.ui.basic.ParseIcon
+import androidy.preference.ui.basic.AnyIcon
 import androidy.preference.ui.basic.harmonizeWithPrimary
-import androidy.preference.uiauto.PreferenceNodeBase
 import androidy.preference.ui.component.PreferenceCollapseItem as FossPreferenceCollapseItem
 import androidy.preference.ui.component.PreferenceItem as FossPreferenceItem
 import androidy.preference.ui.component.PreferencesCautionCard as FossPreferencesCautionCard
@@ -54,7 +53,7 @@ fun PreferenceCollapseItem(
     dependenceKey: String?,
     expand: Boolean = false,
     end: @Composable (BoxScope.() -> Unit) = {
-        ParseIcon(
+        AnyIcon(
             model = if (!expand) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
             contentDescription = "icon",
             enabled = enabled,

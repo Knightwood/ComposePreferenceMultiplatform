@@ -36,7 +36,7 @@ fun SamplePreference(
 
     start: @Composable BoxScope.() -> Unit = {
         val style = Preferences.iconStyle
-        ParseIcon(
+        AnyIcon(
             tint = style.fixEnabledTint(enabled),
             model = icon,
             shape = style.shape,
@@ -94,7 +94,6 @@ internal fun PreferenceRow(
     end: @Composable (BoxScope.() -> Unit)? = null,
 ) {
     val boxStyle = Preferences.boxStyle
-
     Surface(
         modifier = modifier
             .fillMaxWidth()

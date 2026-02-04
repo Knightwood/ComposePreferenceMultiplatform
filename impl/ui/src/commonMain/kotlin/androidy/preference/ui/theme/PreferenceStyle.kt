@@ -9,9 +9,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Vertical
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidy.preference.ui.basic.applyOpacity
@@ -53,7 +56,7 @@ data class PreferenceIconStyle(
     val shape: Shape = CircleShape,
     val paddingValues: PaddingValues = PaddingValues(0.dp),
     val backgroundColor: Color = Color.Transparent,
-    val tint: Color = Color.Unspecified
+    val tint: Color = Color.Unspecified,
 ) {
     fun fixEnabledTint(enabled: Boolean): Color {
         return tint.applyOpacity(enabled)
@@ -72,7 +75,7 @@ val defaultIconStyle
 
 //</editor-fold>
 
- val LocalPreferenceStyle = compositionLocalOf<PreferenceStyle> {
+val LocalPreferenceStyle = compositionLocalOf<PreferenceStyle> {
     PreferenceStyle(
         PreferenceBoxStyle(color = Color.Unspecified, contentColor = Color.Unspecified),
         PreferenceIconStyle()
