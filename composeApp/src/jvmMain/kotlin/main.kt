@@ -15,13 +15,18 @@
  *
  */
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import androidy.preference.data.datastore.DataStorePreferenceHolder
 import androidy.preference.helper.datastore.getDataStore
+import androidy.preference.ui.style.ListItemDefaults
+import androidy.preference.ui.style.ListItemStyle
+import androidy.preference.ui.style.ListItemStyleHolder
 
 fun main() = application {
     val desktopPath = System.getProperty("user.home") + "/Desktop"
@@ -33,7 +38,14 @@ fun main() = application {
         state = rememberWindowState(width = 600.dp, height = 800.dp)
     ) {
         MaterialTheme {
-            MainScreen(holder)
+//            MainScreen(holder)
+            ListItemStyleHolder.provider(
+                ListItemDefaults.style(
+                    containerShape = MaterialTheme.shapes.large,
+                )
+            ) {
+                ListItemTest(modifier = Modifier.padding(8.dp))
+            }
         }
     }
 }

@@ -41,6 +41,7 @@ kotlin {
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel.compose)
                 implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.compose.icon.core)
 
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastore.preferences)

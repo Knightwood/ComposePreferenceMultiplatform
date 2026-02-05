@@ -18,7 +18,7 @@ object ListItemStyleHolder {
 
     @Suppress("ComposableNaming")
     @Composable
-    fun provider(style: ListItemStyle = defaultStyle, content: @Composable () -> Unit) {
+    fun provider(style: ListItemStyle = ListItemDefaults.defaultStyle, content: @Composable () -> Unit) {
         CompositionLocalProvider(LocalListItemStyle provides style) {
             content()
         }

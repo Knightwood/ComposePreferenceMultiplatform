@@ -35,12 +35,13 @@ kotlin {
                 //compose
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.material3)
+                implementation(libs.jetbrains.compose.material3)
                 implementation(compose.ui)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
                 implementation(libs.androidx.lifecycle.viewmodel.compose)
                 implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.compose.icon.core)
                 implementation(libs.github.knightwood.m3ColorUtilities)
             }
         }
