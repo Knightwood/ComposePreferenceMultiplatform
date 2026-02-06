@@ -1,4 +1,4 @@
-package androidy.preference.ui.basic
+package androidy.preference.ui.list_item
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -6,24 +6,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidy.preference.ui.m3_tokens.ProvideContentColorTextStyle
-import androidy.preference.ui.m3_tokens.value
-import androidy.preference.ui.style.ListItemStyle
-import androidy.preference.ui.style.ListItemStyleHolder
-import androidy.preference.ui.style.ListItemTokens
-import androidy.preference.ui.style.ListItemType
-import kotlin.math.sin
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidy.preference.ui.basic.takeIf
+import androidy.preference.ui.list_item.m3_tokens.ProvideContentColorTextStyle
+import androidy.preference.ui.list_item.m3_tokens.value
+import androidy.preference.ui.list_item.normal_style.ListItemStyle
+import androidy.preference.ui.list_item.normal_style.ListItemTokens
+
+private fun PaddingValues.horization(layoutDirection: LayoutDirection): Dp =
+    calculateStartPadding(layoutDirection) + calculateEndPadding(layoutDirection)
+
+private fun PaddingValues.vertical(): Dp = calculateTopPadding() + calculateBottomPadding()
 
 @Composable
 fun ListItemDivider(paddingValues: PaddingValues = PaddingValues(ListItemTokens.DividerSpace)) {
@@ -32,7 +38,11 @@ fun ListItemDivider(paddingValues: PaddingValues = PaddingValues(ListItemTokens.
 
 @Composable
 fun ListItemIconLeading(content: @Composable () -> Unit) {
-    Box(modifier = Modifier) {
+    val style = LocalListItemStyle.current.leadingIconStyle
+    Box(
+        modifier = Modifier
+            .size(style.iconSize)
+    ) {
         content()
     }
 }
@@ -48,8 +58,8 @@ fun ListItemAvatarLeading(content: @Composable () -> Unit) {
 fun ListItemImageLeading(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
-            .size(ListItemTokens.ListItemLeadingImageWidth, ListItemTokens.ListItemLeadingImageHeight)
-            .background(Color.Transparent, ListItemTokens.ListItemLeadingImageShape.value)
+            .size(ListItemTokens.ItemLeadingImageWidth, ListItemTokens.ItemLeadingImageHeight)
+            .background(Color.Transparent, ListItemTokens.ItemLeadingImageShape.value)
     ) {
         content()
     }
@@ -60,40 +70,39 @@ fun ListItemVideoLeading(large: Boolean = false, content: @Composable () -> Unit
     Box(
         modifier = Modifier
             .size(
-                ListItemTokens.ListItemLeadingVideoWidth,
+                ListItemTokens.ItemLeadingVideoWidth,
                 if (large)
-                    ListItemTokens.ListItemLargeLeadingVideoHeight
+                    ListItemTokens.ItemLargeLeadingVideoHeight
                 else
-                    ListItemTokens.ListItemSmallLeadingVideoHeight
+                    ListItemTokens.ItemSmallLeadingVideoHeight
             )
-            .background(Color.Transparent, ListItemTokens.ListItemLeadingVideoShape.value)
+            .background(Color.Transparent, ListItemTokens.ItemLeadingVideoShape.value)
     ) {
         content()
     }
 }
 
 @Composable
-fun ListItem(
+fun SealListItem(
     modifier: Modifier = Modifier,
-    style: ListItemStyle= ListItemStyleHolder.get(),
+    style: ListItemStyle = LocalListItemStyle.current,
     overlineContent: @Composable (() -> Unit)? = null,
     headlineContent: @Composable () -> Unit,
     supportingContent: @Composable (() -> Unit)? = null,
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
-    singleLine: Boolean = true,
 ) {
-    val listItemType = ListItemType.invoke(
+    val layoutDirection = LocalLayoutDirection.current
+    val listItemType = ListItemType(
         overlineContent != null,
         supportingContent != null,
-        !singleLine
     )
     with(style) {
+        val realPadding = contentPadding(listItemType)
         Surface(
             modifier = modifier.heightIn(
                 min = containerHeightMin,
-                max = containerHeightMax(listItemType)
             ),
             shape = containerShape,
             tonalElevation = containerTonalElevation,
@@ -102,24 +111,38 @@ fun ListItem(
             border = containerBorder,
         ) {
             Box {
-                Row(modifier = Modifier.align(Alignment.CenterStart).padding(contentPadding(listItemType))) {
+                Row(
+                    modifier = Modifier.align(Alignment.CenterStart)
+                        .padding(realPadding)
+                ) {
                     leadingContent?.let { decor ->
-                        Box(modifier = Modifier.align(alignment).padding(leadingPadding)) {
+                        Box(
+                            modifier = Modifier
+                                .align(alignment)
+                                .padding(leadingPadding)
+                                .takeIf({ leadingPercent != null }) {
+                                    weight(leadingPercent!!)
+                                }
+                                .takeIf({ leadingSize != null }) {
+                                    size(leadingSize!!)
+                                }
+                        ) {
                             ProvideContentColorTextStyle(
-                                leadingIconStyle.contentColor,
-                                leadingIconStyle.textStyle
+                                contentColor = leadingIconColor(enabled),
+                                textStyle = leadingIconStyle.textStyle,
                             ) {
                                 decor()
                             }
                         }
                     }
                     Column(
-                        modifier = Modifier.weight(1f).align(alignment),
-                        verticalArrangement = Arrangement.spacedBy(bodySpace)
+                        modifier = Modifier.weight(bodyPercent).align(alignment),
+                        verticalArrangement = if (bodyItemSpace != null && bodyItemSpace.value > 0)
+                            Arrangement.spacedBy(bodyItemSpace) else Arrangement.Top
                     ) {
                         if (overlineContent != null) {
                             ProvideContentColorTextStyle(
-                                overlineColor(),
+                                overlineColor(enabled),
                                 overlineTextStyle
                             ) {
                                 overlineContent()
@@ -133,7 +156,7 @@ fun ListItem(
                         }
                         if (supportingContent != null) {
                             ProvideContentColorTextStyle(
-                                supportingColor(),
+                                supportingColor(enabled),
                                 supportingTextStyle
                             ) {
                                 supportingContent()
@@ -141,10 +164,20 @@ fun ListItem(
                         }
                     }
                     trailingContent?.let { decor ->
-                        Box(modifier = Modifier.align(alignment).padding(trailingPadding)) {
+                        Box(
+                            modifier = Modifier
+                                .align(alignment)
+                                .padding(trailingPadding)
+                                .takeIf({ trailingPercent != null }) {
+                                    weight(trailingPercent!!)
+                                }
+                                .takeIf({ trailingSize != null }) {
+                                    size(trailingSize!!)
+                                }
+                        ) {
                             ProvideContentColorTextStyle(
-                                trailingIconStyle.contentColor,
-                                trailingIconStyle.textStyle
+                                contentColor = trailingIconColor(enabled),
+                                textStyle = trailingIconStyle.textStyle,
                             ) {
                                 decor()
                             }

@@ -1,4 +1,4 @@
-package androidy.preference.ui.m3_tokens
+package androidy.preference.ui.list_item.m3_tokens
 
 import androidx.compose.ui.unit.dp
 

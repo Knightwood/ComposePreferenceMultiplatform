@@ -1,12 +1,15 @@
-package androidy.preference.ui.style
+package androidy.preference.ui.list_item.expressive_style
 
 import androidx.compose.ui.unit.dp
-import androidy.preference.ui.m3_tokens.ColorSchemeKeyTokens
-import androidy.preference.ui.m3_tokens.ElevationTokens
-import androidy.preference.ui.m3_tokens.ShapeKeyTokens
-import androidy.preference.ui.m3_tokens.TypographyKeyTokens
+import androidy.preference.ui.list_item.m3_tokens.ColorSchemeKeyTokens
+import androidy.preference.ui.list_item.m3_tokens.ElevationTokens
+import androidy.preference.ui.list_item.m3_tokens.ShapeKeyTokens
+import androidy.preference.ui.list_item.m3_tokens.TypographyKeyTokens
 
-internal object InteractiveListItemTokens {
+/**
+ * Expressive版本的ListItem尺寸有所调整，因此使用新类定义，避免混乱
+ */
+internal object ExpressiveListItemTokens {
     val ContainerShape = ShapeKeyTokens.CornerLarge
     val DividerBottomSpace = 0.0.dp
     val DividerLeadingSpace = 16.0.dp
@@ -128,3 +131,5 @@ internal object InteractiveListItemTokens {
     val ItemUnselectedTrailingIconColor = ColorSchemeKeyTokens.OnSurface
     val SegmentedGap = 2.0.dp
 }
+
+

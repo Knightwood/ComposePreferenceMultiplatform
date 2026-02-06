@@ -1,11 +1,10 @@
-package androidy.preference.ui.style
+package androidy.preference.ui.list_item
 
 @kotlin.jvm.JvmInline
 internal value class ListItemType private constructor(private val lines: Int) :
     Comparable<ListItemType> {
 
     override operator fun compareTo(other: ListItemType) = lines.compareTo(other.lines)
-
     companion object {
         /** One line list item */
         val OneLine = ListItemType(1)
@@ -19,10 +18,9 @@ internal value class ListItemType private constructor(private val lines: Int) :
         internal operator fun invoke(
             hasOverline: Boolean,
             hasSupporting: Boolean,
-            isSupportingMultiline: Boolean
         ): ListItemType {
             return when {
-                (hasOverline && hasSupporting) || isSupportingMultiline -> ThreeLine
+                (hasOverline && hasSupporting)  -> ThreeLine
                 hasOverline || hasSupporting -> TwoLine
                 else -> OneLine
             }

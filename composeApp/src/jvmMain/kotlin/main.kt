@@ -15,8 +15,15 @@
  *
  */
 
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -24,9 +31,8 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import androidy.preference.data.datastore.DataStorePreferenceHolder
 import androidy.preference.helper.datastore.getDataStore
-import androidy.preference.ui.style.ListItemDefaults
-import androidy.preference.ui.style.ListItemStyle
-import androidy.preference.ui.style.ListItemStyleHolder
+import androidy.preference.ui.list_item.normal_style.ListItemDefaults
+import androidy.preference.ui.list_item.LocalListItemStyle
 
 fun main() = application {
     val desktopPath = System.getProperty("user.home") + "/Desktop"
@@ -39,12 +45,23 @@ fun main() = application {
     ) {
         MaterialTheme {
 //            MainScreen(holder)
-            ListItemStyleHolder.provider(
+            LocalListItemStyle.provide(
                 ListItemDefaults.style(
                     containerShape = MaterialTheme.shapes.large,
                 )
             ) {
-                ListItemTest(modifier = Modifier.padding(8.dp))
+                Box() {
+                    val scrollstate = rememberScrollState()
+                    ListItemTest(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .verticalScroll(scrollstate)
+                    )
+                    VerticalScrollbar(
+                        adapter = rememberScrollbarAdapter(scrollstate),
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                    )
+                }
             }
         }
     }
