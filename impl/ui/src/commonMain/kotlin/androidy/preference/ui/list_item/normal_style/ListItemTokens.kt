@@ -6,7 +6,9 @@ import androidy.preference.ui.list_item.m3_tokens.ElevationTokens
 import androidy.preference.ui.list_item.m3_tokens.ShapeKeyTokens
 import androidy.preference.ui.list_item.m3_tokens.TypographyKeyTokens
 
-internal object ListItemTokens {
+internal val ListItemTokens = BasicListItemTokens()
+
+internal open class BasicListItemTokens {
     val DividerSpace = 16.0.dp
 
     // ListItem整体的padding

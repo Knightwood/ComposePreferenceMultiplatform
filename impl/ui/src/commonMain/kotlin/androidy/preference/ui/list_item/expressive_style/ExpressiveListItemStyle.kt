@@ -1,183 +1,287 @@
 package androidy.preference.ui.list_item.expressive_style
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.FiniteAnimationSpec
-import androidx.compose.animation.core.Transition
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.key
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
-
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidy.preference.ui.basic.invalidUse
+import androidy.preference.ui.list_item.normal_style.ListItemContentAlignment
+import androidy.preference.ui.list_item.normal_style.ListItemContentPaddingValues
+import androidy.preference.ui.list_item.normal_style.ListItemIconStyle
+import androidy.preference.ui.list_item.normal_style.ListItemStyle
+import androidy.preference.ui.list_item.normal_style.ListItemTokens
+import androidy.preference.ui.list_item.normal_style.StateColors
+import androidy.preference.ui.list_item.normal_style.StateElevation
+import androidy.preference.ui.list_item.normal_style.StateShapes
 
 /**
- * 根据不同交互状态，返回不同颜色
+ * 创建Expressive主题
  */
-data class ListItemStateColor(
-    val enabledColor: Color,
-    val disabledColor: Color,
-    val selectedColor: Color,
-    val draggedColor: Color,
-) {
-    fun get(enabled: Boolean): Color {
-        return when {
-            enabled -> enabledColor
-            else -> disabledColor
-        }
-    }
+fun ExpressiveListItemStyle(
+    containerShape: Shape,
+    containerSelectedShape: Shape = RectangleShape,
+    containerPressedShape: Shape = RectangleShape,
+    containerFocusedShape: Shape = RectangleShape,
+    containerHoveredShape: Shape = RectangleShape,
+    containerDraggedShape: Shape = RectangleShape,
 
-    fun get(
-        enabled: Boolean,
-        selected: Boolean,
-        dragged: Boolean,
-    ): Color {
-        return when {
-            dragged -> draggedColor
-            selected -> selectedColor
-            enabled -> enabledColor
-            else -> disabledColor
-        }
-    }
+    containerColor: Color,
+    disabledContainerColor: Color,
+    selectedContainerColor: Color,
+    draggedContainerColor: Color,
 
-    @Composable
-    context(transition: Transition<InteractiveListColorState>)
-    internal fun animateColorState(
-        colorAnimationSpec: () -> FiniteAnimationSpec<Color>,
-    ): State<Color> {
-        return transition.animateColor(transitionSpec = { colorAnimationSpec() }) { state ->
-            get(
-                enabled = state.enabled,
-                selected = state.selected,
-                dragged = state.dragged,
-            )
-        }
-    }
-}
+    containerTonalElevation: Dp = ListItemTokens.ItemContainerElevation,
+    containerTonalDraggedElevation: Dp = ListItemTokens.ItemContainerElevation,
 
-internal data class InteractiveListColorState(
-    val enabled: Boolean,
-    val selected: Boolean,
-    val dragged: Boolean,
+    containerShadowElevation: Dp = ListItemTokens.ItemContainerShadowElevation,
+    containerShadowDraggedElevation: Dp = ListItemTokens.ItemContainerShadowElevation,
+
+    containerBorder: BorderStroke? = null,
+    containerHeightMin: Dp = ListItemTokens.ItemContainerHeightMin,
+    containerHeightMax: Dp = ListItemTokens.ItemContainerHeightMax,
+    alignment: ListItemContentAlignment = ListItemContentAlignment(
+        oneline = Alignment.CenterVertically,
+        threeline = Alignment.Top,
+    ),
+    contentPadding: ListItemContentPaddingValues = ListItemContentPaddingValues.default(),
+    leadingPadding: PaddingValues = PaddingValues(end = ListItemTokens.LeadingContentEndPadding),
+    leadingSize: DpSize = DpSize.Unspecified,
+    leadingPercent: Float? = null,
+    bodyPadding: PaddingValues = PaddingValues(0.dp),
+    bodyItemSpace: Dp? = null,
+    bodyPercent: Float = 1f,
+    trailingPadding: PaddingValues = PaddingValues(start = ListItemTokens.TrailingContentStartPadding),
+    trailingSize: DpSize = DpSize.Unspecified,
+    trailingPercent: Float? = null,
+
+    overlineTextStyle: TextStyle,
+    overlineContentColor: Color,
+    disabledOverlineContentColor: Color,
+    selectedOverlineContentColor: Color,
+    draggedOverlineContentColor: Color,
+
+    headlineTextStyle: TextStyle,
+    headlineContentColor: Color,
+    disabledHeadlineContentColor: Color,
+    selectedHeadlineContentColor: Color,
+    draggedHeadlineContentColor: Color,
+
+    supportingTextStyle: TextStyle,
+    supportingContentColor: Color,
+    disabledSupportingContentColor: Color,
+    selectedSupportingTextColor: Color,
+    draggedSupportingTextColor: Color,
+
+    leadingIconStyle: ListItemIconStyle,
+    trailingIconStyle: ListItemIconStyle,
+) = ListItemStyle(
+    containerShape = StateShapes(
+        containerShape,
+        containerSelectedShape,
+        containerPressedShape,
+        containerFocusedShape,
+        containerHoveredShape,
+        containerDraggedShape
+    ),
+    containerColor = StateColors(
+        containerColor,
+        disabledColor = disabledContainerColor,
+        selectedColor = selectedContainerColor,
+        draggedColor = draggedContainerColor
+    ),
+    containerTonalElevation = StateElevation(containerTonalElevation, containerTonalDraggedElevation),
+    containerShadowElevation = StateElevation(containerShadowElevation, containerShadowDraggedElevation),
+    containerBorder = containerBorder,
+    containerHeightMin = containerHeightMin,
+    containerHeightMax = containerHeightMax,
+    alignment = alignment,
+    contentPadding = contentPadding,
+    leadingPadding = leadingPadding,
+    leadingSize = leadingSize,
+    leadingPercent = leadingPercent,
+    bodyPadding = bodyPadding,
+    bodyItemSpace = bodyItemSpace,
+    bodyPercent = bodyPercent,
+    trailingPadding = trailingPadding,
+    trailingSize = trailingSize,
+    trailingPercent = trailingPercent,
+    overlineTextStyle = overlineTextStyle,
+    overlineColor = StateColors(
+        overlineContentColor, disabledOverlineContentColor,
+        selectedOverlineContentColor, draggedOverlineContentColor
+    ),
+    headlineTextStyle = headlineTextStyle,
+    headlineColor = StateColors(
+        headlineContentColor, disabledHeadlineContentColor,
+        selectedHeadlineContentColor, draggedHeadlineContentColor
+    ),
+    supportingTextStyle = supportingTextStyle,
+    supportingTextColor = StateColors(
+        supportingContentColor, disabledSupportingContentColor,
+        selectedSupportingTextColor, draggedSupportingTextColor
+    ),
+    leadingIconStyle = leadingIconStyle,
+    trailingIconStyle = trailingIconStyle,
 )
 
-@ExperimentalMaterial3ExpressiveApi
-@Immutable
-class ListItemShapes(
-    val shape: Shape,
-    val selectedShape: Shape,
-    val pressedShape: Shape,
-    val focusedShape: Shape,
-    val hoveredShape: Shape,
-    val draggedShape: Shape,
-) {
-    /** Returns a copy of this [ListItemShapes], optionally overriding some of the values. */
-    fun copy(
-        shape: Shape? = this.shape,
-        selectedShape: Shape? = this.selectedShape,
-        pressedShape: Shape? = this.pressedShape,
-        focusedShape: Shape? = this.focusedShape,
-        hoveredShape: Shape? = this.hoveredShape,
-        draggedShape: Shape? = this.draggedShape,
-    ): ListItemShapes =
-        ListItemShapes(
-            shape = shape.takeOrElse { this.shape },
-            selectedShape = selectedShape.takeOrElse { this.selectedShape },
-            pressedShape = pressedShape.takeOrElse { this.pressedShape },
-            focusedShape = focusedShape.takeOrElse { this.focusedShape },
-            hoveredShape = hoveredShape.takeOrElse { this.hoveredShape },
-            draggedShape = draggedShape.takeOrElse { this.draggedShape },
-        )
-
-    internal fun Shape?.takeOrElse(block: () -> Shape): Shape = this ?: block()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || other !is ListItemShapes) return false
-
-        if (shape != other.shape) return false
-        if (selectedShape != other.selectedShape) return false
-        if (pressedShape != other.pressedShape) return false
-        if (focusedShape != other.focusedShape) return false
-        if (hoveredShape != other.hoveredShape) return false
-        if (draggedShape != other.draggedShape) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = shape.hashCode()
-        result = 31 * result + selectedShape.hashCode()
-        result = 31 * result + pressedShape.hashCode()
-        result = 31 * result + focusedShape.hashCode()
-        result = 31 * result + hoveredShape.hashCode()
-        result = 31 * result + draggedShape.hashCode()
-        return result
-    }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-private val ListItemShapes.hasRoundedCornerShapes: Boolean
-    get() =
-        shape is RoundedCornerShape &&
-                selectedShape is RoundedCornerShape &&
-                pressedShape is RoundedCornerShape &&
-                focusedShape is RoundedCornerShape &&
-                hoveredShape is RoundedCornerShape &&
-                draggedShape is RoundedCornerShape
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-internal fun ListItemShapes.shapeForInteraction(
-    selected: Boolean,
-    pressed: Boolean,
-    focused: Boolean,
-    hovered: Boolean,
-    dragged: Boolean,
-    animationSpec: FiniteAnimationSpec<Float>,
-): Shape {
-    val shape =
-        when {
-            pressed -> pressedShape
-            dragged -> draggedShape
-            selected -> selectedShape
-            focused -> focusedShape
-            hovered -> hoveredShape
-            else -> shape
-        }
-
-    if (hasRoundedCornerShapes) {
-        return key(this) { rememberAnimatedShape(shape as RoundedCornerShape, animationSpec) }
-    }
-
-    return shape
-}
+fun ExpressiveListItemIconStyle(
+    shape: Shape = RectangleShape,
+    backgroundColor: Color = Color.Transparent,
+    textStyle: TextStyle,
+    size: DpSize = DpSize.Unspecified,
+    contentColor: Color,
+    disabledContentColor: Color = contentColor,
+    selectedContentColor: Color = contentColor,
+    draggedContentColor: Color = contentColor,
+) = ListItemIconStyle(
+    shape = shape,
+    backgroundColor = backgroundColor,
+    textStyle = textStyle,
+    size = size,
+    stateColors = StateColors(
+        contentColor,
+        disabledContentColor,
+        selectedContentColor,
+        draggedContentColor
+    )
+)
 
 /**
- * Represents the elevation of a list item in different states.
- *
- * @param elevation the default elevation of the list item.
- * @param draggedElevation the elevation of the list item when dragged.
+ * Expressive主题复制
  */
-@ExperimentalMaterial3ExpressiveApi
-@Immutable
-class ListItemElevation(val elevation: Dp, val draggedElevation: Dp) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || other !is ListItemElevation) return false
+fun ListItemStyle.copy(
+    /* 整体样式 */
+    /*----------------------------------------------*/
+    containerShape: Shape? = null,
+    containerSelectedShape: Shape? = null,
+    containerPressedShape: Shape? = null,
+    containerFocusedShape: Shape? = null,
+    containerHoveredShape: Shape? = null,
+    containerDraggedShape: Shape? = null,
+    
+    containerColor: Color? = null,
+    disabledContainerColor: Color? = null,
+    selectedContainerColor: Color? = null,
+    draggedContainerColor: Color? = null,
+    
+    containerTonalElevation: Dp? = null,
+    containerTonalDraggedElevation: Dp? = null,
+    
+    containerShadowElevation: Dp? = null,
+    containerShadowDraggedElevation: Dp? = null,
+    
+    containerBorder: BorderStroke? = null,
+    containerHeightMin: Dp? = null,
+    containerHeightMax: Dp? = null,
 
-        if (elevation != other.elevation) return false
-        if (draggedElevation != other.draggedElevation) return false
+    /**
+     * 主轴上有leading,body,tailing 等元素, 设置他们的对齐方式.
+     * Alignment.Top的效果将与ListItem一样
+     */
+    alignment: ListItemContentAlignment? = null,
+    /* 整体样式 */
 
-        return true
-    }
+    /* 各要素尺寸，我们只设置内边距。外边距效果让用户自己来实现。 */
+    contentPadding: ListItemContentPaddingValues? = null,
 
-    override fun hashCode(): Int {
-        var result = elevation.hashCode()
-        result = 31 * result + draggedElevation.hashCode()
-        return result
-    }
+    leadingPadding: PaddingValues? = null,
+    /* 可以给头部视图设置确切的尺寸，也可以使用leadingPercent设定占宽度的比例 */
+    leadingSize: DpSize? = null,
+    leadingPercent: Float? = null,
+
+    bodyPadding: PaddingValues? = null,
+    bodyItemSpace: Dp? = null, /* overline,headline,supporting的间隔 */
+    bodyPercent: Float? = null,
+
+    trailingPadding: PaddingValues? = null,
+    trailingSize: DpSize? = null,
+    trailingPercent: Float? = null,
+    /* 各要素尺寸 */
+
+    /* overline,headline,supporting的文本样式 */
+    overlineTextStyle: TextStyle? = null,
+    overlineContentColor: Color? = null,
+    disabledOverlineContentColor: Color? = null,
+    selectedOverlineContentColor: Color? = null,
+    draggedOverlineContentColor: Color? = null,
+
+    headlineTextStyle: TextStyle? = null,
+    headlineContentColor: Color? = null,
+    disabledHeadlineContentColor: Color? = null,
+    selectedHeadlineContentColor: Color? = null,
+    draggedHeadlineContentColor: Color? = null,
+
+    supportingTextStyle: TextStyle? = null,
+    supportingContentColor: Color? = null,
+    disabledSupportingContentColor: Color? = null,
+    selectedSupportingTextColor: Color? = null,
+    draggedSupportingTextColor: Color? = null,
+    /* overline,headline,supporting的文本样式 */
+
+    /* Icon的默认样式 */
+    leadingIconStyle: ListItemIconStyle? = null,
+    trailingIconStyle: ListItemIconStyle? = null,
+): ListItemStyle {
+    return ExpressiveListItemStyle(
+        containerShape = containerShape ?: this.containerShape.shape,
+        containerSelectedShape = containerSelectedShape ?: this.containerShape.selectedShape,
+        containerPressedShape = containerPressedShape ?: this.containerShape.pressedShape,
+        containerFocusedShape = containerFocusedShape ?: this.containerShape.focusedShape,
+        containerHoveredShape = containerHoveredShape ?: this.containerShape.hoveredShape,
+        containerDraggedShape = containerDraggedShape ?: this.containerShape.draggedShape,
+        
+        containerColor = containerColor invalidUse { this.containerColor.enabledColor },
+        disabledContainerColor = disabledContainerColor invalidUse { this.containerColor.disabledColor },
+        selectedContainerColor = selectedContainerColor invalidUse { this.containerColor.selectedColor },
+        draggedContainerColor = draggedContainerColor invalidUse { this.containerColor.draggedColor },
+        
+        containerTonalElevation = containerTonalElevation ?: this.containerTonalElevation.elevation,
+        containerTonalDraggedElevation = containerTonalDraggedElevation ?: this.containerTonalElevation.draggedElevation,
+        
+        containerShadowElevation = containerShadowElevation ?: this.containerShadowElevation.elevation,
+        containerShadowDraggedElevation = containerShadowDraggedElevation ?: this.containerShadowElevation.draggedElevation,
+        
+        containerBorder = containerBorder ?: this.containerBorder,
+        containerHeightMin = containerHeightMin ?: this.containerHeightMin,
+        containerHeightMax = containerHeightMax ?: this.containerHeightMax,
+        
+        alignment = alignment ?: this.alignment,
+        contentPadding = contentPadding ?: this.contentPadding,
+        leadingPadding = leadingPadding ?: this.leadingPadding,
+        leadingSize = leadingSize invalidUse { this.leadingSize },
+        leadingPercent = leadingPercent ?: this.leadingPercent,
+        bodyPadding = bodyPadding ?: this.bodyPadding,
+        bodyItemSpace = bodyItemSpace ?: this.bodyItemSpace,
+        bodyPercent = bodyPercent ?: this.bodyPercent,
+        trailingPadding = trailingPadding ?: this.trailingPadding,
+        trailingSize = trailingSize invalidUse { this.trailingSize },
+        trailingPercent = trailingPercent ?: this.trailingPercent,
+        
+        overlineTextStyle = overlineTextStyle ?: this.overlineTextStyle,
+        overlineContentColor = overlineContentColor invalidUse { this.overlineColor.enabledColor },
+        disabledOverlineContentColor = disabledOverlineContentColor invalidUse { this.overlineColor.disabledColor },
+        selectedOverlineContentColor = selectedOverlineContentColor invalidUse { this.overlineColor.selectedColor },
+        draggedOverlineContentColor = draggedOverlineContentColor invalidUse { this.overlineColor.draggedColor },
+        
+        headlineTextStyle = headlineTextStyle ?: this.headlineTextStyle,
+        headlineContentColor = headlineContentColor invalidUse { this.headlineColor.enabledColor },
+        disabledHeadlineContentColor = disabledHeadlineContentColor invalidUse { this.headlineColor.disabledColor },
+        selectedHeadlineContentColor = selectedHeadlineContentColor invalidUse { this.headlineColor.selectedColor },
+        draggedHeadlineContentColor = draggedHeadlineContentColor invalidUse { this.headlineColor.draggedColor },
+        
+        supportingTextStyle = supportingTextStyle ?: this.supportingTextStyle,
+        supportingContentColor = supportingContentColor invalidUse { this.supportingTextColor.enabledColor },
+        disabledSupportingContentColor = disabledSupportingContentColor invalidUse { this.supportingTextColor.disabledColor },
+        selectedSupportingTextColor = selectedSupportingTextColor invalidUse { this.supportingTextColor.selectedColor },
+        draggedSupportingTextColor = draggedSupportingTextColor invalidUse { this.supportingTextColor.draggedColor },
+        
+        leadingIconStyle = leadingIconStyle ?: this.leadingIconStyle,
+        trailingIconStyle = trailingIconStyle ?: this.trailingIconStyle,
+    )
 }

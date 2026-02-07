@@ -68,10 +68,10 @@ fun SealListItem(
             modifier = modifier.heightIn(
                 min = containerHeightMin,
             ),
-            shape = containerShape,
-            tonalElevation = containerTonalElevation,
-            color = containerColor,
-            shadowElevation = containerShadowElevation,
+            shape = containerShape.get(),
+            tonalElevation = containerTonalElevation.get(),
+            color = containerColor(),
+            shadowElevation = containerShadowElevation.get(),
             border = containerBorder,
         ) {
             Box {
