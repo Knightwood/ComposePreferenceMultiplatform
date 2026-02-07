@@ -15,14 +15,25 @@
  *
  */
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,36 +44,45 @@ import androidy.preference.data.datastore.DataStorePreferenceHolder
 import androidy.preference.helper.datastore.getDataStore
 import androidy.preference.ui.list_item.normal_style.ListItemDefaults
 import androidy.preference.ui.list_item.LocalListItemStyle
+import androidy.preference.ui.list_item.normal_style.ListItemIconStyle
 
 fun main() = application {
-    val desktopPath = System.getProperty("user.home") + "/Desktop"
-    val dataStore = getDataStore("$desktopPath/ee.preferences_pb")
-    val holder = DataStorePreferenceHolder.instance(dataStore)
     Window(
         onCloseRequest = ::exitApplication,
         title = "ComposePreference-Multi",
-        state = rememberWindowState(width = 600.dp, height = 800.dp)
+        state = rememberWindowState(width = 396.dp, height = 900.dp)
     ) {
         MaterialTheme {
-//            MainScreen(holder)
-            LocalListItemStyle.provide(
-                ListItemDefaults.style(
-                    containerShape = MaterialTheme.shapes.large,
-                )
-            ) {
-                Box() {
-                    val scrollstate = rememberScrollState()
-                    ListItemTest(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .verticalScroll(scrollstate)
-                    )
-                    VerticalScrollbar(
-                        adapter = rememberScrollbarAdapter(scrollstate),
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                    )
+/*            Column {
+                var alignment by remember { mutableStateOf(Alignment.Top) }
+                var isCheck by remember { mutableStateOf(false) }
+                Row(modifier = Modifier.requiredHeight(160.dp)) {
+                    Button(onClick = {}, modifier = Modifier.align( alignment)) {
+                        Text("Save")
+                    }
                 }
-            }
+                Switch(isCheck, onCheckedChange = {
+                    isCheck = !isCheck
+                    alignment = if (it) Alignment.CenterVertically else Alignment.Top
+                })
+            }*/
+            preferenceTest()
         }
+    }
+}
+
+@Composable
+fun preferenceTest() {
+    val desktopPath = System.getProperty("user.home") + "/Desktop"
+    val dataStore = getDataStore("$desktopPath/ee.preferences_pb")
+    val holder = DataStorePreferenceHolder.instance(dataStore)
+    LocalListItemStyle.provide(
+        ListItemDefaults.style(
+            containerShape = MaterialTheme.shapes.large,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+            leadingIconStyle = ListItemIconStyle.leadingAvatarStyle()
+        )
+    ) {
+        MainScreen(holder)
     }
 }

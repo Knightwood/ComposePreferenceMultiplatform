@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -20,12 +21,13 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidy.preference.ui.list_item.SealListItem
 import androidy.preference.ui.theme.Preferences
 import androidy.preference.ui.theme.fixEnabledColor
 
 private const val TAG = "PreferenceLayout"
 
-@Composable
+/*@Composable
 fun SamplePreference(
     modifier: Modifier = Modifier,
     title: String? = null,
@@ -81,6 +83,64 @@ fun SamplePreference(
         } else null,
         end = end
     )
+}*/
+
+@Composable
+fun SamplePreference(
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    icon: Any? = null,
+    desc: String? = null,
+    enabled: Boolean = true,
+    end: @Composable (BoxScope.() -> Unit)? = null,
+
+    start: @Composable (BoxScope.() -> Unit)? = if (icon == null) null else {
+        {
+            AnyIcon(
+                model = icon,
+                contentDescription = "icon"
+            )
+        }
+    },
+
+    titleContent: @Composable (title: String) -> Unit = {
+        Text(it)
+    },
+
+    descContent: @Composable (desc: String) -> Unit = {
+        Text(it)
+    },
+
+    onClick: (() -> Unit)?,
+) {
+    Surface(modifier = modifier, enabled = enabled, onClick = { onClick?.invoke() }) {
+        SealListItem(
+            modifier = modifier,
+            headlineContent = {
+                if (title != null)
+                    titleContent(title)
+            },
+            supportingContent = {
+                if (desc != null)
+                    descContent(desc)
+            },
+            leadingContent = start?.let {
+                {
+                    Box(modifier = Modifier) {
+                        start()
+                    }
+                }
+            },
+            trailingContent = end?.let {
+                {
+                    Box {
+                        end()
+                    }
+                }
+            },
+            enabled = enabled,
+        )
+    }
 }
 
 @Composable

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExposurePlus1
 import androidx.compose.material.icons.filled.ExposurePlus2
+import androidx.compose.material.icons.filled.Task
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -37,7 +38,8 @@ fun MainScreen(holder : PreferenceHolder) {
                             contentDescription = "one"
                         )
                     },
-                    label = { Text("仅组件") })
+                    label = { Text("仅组件") }
+                )
 
                 NavigationBarItem(
                     selected = selected == 1,
@@ -48,7 +50,20 @@ fun MainScreen(holder : PreferenceHolder) {
                             contentDescription = "two"
                         )
                     },
-                    label = { Text("自动读写") })
+                    label = { Text("自动读写") }
+                )
+
+                NavigationBarItem(
+                    selected = selected == 2,
+                    onClick = { selected = 2 },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Task,
+                            contentDescription = "listitem"
+                        )
+                    },
+                    label = { Text("ListItem") }
+                )
             }
         }) {
             Surface(
@@ -58,8 +73,10 @@ fun MainScreen(holder : PreferenceHolder) {
             ) {
                 if (selected == 0) {
                     NewComponents()
-                } else {
+                } else if (selected == 1) {
                     NewComponents2(holder)
+                }else if (selected == 2) {
+                    ListItemTest()
                 }
             }
         }

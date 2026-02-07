@@ -3,10 +3,15 @@ package androidy.preference.ui.basic
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isUnspecified
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.isUnspecified
+import java.time.format.TextStyle
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -55,6 +60,13 @@ internal inline infix fun <T> T?.isNullUse(
  * 如果为null或者isUnspecified，则返回valueProvider()，否则返回this
  */
 internal inline infix fun Color?.invalidUse(valueProvider: () -> Color): Color {
+    return if (this == null || this.isUnspecified) valueProvider() else this
+}
+
+/**
+ * 如果为null或者isUnspecified，则返回valueProvider()，否则返回this
+ */
+internal inline infix fun DpSize?.invalidUse(valueProvider: () -> DpSize): DpSize {
     return if (this == null || this.isUnspecified) valueProvider() else this
 }
 

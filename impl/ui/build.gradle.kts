@@ -52,6 +52,7 @@ kotlin {
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.compose.icon.core)
                 implementation(libs.github.knightwood.m3ColorUtilities)
+                implementation(libs.slf4j.api)
             }
         }
     }

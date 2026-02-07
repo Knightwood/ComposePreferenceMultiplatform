@@ -65,6 +65,7 @@ kotlin {
                 implementation(compose.desktop.currentOs) {
                     exclude("org.jetbrains.compose.material")
                 }
+                implementation(libs.slf4j.logback)
             }
         }
     }

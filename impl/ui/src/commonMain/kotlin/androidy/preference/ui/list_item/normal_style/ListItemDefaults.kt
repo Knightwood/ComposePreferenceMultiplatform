@@ -56,7 +56,7 @@ object ListItemDefaults {
          * 主轴上有leading,body,tailing 等元素, 设置他们的对齐方式.
          * Alignment.Top的效果将与ListItem一样
          */
-        alignment: Vertical? = null,
+        alignment: ListItemContentAlignment? = null,
         /* 整体样式 */
 
         /* 各要素尺寸，我们只设置内边距。外边距效果让用户自己来实现。 */

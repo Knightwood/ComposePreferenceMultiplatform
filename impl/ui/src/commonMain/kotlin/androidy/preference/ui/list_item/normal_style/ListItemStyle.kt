@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Vertical
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -40,7 +40,10 @@ constructor(
      * In most cases, elements in a list item are middle-aligned
      * If a list is 88dp or larger, or contains three or more lines of text, elements are top-aligned
      */
-    val alignment: Vertical = Alignment.Top,
+    val alignment: ListItemContentAlignment = ListItemContentAlignment(
+        oneline = Alignment.CenterVertically,
+        threeline = Alignment.Top,
+    ),
     /* 整体样式 */
 
     /**
@@ -49,30 +52,15 @@ constructor(
      * 当多行或者item比较臃肿时，垂直边距应为12dp
      * 默认为10dp
      */
-    val contentPadding: ListItemContentPaddingValues = ListItemContentPaddingValues(
-        oneline = PaddingValues(
-            top = ListItemTokens.ItemVerticalPadding,
-            bottom = ListItemTokens.ItemVerticalPadding,
-            start = ListItemTokens.ItemStartPadding,
-            end = ListItemTokens.ItemEndPadding
-        ),
-        twoline = PaddingValues(
-            top = ListItemTokens.ItemVerticalPadding,
-            bottom = ListItemTokens.ItemVerticalPadding,
-            start = ListItemTokens.ItemStartPadding,
-            end = ListItemTokens.ItemEndPadding
-        ),
-        threeline = PaddingValues(
-            top = ListItemTokens.ItemThreeLineVerticalPadding,
-            bottom = ListItemTokens.ItemThreeLineVerticalPadding,
-            start = ListItemTokens.ItemStartPadding,
-            end = ListItemTokens.ItemEndPadding
-        )
-    ),
+    val contentPadding: ListItemContentPaddingValues = ListItemContentPaddingValues.default(),
 
     val leadingPadding: PaddingValues = PaddingValues(end = ListItemTokens.LeadingContentEndPadding),
-    /* 可以给头部视图设置确切的尺寸，也可以使用leadingPercent设定占宽度的比例 */
-    val leadingSize: DpSize? = null,
+    /**
+     * 可以给LeadingIcon slot设置确切的尺寸，也可以使用leadingPercent设定占宽度的比例
+     *
+     * 此项配置与ListItemIconStyle中的size并不等同。
+     */
+    val leadingSize: DpSize = DpSize.Unspecified,
     val leadingPercent: Float? = null,
 
     val bodyPadding: PaddingValues = PaddingValues(0.dp),
@@ -80,7 +68,10 @@ constructor(
     val bodyPercent: Float = 1f,
 
     val trailingPadding: PaddingValues = PaddingValues(start = ListItemTokens.TrailingContentStartPadding),
-    val trailingSize: DpSize? = null,
+    /**
+     * 参考leadingSize
+     */
+    val trailingSize: DpSize = DpSize.Unspecified,
     val trailingPercent: Float? = null,
     /* 各要素尺寸 */
 
@@ -119,7 +110,7 @@ constructor(
          * 主轴上有leading,body,tailing 等元素, 设置他们的对齐方式.
          * Alignment.Top的效果将与ListItem一样
          */
-        alignment: Vertical? = null,
+        alignment: ListItemContentAlignment? = null,
         /* 整体样式 */
 
         /* 各要素尺寸，我们只设置内边距。外边距效果让用户自己来实现。 */
@@ -168,13 +159,13 @@ constructor(
             alignment = alignment ?: this.alignment,
             contentPadding = contentPadding ?: this.contentPadding,
             leadingPadding = leadingPadding ?: this.leadingPadding,
-            leadingSize = leadingSize ?: this.leadingSize,
+            leadingSize = leadingSize invalidUse { this.leadingSize },
             leadingPercent = leadingPercent ?: this.leadingPercent,
             bodyPadding = bodyPadding ?: this.bodyPadding,
             bodyItemSpace = bodyItemSpace ?: this.bodyItemSpace,
             bodyPercent = bodyPercent ?: this.bodyPercent,
             trailingPadding = trailingPadding ?: this.trailingPadding,
-            trailingSize = trailingSize ?: this.trailingSize,
+            trailingSize = trailingSize invalidUse { this.trailingSize },
             trailingPercent = trailingPercent ?: this.trailingPercent,
             overlineTextStyle = overlineTextStyle ?: this.overlineTextStyle,
             overlineColor = overlineColor invalidUse { this.overlineColor },
@@ -188,6 +179,15 @@ constructor(
             leadingIconStyle = leadingIconStyle ?: this.leadingIconStyle,
             trailingIconStyle = trailingIconStyle ?: this.trailingIconStyle,
         )
+    }
+
+    internal fun alignment(listItemType: ListItemType): Alignment.Vertical {
+        return when (listItemType) {
+            ListItemType.Companion.OneLine -> alignment.oneline
+            ListItemType.Companion.TwoLine -> alignment.twoline
+            ListItemType.Companion.ThreeLine -> alignment.threeline
+            else -> alignment.oneline
+        }
     }
 
     internal fun contentPadding(
@@ -237,33 +237,86 @@ constructor(
  * icon、text都默认使用ContentColor
  */
 data class ListItemIconStyle(
-    val shape: Shape?,
+    val shape: Shape = RectangleShape,
     val backgroundColor: Color = Color.Transparent,
-    val paddingValues: PaddingValues = PaddingValues(0.dp),
     val textStyle: TextStyle,
-    val iconSize: Dp,
+    val size: DpSize,
     val contentColor: Color,
     val disabledContentColor: Color,
 ) {
     companion object {
         @Composable
         fun leadingAvatarStyle(
-            paddingValues: PaddingValues = PaddingValues(0.dp),
-            disabledContentColor: Color = ListItemTokens.ItemLeadingAvatarColor.value.copy(
+            contentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value,
+            disabledContentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value.copy(
                 alpha = ListItemTokens.ItemDisabledLeadingIconOpacity
             ),
-            shape: Shape = ListItemTokens.ItemLeadingAvatarShape.value,
-            iconSize: Dp = ListItemTokens.ItemLeadingAvatarSize,
-            contentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value,
             backgroundColor: Color = ListItemTokens.ItemLeadingAvatarColor.value,
+            shape: Shape = ListItemTokens.ItemLeadingAvatarShape.value,
+            size: DpSize = DpSize(ListItemTokens.ItemLeadingAvatarSize),
             textStyle: TextStyle = ListItemTokens.ItemLeadingAvatarLabelFont.value,
         ): ListItemIconStyle {
             return ListItemIconStyle(
                 shape = shape,
                 backgroundColor = backgroundColor,
-                paddingValues = paddingValues,
                 textStyle = textStyle,
-                iconSize = iconSize,
+                size = size,
+                contentColor = contentColor,
+                disabledContentColor = disabledContentColor
+            )
+        }
+
+        @Composable
+        fun leadingImageStyle(
+            contentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value,
+            disabledContentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value.copy(
+                alpha = ListItemTokens.ItemDisabledLeadingIconOpacity
+            ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = ListItemTokens.ItemLeadingImageShape.value,
+            size: DpSize = DpSize(
+                ListItemTokens.ItemLeadingImageWidth,
+                ListItemTokens.ItemLeadingImageHeight,
+            ),
+            textStyle: TextStyle = ListItemTokens.ItemLeadingAvatarLabelFont.value,
+        ): ListItemIconStyle {
+            return ListItemIconStyle(
+                shape = shape,
+                backgroundColor = backgroundColor,
+                textStyle = textStyle,
+                size = size,
+                contentColor = contentColor,
+                disabledContentColor = disabledContentColor
+            )
+        }
+
+        @Composable
+        fun leadingVideoStyle(
+            small: Boolean = true,
+            contentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value,
+            disabledContentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value.copy(
+                alpha = ListItemTokens.ItemDisabledLeadingIconOpacity
+            ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = ListItemTokens.ItemLeadingVideoShape.value,
+            size: DpSize = if (small) {
+                DpSize(
+                    ListItemTokens.ItemSmallLeadingVideoWidth,
+                    ListItemTokens.ItemSmallLeadingVideoHeight,
+                )
+            } else {
+                DpSize(
+                    ListItemTokens.ItemLargeLeadingVideoWidth,
+                    ListItemTokens.ItemLargeLeadingVideoHeight,
+                )
+            },
+            textStyle: TextStyle = ListItemTokens.ItemLeadingAvatarLabelFont.value,
+        ): ListItemIconStyle {
+            return ListItemIconStyle(
+                shape = shape,
+                backgroundColor = backgroundColor,
+                textStyle = textStyle,
+                size = size,
                 contentColor = contentColor,
                 disabledContentColor = disabledContentColor
             )
@@ -271,44 +324,43 @@ data class ListItemIconStyle(
 
         @Composable
         fun leadingIconStyle(
-            shape: Shape? = null,
-            paddingValues: PaddingValues = PaddingValues(0.dp),
             contentColor: Color = ListItemTokens.ItemLeadingIconColor.value,
-            backgroundColor: Color = Color.Transparent,
-            textStyle: TextStyle = ListItemTokens.ItemLeadingAvatarLabelFont.value,
-            iconSize: Dp = ListItemTokens.ItemLeadingIconSize,
             disabledIconColor: Color = ListItemTokens.ItemDisabledLeadingIconColor.value.copy(
                 alpha = ListItemTokens.ItemDisabledLeadingIconOpacity
             ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = RectangleShape,
+            size: DpSize = DpSize(ListItemTokens.ItemLeadingIconSize),
+            textStyle: TextStyle = ListItemTokens.ItemLeadingAvatarLabelFont.value,
         ): ListItemIconStyle {
             return ListItemIconStyle(
                 shape = shape,
-                paddingValues = paddingValues,
                 backgroundColor = backgroundColor,
-                iconSize = iconSize,
+                size = size,
                 contentColor = contentColor,
                 textStyle = textStyle,
                 disabledContentColor = disabledIconColor,
             )
         }
 
+        /**
+         * @param size 通常不给trailIcon限制尺寸，避免无法放下Button、text等
+         */
         @Composable
         fun trailingIconStyle(
-            shape: Shape? = null,
-            paddingValues: PaddingValues = PaddingValues(0.dp),
             contentColor: Color = ListItemTokens.ItemTrailingIconColor.value,
-            backgroundColor: Color = Color.Transparent,
-            textStyle: TextStyle = ListItemTokens.ItemTrailingSupportingTextFont.value,
-            iconSize: Dp = ListItemTokens.ItemTrailingIconSize,
             disabledIconColor: Color = ListItemTokens.ItemDisabledTrailingIconColor.value.copy(
                 alpha = ListItemTokens.ItemDisabledTrailingIconOpacity
             ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = RectangleShape,
+            size: DpSize = DpSize.Unspecified,
+            textStyle: TextStyle = ListItemTokens.ItemTrailingSupportingTextFont.value,
         ): ListItemIconStyle {
             return ListItemIconStyle(
                 shape = shape,
-                paddingValues = paddingValues,
                 backgroundColor = backgroundColor,
-                iconSize = iconSize,
+                size = size,
                 contentColor = contentColor,
                 textStyle = textStyle,
                 disabledContentColor = disabledIconColor,
@@ -325,4 +377,42 @@ data class ListItemContentPaddingValues(
     val oneline: PaddingValues,
     val twoline: PaddingValues = oneline,
     val threeline: PaddingValues = oneline,
+) {
+    companion object {
+        fun default() = ListItemContentPaddingValues(
+            oneline = PaddingValues(
+                top = ListItemTokens.ItemVerticalPadding,
+                bottom = ListItemTokens.ItemVerticalPadding,
+                start = ListItemTokens.ItemStartPadding,
+                end = ListItemTokens.ItemEndPadding
+            ),
+            twoline = PaddingValues(
+                top = ListItemTokens.ItemVerticalPadding,
+                bottom = ListItemTokens.ItemVerticalPadding,
+                start = ListItemTokens.ItemStartPadding,
+                end = ListItemTokens.ItemEndPadding
+            ),
+            threeline = PaddingValues(
+                top = ListItemTokens.ItemThreeLineVerticalPadding,
+                bottom = ListItemTokens.ItemThreeLineVerticalPadding,
+                start = ListItemTokens.ItemStartPadding,
+                end = ListItemTokens.ItemEndPadding
+            )
+        )
+    }
+}
+
+/**
+ * 主轴对齐方式
+ * @param enableAdjustAlignment 是否允许在supporting高度比较高时使用三行的alignment。
+ */
+@Immutable
+data class ListItemContentAlignment(
+    val oneline: Alignment.Vertical,
+    val twoline: Alignment.Vertical = oneline,
+    val threeline: Alignment.Vertical = oneline,
+    val enableAdjustAlignment: Boolean = true,
 )
+
+@Stable
+fun DpSize(wh: Dp): DpSize = DpSize(wh, wh)

@@ -69,10 +69,11 @@ internal object ListItemTokens {
     val ItemLeadingImageWidth = 56.0.dp
 
     //leadingVideo样式
-    val ItemLeadingVideoShape = ShapeKeyTokens.CornerNone
-    val ItemLeadingVideoWidth = 100.0.dp
-    val ItemLargeLeadingVideoHeight = 69.0.dp
+    val ItemLeadingVideoShape = ShapeKeyTokens.CornerSmall
     val ItemSmallLeadingVideoHeight = 56.0.dp
+    val ItemSmallLeadingVideoWidth = 100.0.dp
+    val ItemLargeLeadingVideoHeight = 64.0.dp
+    val ItemLargeLeadingVideoWidth = 114.0.dp
 
     //trailingIcon样式
     val ItemTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
