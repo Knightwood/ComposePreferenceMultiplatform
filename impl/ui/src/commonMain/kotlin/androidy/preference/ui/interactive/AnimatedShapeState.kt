@@ -1,4 +1,4 @@
-package androidy.preference.ui.list_item.expressive_style
+package androidy.preference.ui.interactive
 
 
 import androidx.compose.animation.core.Animatable

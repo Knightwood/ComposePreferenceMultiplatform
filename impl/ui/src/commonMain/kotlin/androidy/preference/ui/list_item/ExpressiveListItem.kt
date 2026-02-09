@@ -8,11 +8,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.role
@@ -38,13 +34,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import androidy.preference.ui.basic.takeIf
-import androidy.preference.ui.interactive_item.rememberInteractiveState
+import androidy.preference.ui.interactive.rememberInteractiveState
 import androidy.preference.ui.list_item.m3_tokens.MotionSchemeKeyTokens
 import androidy.preference.ui.list_item.m3_tokens.ProvideContentColorTextStyle
 import androidy.preference.ui.list_item.m3_tokens.value
@@ -353,20 +347,6 @@ private fun ListItemStyle.ListItemIconBox(
     }
 }
 //</editor-fold>
-
-@Composable
-private fun TextUnit.roundToPx(): Int {
-    val localDensity = LocalDensity.current
-    return localDensity.run {
-        roundToPx()
-    }
-}
-
-private fun PaddingValues.horization(layoutDirection: LayoutDirection): Dp =
-    calculateStartPadding(layoutDirection) + calculateEndPadding(layoutDirection)
-
-private fun PaddingValues.vertical(): Dp = calculateTopPadding() + calculateBottomPadding()
-
 private fun Modifier.zIndexLambda(zIndex: FloatProducer): Modifier =
     layout { measurable, constraints ->
         val placeable = measurable.measure(constraints)

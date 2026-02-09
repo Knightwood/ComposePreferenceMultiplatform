@@ -1,4 +1,4 @@
-package androidy.preference.ui.interactive_item
+package androidy.preference.ui.interactive
 
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.FocusInteraction

@@ -205,17 +205,17 @@ private fun ListItemStyle.ListItemIconBox(
 //</editor-fold>
 
 @Composable
-private fun TextUnit.roundToPx(): Int {
+internal fun TextUnit.roundToPx(): Int {
     val localDensity = LocalDensity.current
     return localDensity.run {
         roundToPx()
     }
 }
 
-private fun PaddingValues.horization(layoutDirection: LayoutDirection): Dp =
+internal fun PaddingValues.horization(layoutDirection: LayoutDirection): Dp =
     calculateStartPadding(layoutDirection) + calculateEndPadding(layoutDirection)
 
-private fun PaddingValues.vertical(): Dp = calculateTopPadding() + calculateBottomPadding()
+internal fun PaddingValues.vertical(): Dp = calculateTopPadding() + calculateBottomPadding()
 
 @Composable
 fun ListItemDivider(paddingValues: PaddingValues = PaddingValues(ListItemTokens.DividerSpace)) {
