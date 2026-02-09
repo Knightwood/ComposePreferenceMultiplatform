@@ -77,11 +77,11 @@ fun preferenceTest() {
     val dataStore = getDataStore("$desktopPath/ee.preferences_pb")
     val holder = DataStorePreferenceHolder.instance(dataStore)
     LocalListItemStyle.provide(
-        ListItemDefaults.style(
+        style = ListItemDefaults.style(
             containerShape = MaterialTheme.shapes.large,
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             leadingIconStyle = ListItemIconStyle.leadingAvatarStyle()
-        )
+        ),
     ) {
         MainScreen(holder)
     }

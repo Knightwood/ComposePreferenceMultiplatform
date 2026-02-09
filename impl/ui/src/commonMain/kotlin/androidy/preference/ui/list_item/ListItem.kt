@@ -143,8 +143,8 @@ private fun ListItemStyle.ListItemLeading(
                     .takeIf({ leadingPercent != null }) {
                         weight(leadingPercent!!)
                     }
-                    .takeIf({ leadingSize != null }) {
-                        size(leadingSize!!)
+                    .takeIf({  leadingSize.isSpecified  }) {
+                        size(leadingSize)
                     }
             ) {
                 ListItemIconBox(enabled, leadingIconStyle, decor)
@@ -169,8 +169,8 @@ private fun ListItemStyle.ListItemTrailing(
                     .takeIf({ trailingPercent != null }) {
                         weight(trailingPercent!!)
                     }
-                    .takeIf({ trailingSize != null }) {
-                        size(trailingSize!!)
+                    .takeIf({ trailingSize.isSpecified }) {
+                        size(trailingSize)
                     }
             ) {
                 ListItemIconBox(enabled, trailingIconStyle, decor)
@@ -194,8 +194,8 @@ private fun ListItemStyle.ListItemIconBox(
     ) {
         Box(modifier = Modifier.align(alignment = Alignment.Center)) {
             ProvideContentColorTextStyle(
-                contentColor = leadingIconColor(enabled),
-                textStyle = leadingIconStyle.textStyle,
+                contentColor = style.stateColors.get(enabled),
+                textStyle = style.textStyle,
             ) {
                 content()
             }

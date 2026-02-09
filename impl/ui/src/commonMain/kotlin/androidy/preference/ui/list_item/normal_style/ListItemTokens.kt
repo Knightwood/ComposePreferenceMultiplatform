@@ -9,7 +9,13 @@ import androidy.preference.ui.list_item.m3_tokens.TypographyKeyTokens
 internal val ListItemTokens = BasicListItemTokens()
 
 internal open class BasicListItemTokens {
+    val FocusIndicatorColor = ColorSchemeKeyTokens.Secondary
     val DividerSpace = 16.0.dp
+
+    //    val ItemLeadingSpace = 16.0.dp
+//    val ItemTrailingSpace = 16.0.dp
+    val DividerLeadingSpace = 16.0.dp
+    val DividerTrailingSpace = 16.0.dp
 
     // ListItem整体的padding
     val ItemVerticalPadding = 10.dp
@@ -49,6 +55,7 @@ internal open class BasicListItemTokens {
     //supporting字体样式
     val ItemSupportingTextColor = ColorSchemeKeyTokens.OnSurfaceVariant
     val ItemSupportingTextFont = TypographyKeyTokens.BodyMedium
+    val ItemDisabledSupportingTextColor = ColorSchemeKeyTokens.OnSurface
     val ItemDisabledSupportingTextOpacity = 0.38f
 
     //leadingIcon样式
@@ -71,6 +78,7 @@ internal open class BasicListItemTokens {
     val ItemLeadingImageWidth = 56.0.dp
 
     //leadingVideo样式
+    val ItemLeadingVideoWidth = 100.0.dp
     val ItemLeadingVideoShape = ShapeKeyTokens.CornerSmall
     val ItemSmallLeadingVideoHeight = 56.0.dp
     val ItemSmallLeadingVideoWidth = 100.0.dp
@@ -78,9 +86,39 @@ internal open class BasicListItemTokens {
     val ItemLargeLeadingVideoWidth = 114.0.dp
 
     //trailingIcon样式
-    val ItemTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
     val ItemTrailingIconSize = 24.0.dp
+    val ItemTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
     val ItemDisabledTrailingIconColor = ColorSchemeKeyTokens.OnSurface
     val ItemDisabledTrailingIconOpacity = 0.38f
+    val ItemTrailingSupportingTextColor = ColorSchemeKeyTokens.OnSurfaceVariant
     val ItemTrailingSupportingTextFont = TypographyKeyTokens.LabelSmall
+
+
+    //其他
+    val ItemDraggedContainerElevation = ElevationTokens.Level4
+    val ItemDraggedLabelTextColor = ColorSchemeKeyTokens.OnSurface
+    val ItemDraggedLeadingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemDraggedTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+
+    val ItemFocusLabelTextColor = ColorSchemeKeyTokens.OnSurface
+    val ItemFocusLeadingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemFocusTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+
+    val ItemHoverLabelTextColor = ColorSchemeKeyTokens.OnSurface
+    val ItemHoverLeadingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemHoverTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+
+    val ItemPressedLabelTextColor = ColorSchemeKeyTokens.OnSurface
+    val ItemPressedLeadingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemPressedTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+
+    val ItemSelectedTrailingIconColor = ColorSchemeKeyTokens.Primary
+    val ItemUnselectedTrailingIconColor = ColorSchemeKeyTokens.OnSurface
 }
+
+internal val ListItemVerticalPadding = ListItemTokens.ItemVerticalPadding
+internal val ListItemThreeLineVerticalPadding = ListItemTokens.ItemThreeLineContainerHeight
+internal val ListItemStartPadding = ListItemTokens.ItemStartPadding
+internal val ListItemEndPadding = ListItemTokens.ItemEndPadding
+internal val LeadingContentEndPadding = ListItemTokens.LeadingContentEndPadding
+internal val TrailingContentStartPadding = ListItemTokens.TrailingContentStartPadding

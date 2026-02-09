@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -19,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidy.preference.ui.list_item.ExpressiveListItem
 import androidy.preference.ui.list_item.SealListItem
 
 private const val longText =
@@ -61,14 +63,14 @@ private fun ListItemInternal(modifier: Modifier = Modifier) {
             leadingContent = { leading() },
             trailingContent = { Text("Trailing") },
         )
-        var isCheck by remember { mutableStateOf(false) }
+        var isCheckEnter by remember { mutableStateOf(false) }
         SealListItem(
             headlineContent = { Text("Headline") },
-            supportingContent = { Text(if (isCheck) longText else "Supporting") },
+            supportingContent = { Text(if (isCheckEnter) longText else "Supporting") },
             leadingContent = { leading() },
             trailingContent = { Text("Trailing") },
         )
-        Switch(checked = isCheck, onCheckedChange = { isCheck = it })
+        Switch(checked = isCheckEnter, onCheckedChange = { isCheckEnter = it })
         SealListItem(
             headlineContent = { Text("Headline") },
             leadingContent = {
@@ -84,10 +86,24 @@ private fun ListItemInternal(modifier: Modifier = Modifier) {
             headlineContent = { Text("Headline") },
             trailingContent = { Text("Trailing") },
         )
+
+        HorizontalDivider()
+
+        var isCheck by remember { mutableStateOf(false) }
+        ExpressiveListItem(
+            content = { Text("Headline") },
+            supportingContent = { Text(longText) },
+            leadingContent = { leading() },
+            trailingContent = { Text("Trailing") },
+            checked = isCheck,
+            onCheckedChange = {
+                isCheck = it
+            }
+        )
     }
 }
 
 @Composable
 fun leading() {
-        Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "one")
+    Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "one")
 }

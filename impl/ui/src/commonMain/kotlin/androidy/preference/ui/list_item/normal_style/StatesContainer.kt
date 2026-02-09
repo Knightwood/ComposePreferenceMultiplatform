@@ -2,17 +2,22 @@ package androidy.preference.ui.list_item.normal_style
 
 
 import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.Transition
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import androidy.preference.ui.interactive_item.InteractiveState
 import androidy.preference.ui.list_item.expressive_style.rememberAnimatedShape
 
 
@@ -23,8 +28,9 @@ import androidy.preference.ui.list_item.expressive_style.rememberAnimatedShape
 data class StateColors(
     val enabledColor: Color,
     val disabledColor: Color = enabledColor,
-    val selectedColor: Color = Color.Unspecified,
-    val draggedColor: Color = Color.Unspecified,
+    val selectedColor: Color = enabledColor,
+    val draggedColor: Color = enabledColor,
+    val hoveredColor: Color = enabledColor,
 ) {
     fun get(enabled: Boolean): Color {
         return when {
@@ -47,10 +53,26 @@ data class StateColors(
     }
 
     @Composable
-    context(transition: Transition<InteractiveListColorState>)
     internal fun animateColorState(
+        enabled: Boolean,
+        selected: Boolean,
+        interactiveState: InteractiveState,
         colorAnimationSpec: () -> FiniteAnimationSpec<Color>,
     ): State<Color> {
+        val colorState = InteractiveListColorState(
+            enabled = enabled,
+            selected = selected,
+            dragged = interactiveState.isDragged,
+        )
+        return animateColorState(colorState, colorAnimationSpec)
+    }
+
+    @Composable
+    internal fun animateColorState(
+        colorState: InteractiveListColorState,
+        colorAnimationSpec: () -> FiniteAnimationSpec<Color>,
+    ): State<Color> {
+        val transition = updateTransition(colorState, "ListColor")
         return transition.animateColor(transitionSpec = { colorAnimationSpec() }) { state ->
             get(
                 enabled = state.enabled,
@@ -61,11 +83,42 @@ data class StateColors(
     }
 }
 
-internal data class InteractiveListColorState(
+@Immutable
+class InteractiveListColorState(
     val enabled: Boolean,
     val selected: Boolean,
     val dragged: Boolean,
-)
+    val pressed: Boolean,
+    val focused: Boolean,
+    val hovered: Boolean,
+) {
+    constructor(enabled: Boolean) : this(
+        enabled = enabled,
+        selected = false,
+        dragged = false,
+        pressed = false,
+        focused = false,
+        hovered = false,
+    )
+
+    constructor(enabled: Boolean, selected: Boolean) : this(
+        enabled = enabled,
+        selected = selected,
+        dragged = false,
+        pressed = false,
+        focused = false,
+        hovered = false,
+    )
+
+    constructor(enabled: Boolean, selected: Boolean, dragged: Boolean) : this(
+        enabled = enabled,
+        selected = selected,
+        dragged = dragged,
+        pressed = false,
+        focused = false,
+        hovered = false,
+    )
+}
 
 @Immutable
 class StateShapes(
@@ -119,6 +172,58 @@ class StateShapes(
 
     internal fun Shape?.takeOrElse(block: () -> Shape): Shape = this ?: block()
 
+    @Composable
+    internal fun StateShapes.shapeForInteraction(
+        selected: Boolean,
+        pressed: Boolean,
+        focused: Boolean,
+        hovered: Boolean,
+        dragged: Boolean,
+        animationSpec: () -> FiniteAnimationSpec<Float>,
+    ): Shape {
+        val shape =
+            when {
+                pressed -> pressedShape
+                dragged -> draggedShape
+                selected -> selectedShape
+                focused -> focusedShape
+                hovered -> hoveredShape
+                else -> shape
+            }
+
+        if (hasRoundedCornerShapes) {
+            return key(this) { rememberAnimatedShape(shape as RoundedCornerShape, animationSpec()) }
+        }
+
+        return shape
+    }
+
+    val StateShapes.hasRoundedCornerShapes: Boolean
+        get() =
+            shape is RoundedCornerShape &&
+                    selectedShape is RoundedCornerShape &&
+                    pressedShape is RoundedCornerShape &&
+                    focusedShape is RoundedCornerShape &&
+                    hoveredShape is RoundedCornerShape &&
+                    draggedShape is RoundedCornerShape
+
+
+    @Composable
+    fun collectAsState(
+        selected: Boolean,
+        state: InteractiveState,
+        animationSpec: () -> FiniteAnimationSpec<Float>,
+    ): Shape {
+        return shapeForInteraction(
+            selected,
+            state.isPressed,
+            state.isFocused,
+            state.isHovered,
+            state.isDragged,
+            animationSpec,
+        )
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || other !is StateShapes) return false
@@ -144,41 +249,6 @@ class StateShapes(
     }
 }
 
-private val StateShapes.hasRoundedCornerShapes: Boolean
-    get() =
-        shape is RoundedCornerShape &&
-                selectedShape is RoundedCornerShape &&
-                pressedShape is RoundedCornerShape &&
-                focusedShape is RoundedCornerShape &&
-                hoveredShape is RoundedCornerShape &&
-                draggedShape is RoundedCornerShape
-
-@Composable
-internal fun StateShapes.shapeForInteraction(
-    selected: Boolean,
-    pressed: Boolean,
-    focused: Boolean,
-    hovered: Boolean,
-    dragged: Boolean,
-    animationSpec: FiniteAnimationSpec<Float>,
-): Shape {
-    val shape =
-        when {
-            pressed -> pressedShape
-            dragged -> draggedShape
-            selected -> selectedShape
-            focused -> focusedShape
-            hovered -> hoveredShape
-            else -> shape
-        }
-
-    if (hasRoundedCornerShapes) {
-        return key(this) { rememberAnimatedShape(shape as RoundedCornerShape, animationSpec) }
-    }
-
-    return shape
-}
-
 /**
  * Represents the elevation of a list item in different states.
  *
@@ -192,6 +262,20 @@ class StateElevation(val elevation: Dp, val draggedElevation: Dp = elevation) {
         dragged -> draggedElevation
         else -> elevation
     }
+
+    @Composable
+    fun animateElevation(
+        interactiveState: InteractiveState,
+        animationSpec: () -> AnimationSpec<Dp>,
+    ): State<Dp> {
+        val targetElevation = if (interactiveState.isDragged) draggedElevation else elevation
+        return animateDpAsState(
+            targetValue = targetElevation,
+            animationSpec = animationSpec(),
+            label = "StateElevation",
+        )
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || other !is StateElevation) return false

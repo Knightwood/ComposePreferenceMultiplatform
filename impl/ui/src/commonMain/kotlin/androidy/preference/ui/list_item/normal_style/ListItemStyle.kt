@@ -16,6 +16,11 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidy.preference.ui.basic.invalidUse
 import androidy.preference.ui.list_item.ListItemType
+import androidy.preference.ui.list_item.expressive_style.BasicExpressiveListItemTokens
+import androidy.preference.ui.list_item.expressive_style.InteractiveListBottomPadding
+import androidy.preference.ui.list_item.expressive_style.InteractiveListEndPadding
+import androidy.preference.ui.list_item.expressive_style.InteractiveListStartPadding
+import androidy.preference.ui.list_item.expressive_style.InteractiveListTopPadding
 import androidy.preference.ui.list_item.m3_tokens.value
 
 
@@ -286,6 +291,8 @@ constructor(
     /** The color of this [ListItem]'s trailing content based on enabled state */
     @Stable
     internal fun trailingIconColor(enabled: Boolean): Color = trailingIconStyle.stateColors.get(enabled)
+
+    companion object
 }
 
 /**
@@ -313,6 +320,28 @@ data class ListItemIconStyle(
         stateColors = StateColors(
             contentColor,
             disabledContentColor
+        )
+    )
+
+    constructor(
+        shape: Shape = RectangleShape,
+        backgroundColor: Color = Color.Transparent,
+        textStyle: TextStyle,
+        size: DpSize = DpSize.Unspecified,
+        contentColor: Color,
+        disabledContentColor: Color = contentColor,
+        selectedContentColor: Color = contentColor,
+        draggedContentColor: Color = contentColor,
+    ) : this(
+        shape = shape,
+        backgroundColor = backgroundColor,
+        textStyle = textStyle,
+        size = size,
+        stateColors = StateColors(
+            contentColor,
+            disabledContentColor,
+            selectedContentColor,
+            draggedContentColor
         )
     )
 
@@ -397,7 +426,7 @@ data class ListItemIconStyle(
         @Composable
         fun leadingIconStyle(
             contentColor: Color = ListItemTokens.ItemLeadingIconColor.value,
-            disabledIconColor: Color = ListItemTokens.ItemDisabledLeadingIconColor.value.copy(
+            disabledContentColor: Color = ListItemTokens.ItemDisabledLeadingIconColor.value.copy(
                 alpha = ListItemTokens.ItemDisabledLeadingIconOpacity
             ),
             backgroundColor: Color = Color.Transparent,
@@ -411,12 +440,13 @@ data class ListItemIconStyle(
                 size = size,
                 contentColor = contentColor,
                 textStyle = textStyle,
-                disabledContentColor = disabledIconColor,
+                disabledContentColor = disabledContentColor,
             )
         }
 
         /**
          * @param size 通常不给trailIcon限制尺寸，避免无法放下Button、text等
+         * 若需要设置size，尺寸可以参考[BasicListItemTokens.ItemTrailingIconSize]
          */
         @Composable
         fun trailingIconStyle(
@@ -450,6 +480,19 @@ data class ListItemContentPaddingValues(
     val twoline: PaddingValues = oneline,
     val threeline: PaddingValues = oneline,
 ) {
+    operator fun invoke(): PaddingValues {
+        return oneline
+    }
+
+    internal operator fun invoke(type: ListItemType): PaddingValues {
+        return when (type) {
+            ListItemType.OneLine -> oneline
+            ListItemType.TwoLine -> twoline
+            ListItemType.ThreeLine -> threeline
+            else -> oneline
+        }
+    }
+
     companion object {
         fun default() = ListItemContentPaddingValues(
             oneline = PaddingValues(
@@ -469,6 +512,15 @@ data class ListItemContentPaddingValues(
                 bottom = ListItemTokens.ItemThreeLineVerticalPadding,
                 start = ListItemTokens.ItemStartPadding,
                 end = ListItemTokens.ItemEndPadding
+            )
+        )
+
+        fun expressiveDefaults() = ListItemContentPaddingValues(
+            oneline = PaddingValues(
+                start = InteractiveListStartPadding,
+                end = InteractiveListEndPadding,
+                top = InteractiveListTopPadding,
+                bottom = InteractiveListBottomPadding
             )
         )
     }

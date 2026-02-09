@@ -32,7 +32,7 @@ object ListItemDefaults {
                 ),
                 supportingTextStyle = ListItemTokens.ItemSupportingTextFont.value,
                 supportingTextColor = ListItemTokens.ItemSupportingTextColor.value,
-                disabledSupportingTextColor = ListItemTokens.ItemSupportingTextColor.value.copy(
+                disabledSupportingTextColor = ListItemTokens.ItemDisabledSupportingTextColor.value.copy(
                     alpha = ListItemTokens.ItemDisabledSupportingTextOpacity
                 ),
                 leadingIconStyle = ListItemIconStyle.Companion.leadingIconStyle(),

@@ -6,77 +6,126 @@ import androidy.preference.ui.list_item.m3_tokens.ElevationTokens
 import androidy.preference.ui.list_item.m3_tokens.ShapeKeyTokens
 import androidy.preference.ui.list_item.normal_style.BasicListItemTokens
 
+internal val ExpressiveListItemTokens = BasicExpressiveListItemTokens()
+
 /**
  * Expressive版本的ListItem尺寸有所调整，因此使用新类定义，避免混乱
  */
-internal object ExpressiveListItemTokens : BasicListItemTokens() {
+internal open class BasicExpressiveListItemTokens : BasicListItemTokens() {
+//    val FocusIndicatorColor = ColorSchemeKeyTokens.Secondary
     val ContainerShape = ShapeKeyTokens.CornerLarge
-    val DividerBottomSpace = 0.0.dp
-    val DividerLeadingSpace = 16.0.dp
+    val SegmentedGap = 2.0.dp
+    val ItemSegmentedContainerColor = ColorSchemeKeyTokens.Surface
+    val ItemDisabledStateLayerOpacity = 0.1f
     val DividerTopSpace = 0.0.dp
-    val DividerTrailingSpace = 16.0.dp
-    val FocusIndicatorColor = ColorSchemeKeyTokens.Secondary
-    val ItemBetweenSpace = 12.0.dp
+    val DividerBottomSpace = 0.0.dp
+//    val DividerLeadingSpace = 16.0.dp
+//    val DividerTrailingSpace = 16.0.dp
+
+    val ItemTopSpace = 10.0.dp
     val ItemBottomSpace = 10.0.dp
+    val ItemLeadingSpace = 16.0.dp
+    val ItemTrailingSpace = 16.0.dp
+    val ItemBetweenSpace = 12.0.dp//取代了LeadingEnd和TrailStart的
+//    val ItemOneLineContainerHeight = 56.0.dp
+//    val ItemTwoLineContainerHeight = 72.0.dp
+//    val ItemThreeLineContainerHeight = 88.0.dp
+
+    // ItemContainer
 //    val ItemContainerColor = ColorSchemeKeyTokens.Surface
 //    val ItemContainerElevation = ElevationTokens.Level0
-    val ItemContainerExpressiveShape = ShapeKeyTokens.CornerExtraSmall
 //    val ItemContainerShape = ShapeKeyTokens.CornerNone
+//    val ItemDraggedContainerElevation = ElevationTokens.Level4
+    val ItemSelectedContainerColor = ColorSchemeKeyTokens.SecondaryContainer
+    val ItemSelectedContainerShape = ShapeKeyTokens.CornerLarge
+    val ItemContainerExpressiveShape = ShapeKeyTokens.CornerExtraSmall
     val ItemDisabledContainerExpressiveShape = ShapeKeyTokens.CornerExtraSmall
-//    val ItemDisabledLabelTextColor = ColorSchemeKeyTokens.OnSurface
-//    val ItemDisabledLabelTextOpacity = 0.38f
-//    val ItemDisabledLeadingIconColor = ColorSchemeKeyTokens.OnSurface
-//    val ItemDisabledLeadingIconOpacity = 0.38f
+    val ItemSelectedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
+    val ItemPressedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
+    val ItemFocusedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
+    val ItemHoveredContainerExpressiveShape = ShapeKeyTokens.CornerMedium
+    val ItemDraggedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
+
+    // overline
+//    val ItemOverlineColor = ColorSchemeKeyTokens.OnSurfaceVariant
+//    val ItemOverlineFont = TypographyKeyTokens.LabelSmall
 //    val ItemDisabledOverlineColor = ColorSchemeKeyTokens.OnSurface
 //    val ItemDisabledOverlineOpacity = 0.38f
-    val ItemDisabledStateLayerOpacity = 0.1f
-    val ItemDisabledSupportingTextColor = ColorSchemeKeyTokens.OnSurface
-//    val ItemDisabledSupportingTextOpacity = 0.38f
-//    val ItemDisabledTrailingIconColor = ColorSchemeKeyTokens.OnSurface
-//    val ItemDisabledTrailingIconOpacity = 0.38f
-    val ItemDraggedContainerElevation = ElevationTokens.Level4
-    val ItemDraggedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
-    val ItemDraggedLabelTextColor = ColorSchemeKeyTokens.OnSurface
-    val ItemDraggedLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemDraggedTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemFocusLabelTextColor = ColorSchemeKeyTokens.OnSurface
-    val ItemFocusLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemFocusTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemFocusedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
-    val ItemHoverLabelTextColor = ColorSchemeKeyTokens.OnSurface
-    val ItemHoverLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemHoverTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemHoveredContainerExpressiveShape = ShapeKeyTokens.CornerMedium
+    val ItemSelectedOverlineColor = ColorSchemeKeyTokens.OnSecondaryContainer
+    val ItemDraggedOverlineColor = ItemOverlineColor // 原始版本无定义，直接使用了Overline颜色
+
+    // Headline
+    /* ListItem是个Container，其上内容比如文本、图标都是Content，需要用Content Color
+      其中Headline被当作主内容，所以ContentColor默认使用Headline颜色
+      Headline的所用内容颜色被定义为Label颜色 */
 //    val ItemLabelTextColor = ColorSchemeKeyTokens.OnSurface
 //    val ItemLabelTextFont = TypographyKeyTokens.BodyLarge
+//    val ItemDisabledLabelTextColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemDisabledLabelTextOpacity = 0.38f
+    val ItemSelectedLabelTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
+//    val ItemDraggedLabelTextColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemFocusLabelTextColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemHoverLabelTextColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemPressedLabelTextColor = ColorSchemeKeyTokens.OnSurface
+
+    //  supportingText
+//    val ItemSupportingTextColor = ColorSchemeKeyTokens.OnSurfaceVariant
+//    val ItemSupportingTextFont = TypographyKeyTokens.BodyMedium
+    val ItemSelectedSupportingTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
+    val ItemDraggedSupportingTextColor = ItemSupportingTextColor
+//    val ItemDisabledSupportingTextColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemDisabledSupportingTextOpacity = 0.38f
+
+    // LeadingIcon
+//    val ItemLeadingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+//    val ItemLeadingIconSize = 24.0.dp
+//    val ItemDisabledLeadingIconColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemDisabledLeadingIconOpacity = 0.38f
+    val ItemLeadingIconExpressiveSize = 20.0.dp
+    val ItemHoverLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemPressedLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemDraggedLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemFocusLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemSelectedLeadingIconColor = ColorSchemeKeyTokens.OnSecondaryContainer
+
+    // LeadingVideo
+//    val ItemLeadingVideoWidth = 100.0.dp
+//    val ItemLeadingVideoShape = ShapeKeyTokens.CornerSmall
 //    val ItemLargeLeadingVideoHeight = 64.0.dp
 //    val ItemLargeLeadingVideoWidth = 114.0.dp
+//    val ItemSmallLeadingVideoHeight = 56.0.dp
+//    val ItemSmallLeadingVideoWidth = 100.0.dp
+
+    // LeadingImage
+//    val ItemLeadingImageHeight = 56.0.dp
+//    val ItemLeadingImageWidth = 56.0.dp
+//    val ItemLeadingImageShape = ShapeKeyTokens.CornerNone
+    val ItemLeadingImageExpressiveShape = ShapeKeyTokens.CornerSmall
+
+    // LeadingAvatar
 //    val ItemLeadingAvatarColor = ColorSchemeKeyTokens.PrimaryContainer
 //    val ItemLeadingAvatarLabelColor = ColorSchemeKeyTokens.OnPrimaryContainer
 //    val ItemLeadingAvatarLabelFont = TypographyKeyTokens.TitleMedium
 //    val ItemLeadingAvatarShape = ShapeKeyTokens.CornerFull
 //    val ItemLeadingAvatarSize = 40.0.dp
-//    val ItemLeadingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemLeadingIconExpressiveSize = 20.0.dp
-//    val ItemLeadingIconSize = 24.0.dp
-    val ItemLeadingImageExpressiveShape = ShapeKeyTokens.CornerSmall
-//    val ItemLeadingImageHeight = 56.0.dp
-//    val ItemLeadingImageShape = ShapeKeyTokens.CornerNone
-//    val ItemLeadingImageWidth = 56.0.dp
-    val ItemLeadingSpace = 16.0.dp
-//    val ItemLeadingVideoShape = ShapeKeyTokens.CornerSmall
-    val ItemLeadingVideoWidth = 100.0.dp
-//    val ItemOneLineContainerHeight = 56.0.dp
-//    val ItemOverlineColor = ColorSchemeKeyTokens.OnSurfaceVariant
-//    val ItemOverlineFont = TypographyKeyTokens.LabelSmall
-    val ItemPressedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
-    val ItemPressedLabelTextColor = ColorSchemeKeyTokens.OnSurface
-    val ItemPressedLeadingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+
+    // TrailingIcon
+//    val ItemTrailingSupportingTextFont = TypographyKeyTokens.LabelSmall
+    val ItemTrailingIconExpressiveSize = 20.0.dp
+//    val ItemTrailingSupportingTextColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemSelectedTrailingSupportingTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
+//    val ItemTrailingIconSize = 24.0.dp
+//    val ItemTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+//    val ItemDisabledTrailingIconColor = ColorSchemeKeyTokens.OnSurface
+//    val ItemDisabledTrailingIconOpacity = 0.38f
+    val ItemDraggedTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemFocusTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
+    val ItemHoverTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
     val ItemPressedTrailingIconIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemSegmentedContainerColor = ColorSchemeKeyTokens.Surface
-    val ItemSelectedContainerColor = ColorSchemeKeyTokens.SecondaryContainer
-    val ItemSelectedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
-    val ItemSelectedContainerShape = ShapeKeyTokens.CornerLarge
+//    val ItemSelectedTrailingIconColor = ColorSchemeKeyTokens.OnSecondaryContainer
+//    val ItemUnselectedTrailingIconColor = ColorSchemeKeyTokens.OnSurface
+
+    //=========================未使用的状态==============================================//
     val ItemSelectedDisabledContainerColor = ColorSchemeKeyTokens.OnSurface
     val ItemSelectedDisabledContainerExpressiveShape = ShapeKeyTokens.CornerLarge
     val ItemSelectedDisabledContainerOpacity = 0.38f
@@ -105,31 +154,11 @@ internal object ExpressiveListItemTokens : BasicListItemTokens() {
     val ItemSelectedHoverLeadingIconColor = ColorSchemeKeyTokens.OnSurface
     val ItemSelectedHoverTrailingIconColor = ColorSchemeKeyTokens.OnSurface
     val ItemSelectedHoveredContainerExpressiveShape = ShapeKeyTokens.CornerLarge
-    val ItemSelectedLabelTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
-    val ItemSelectedLeadingIconColor = ColorSchemeKeyTokens.OnSecondaryContainer
-    val ItemSelectedOverlineColor = ColorSchemeKeyTokens.OnSecondaryContainer
     val ItemSelectedPressedContainerExpressiveShape = ShapeKeyTokens.CornerLarge
     val ItemSelectedPressedLabelTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
     val ItemSelectedPressedLeadingIconColor = ColorSchemeKeyTokens.OnSurface
     val ItemSelectedPressedTrailingIconColor = ColorSchemeKeyTokens.OnSurface
-    val ItemSelectedSupportingTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
-    val ItemSelectedTrailingIconColor = ColorSchemeKeyTokens.OnSecondaryContainer
-    val ItemSelectedTrailingSupportingTextColor = ColorSchemeKeyTokens.OnSecondaryContainer
-//    val ItemSmallLeadingVideoHeight = 56.0.dp
-//    val ItemSmallLeadingVideoWidth = 100.0.dp
-//    val ItemSupportingTextColor = ColorSchemeKeyTokens.OnSurfaceVariant
-//    val ItemSupportingTextFont = TypographyKeyTokens.BodyMedium
-//    val ItemThreeLineContainerHeight = 88.0.dp
-    val ItemTopSpace = 10.0.dp
-//    val ItemTrailingIconColor = ColorSchemeKeyTokens.OnSurfaceVariant
-    val ItemTrailingIconExpressiveSize = 20.0.dp
-//    val ItemTrailingIconSize = 24.0.dp
-    val ItemTrailingSpace = 16.0.dp
-    val ItemTrailingSupportingTextColor = ColorSchemeKeyTokens.OnSurfaceVariant
-//    val ItemTrailingSupportingTextFont = TypographyKeyTokens.LabelSmall
-//    val ItemTwoLineContainerHeight = 72.0.dp
-    val ItemUnselectedTrailingIconColor = ColorSchemeKeyTokens.OnSurface
-    val SegmentedGap = 2.0.dp
+    //===============================================================================//
 }
 
 

@@ -3,7 +3,7 @@ package androidy.preference.ui.list_item.expressive_style
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
@@ -18,6 +18,24 @@ import androidy.preference.ui.list_item.normal_style.ListItemStyle
 
 object ExpressiveListItemDefaults {
     internal var cached: ListItemStyle? = null
+
+    /** The default padding applied to all content within a list item. */
+    val ContentPadding: PaddingValues = ListItemContentPaddingValues.expressiveDefaults()()
+
+    /** The default elevation of a list item */
+    val Elevation: Dp = ExpressiveListItemTokens.ItemContainerElevation
+
+    /** The default shape of a list item */
+    val shape: Shape
+        @Composable @ReadOnlyComposable get() = ExpressiveListItemTokens.ItemContainerShape.value
+
+    /** The container color of a list item */
+    val containerColor: Color
+        @Composable @ReadOnlyComposable get() = ExpressiveListItemTokens.ItemContainerColor.value
+
+    /** The content color of a list item */
+    val contentColor: Color
+        @Composable @ReadOnlyComposable get() = ExpressiveListItemTokens.ItemLabelTextColor.value
 
     val defaultStyle: ListItemStyle
         @Composable
@@ -46,27 +64,11 @@ object ExpressiveListItemDefaults {
                 containerBorder = null,
                 containerHeightMin = ExpressiveListItemTokens.ItemOneLineContainerHeight,
                 containerHeightMax = ExpressiveListItemTokens.ItemThreeLineContainerHeight,
-
-                alignment = ListItemContentAlignment(
-                    oneline = Alignment.CenterVertically,
-                    threeline = Alignment.Top,
-                ),
-
-                contentPadding = ListItemContentPaddingValues(
-                    oneline = PaddingValues(
-                        start = InteractiveListStartPadding,
-                        end = InteractiveListEndPadding,
-                        top = InteractiveListTopPadding,
-                        bottom = InteractiveListBottomPadding
-                    )
-                ),
-                leadingPadding = PaddingValues(end = ExpressiveListItemTokens.ItemBetweenSpace),
                 leadingSize = DpSize.Unspecified,
                 leadingPercent = null,
                 bodyPadding = PaddingValues(0.dp),
                 bodyItemSpace = null,
                 bodyPercent = 1f,
-                trailingPadding = PaddingValues(start = ExpressiveListItemTokens.ItemBetweenSpace),
                 trailingSize = DpSize.Unspecified,
                 trailingPercent = null,
 
@@ -76,7 +78,7 @@ object ExpressiveListItemDefaults {
                     alpha = ExpressiveListItemTokens.ItemDisabledOverlineOpacity
                 ),
                 selectedOverlineContentColor = ExpressiveListItemTokens.ItemSelectedOverlineColor.value,
-                draggedOverlineContentColor = ExpressiveListItemTokens.ItemOverlineColor.value,
+                draggedOverlineContentColor = ExpressiveListItemTokens.ItemDraggedOverlineColor.value,
 
                 headlineTextStyle = ExpressiveListItemTokens.ItemLabelTextFont.value,
                 headlineContentColor = ExpressiveListItemTokens.ItemLabelTextColor.value,
@@ -92,28 +94,10 @@ object ExpressiveListItemDefaults {
                     alpha = ExpressiveListItemTokens.ItemDisabledSupportingTextOpacity
                 ),
                 selectedSupportingTextColor = ExpressiveListItemTokens.ItemSelectedSupportingTextColor.value,
-                draggedSupportingTextColor = ExpressiveListItemTokens.ItemSupportingTextColor.value,
+                draggedSupportingTextColor = ExpressiveListItemTokens.ItemDraggedSupportingTextColor.value,
 
-                leadingIconStyle = ListItemIconStyle.Companion.leadingIconStyle(
-                    contentColor = ExpressiveListItemTokens.ItemLeadingIconColor.value,
-                    disabledIconColor = ExpressiveListItemTokens.ItemDisabledLeadingIconColor.value.copy(
-                        alpha = ExpressiveListItemTokens.ItemDisabledLeadingIconOpacity
-                    ),
-                    size = DpSize(
-                        ExpressiveListItemTokens.ItemLeadingIconExpressiveSize,
-                        ExpressiveListItemTokens.ItemLeadingIconExpressiveSize
-                    )
-                ),
-                trailingIconStyle = ListItemIconStyle.Companion.trailingIconStyle(
-                    contentColor = ExpressiveListItemTokens.ItemTrailingIconColor.value,
-                    disabledIconColor = ExpressiveListItemTokens.ItemDisabledTrailingIconColor.value.copy(
-                        alpha = ExpressiveListItemTokens.ItemDisabledTrailingIconOpacity
-                    ),
-                    size = DpSize(
-                        ExpressiveListItemTokens.ItemTrailingIconExpressiveSize,
-                        ExpressiveListItemTokens.ItemTrailingIconExpressiveSize
-                    )
-                ),
+                leadingIconStyle = ListItemIconStyle.Companion.expressiveLeadingIconStyle(),
+                trailingIconStyle = ListItemIconStyle.Companion.expressiveTrailingIconStyle(),
             ).also { cached = it }
         }
 
