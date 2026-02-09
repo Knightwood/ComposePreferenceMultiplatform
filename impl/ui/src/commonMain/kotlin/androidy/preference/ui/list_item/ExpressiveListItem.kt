@@ -16,10 +16,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ListItemColors
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.ListItemElevation
-import androidx.compose.material3.ListItemShapes
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -59,6 +55,39 @@ private val logger = org.slf4j.LoggerFactory.getLogger("ExpressiveListItem")
 
 @Composable
 fun ExpressiveListItem(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    style: ListItemStyle = LocalListItemStyle.currentExpressive,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    overlineContent: @Composable (() -> Unit)? = null,
+    supportingContent: @Composable (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null,
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable () -> Unit,
+) {
+    InteractiveListItem(
+        modifier = modifier,
+        headlineContent = content,
+        leadingContent = leadingContent,
+        trailingContent = trailingContent,
+        overlineContent = overlineContent,
+        supportingContent = supportingContent,
+        style=style,
+        enabled = enabled,
+        selected = false,
+        applySemantics = {},
+        onClick = onClick,
+        onLongClick = onLongClick,
+        onLongClickLabel = onLongClickLabel,
+        interactionSource = interactionSource,
+    )
+}
+
+@Composable
+fun ExpressiveListItem(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -93,6 +122,45 @@ fun ExpressiveListItem(
         interactionSource = interactionSource,
     )
 }
+
+@Composable
+fun ExpressiveListItem(
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    style: ListItemStyle = LocalListItemStyle.currentExpressive,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    overlineContent: @Composable (() -> Unit)? = null,
+    supportingContent: @Composable (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null,
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable () -> Unit,
+) {
+    InteractiveListItem(
+        modifier = modifier,
+        headlineContent = content,
+        leadingContent = leadingContent,
+        trailingContent = trailingContent,
+        overlineContent = overlineContent,
+        supportingContent = supportingContent,
+        style=style,
+        enabled = enabled,
+        selected = selected,
+        applySemantics = {
+            toggleableState = ToggleableState(selected)
+            role = Role.RadioButton
+        },
+        onClick = { onClick() },
+        onLongClick = onLongClick,
+        onLongClickLabel = onLongClickLabel,
+        interactionSource = interactionSource,
+    )
+}
+
+
 @Composable
 internal fun InteractiveListItem(
     modifier: Modifier = Modifier,
