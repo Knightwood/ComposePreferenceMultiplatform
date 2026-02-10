@@ -37,6 +37,7 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 //ui实现
+include(":impl:listitem")
 include(":impl:ui")
 include(":impl:ui-auto")
 //ui-auto所需的数据读写工具实现

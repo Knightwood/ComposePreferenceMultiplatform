@@ -51,9 +51,7 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodel.compose)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.compose.icon.core)
-                implementation(libs.github.knightwood.m3ColorUtilities)
                 implementation(libs.slf4j.api)
-                api(project(":impl:listitem"))
             }
         }
     }
@@ -62,7 +60,7 @@ kotlin {
 
 android {
     compileSdk = 34
-    namespace = "androidy.compose.preference.ui"
+    namespace = "androidy.ui.material3.listitem"
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     buildFeatures {
         buildConfig = false

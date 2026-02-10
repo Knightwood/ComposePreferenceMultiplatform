@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -21,9 +20,8 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidy.preference.ui.list_item.SealListItem
+import androidy.ui.material3.listitem.BaselineListItem
 import androidy.preference.ui.theme.Preferences
-import androidy.preference.ui.theme.fixEnabledColor
 
 private const val TAG = "PreferenceLayout"
 
@@ -114,7 +112,7 @@ fun SamplePreference(
     onClick: (() -> Unit)?,
 ) {
     Surface(modifier = modifier, enabled = enabled, onClick = { onClick?.invoke() }) {
-        SealListItem(
+        BaselineListItem(
             modifier = modifier,
             headlineContent = {
                 if (title != null)
