@@ -3,11 +3,13 @@ package androidy.ui.material3.listitem.normal_style
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidy.ui.material3.listitem.m3_tokens.value
 
 object ListItemDefaults {
@@ -19,19 +21,39 @@ object ListItemDefaults {
             return cached ?: ListItemStyle(
                 containerShape = ListItemTokens.ItemContainerShape.value,
                 containerColor = ListItemTokens.ItemContainerColor.value,
+                disabledContainerColor = ListItemTokens.ItemContainerColor.value,
+                containerTonalElevation = ListItemTokens.ItemContainerElevation,
+                containerShadowElevation = ListItemTokens.ItemContainerShadowElevation,
+                containerBorder = null,
+                containerHeightMin = ListItemTokens.ItemContainerHeightMin,
+                containerHeightMax = ListItemTokens.ItemContainerHeightMax,
+                alignment = ListItemContentAlignment(
+                    oneline = Alignment.CenterVertically,
+                    threeline = Alignment.Top,
+                ),
+                contentPadding = ListItemContentPaddingValues.default(),
+                leadingPadding = PaddingValues(end = ListItemTokens.LeadingContentEndPadding),
+                leadingSize = DpSize.Unspecified,
+                leadingPercent = null,
+                bodyPadding = PaddingValues(0.dp),
+                bodyItemSpace = null,
+                bodyPercent = 1f,
+                trailingPadding = PaddingValues(start = ListItemTokens.TrailingContentStartPadding),
+                trailingSize = DpSize.Unspecified,
+                trailingPercent = null,
                 overlineTextStyle = ListItemTokens.ItemOverlineFont.value,
-                overlineColor = ListItemTokens.ItemOverlineColor.value,
-                disabledOverlineColor = ListItemTokens.ItemDisabledOverlineColor.value.copy(
+                overlineContentColor = ListItemTokens.ItemOverlineColor.value,
+                disabledOverlineContentColor = ListItemTokens.ItemDisabledOverlineColor.value.copy(
                     alpha = ListItemTokens.ItemDisabledOverlineOpacity
                 ),
                 headlineTextStyle = ListItemTokens.ItemLabelTextFont.value,
-                headlineColor = ListItemTokens.ItemLabelTextColor.value,
-                disabledHeadlineColor = ListItemTokens.ItemDisabledLabelTextColor.value.copy(
+                headlineContentColor = ListItemTokens.ItemLabelTextColor.value,
+                disabledHeadlineContentColor = ListItemTokens.ItemDisabledLabelTextColor.value.copy(
                     alpha = ListItemTokens.ItemDisabledLabelTextOpacity
                 ),
                 supportingTextStyle = ListItemTokens.ItemSupportingTextFont.value,
-                supportingTextColor = ListItemTokens.ItemSupportingTextColor.value,
-                disabledSupportingTextColor = ListItemTokens.ItemDisabledSupportingTextColor.value.copy(
+                supportingContentColor = ListItemTokens.ItemSupportingTextColor.value,
+                disabledSupportingContentColor = ListItemTokens.ItemDisabledSupportingTextColor.value.copy(
                     alpha = ListItemTokens.ItemDisabledSupportingTextOpacity
                 ),
                 leadingIconStyle = ListItemIconStyle.Companion.leadingIconStyle(),
@@ -80,15 +102,15 @@ object ListItemDefaults {
 
         /* overline,headline,supporting的文本样式 */
         overlineTextStyle: TextStyle? = null,
-        overlineColor: Color? = null,
+        overlineContentColor: Color? = null,
 
         headlineTextStyle: TextStyle? = null,
-        headlineColor: Color? = null,
-        disabledHeadlineColor: Color? = null,
+        headlineContentColor: Color? = null,
+        disabledHeadlineContentColor: Color? = null,
 
         supportingTextStyle: TextStyle? = null,
-        supportingTextColor: Color? = null,
-        disabledSupportingTextColor: Color? = null,
+        supportingContentColor: Color? = null,
+        disabledSupportingContentColor: Color? = null,
         /* overline,headline,supporting的文本样式 */
 
         /* Icon的默认样式 */
@@ -115,13 +137,13 @@ object ListItemDefaults {
             trailingSize = trailingSize,
             trailingPercent = trailingPercent,
             overlineTextStyle = overlineTextStyle,
-            overlineColor = overlineColor,
+            overlineContentColor = overlineContentColor,
             headlineTextStyle = headlineTextStyle,
-            headlineColor = headlineColor,
-            disabledHeadlineColor = disabledHeadlineColor,
+            headlineContentColor = headlineContentColor,
+            disabledHeadlineContentColor = disabledHeadlineContentColor,
             supportingTextStyle = supportingTextStyle,
-            supportingTextColor = supportingTextColor,
-            disabledSupportingTextColor = disabledSupportingTextColor,
+            supportingContentColor = supportingContentColor,
+            disabledSupportingContentColor = disabledSupportingContentColor,
             leadingIconStyle = leadingIconStyle,
             trailingIconStyle = trailingIconStyle,
         )

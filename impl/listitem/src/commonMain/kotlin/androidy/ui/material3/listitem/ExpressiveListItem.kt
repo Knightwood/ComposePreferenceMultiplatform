@@ -1,5 +1,6 @@
 package androidy.ui.material3.listitem
 
+import androidx.compose.foundation.Indication
 import androidx.compose.ui.layout.layout
 import androidy.ui.material3.listitem.expressive_style.FloatProducer
 import androidx.compose.foundation.background
@@ -16,9 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,12 +42,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import androidy.ui.material3.listitem.basic.takeIf
+import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.interactive.rememberInteractiveState
 import androidy.ui.material3.listitem.m3_tokens.MotionSchemeKeyTokens
 import androidy.ui.material3.listitem.m3_tokens.ProvideContentColorTextStyle
 import androidy.ui.material3.listitem.m3_tokens.value
+import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
+import androidy.ui.material3.listitem.normal_style.merge
 import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("ExpressiveListItem")
@@ -54,6 +61,9 @@ fun ExpressiveListItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     style: ListItemStyle = LocalListItemStyle.currentExpressive,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
+    indication: Indication? = ripple(),
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -63,6 +73,9 @@ fun ExpressiveListItem(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit,
 ) {
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
+    }
     InteractiveListItem(
         modifier = modifier,
         headlineContent = content,
@@ -70,10 +83,13 @@ fun ExpressiveListItem(
         trailingContent = trailingContent,
         overlineContent = overlineContent,
         supportingContent = supportingContent,
-        style=style,
+        style = finalStyle.value,
         enabled = enabled,
         selected = false,
-        applySemantics = {},
+        indication = indication,
+        applySemantics = {
+            role = Role.Button
+        },
         onClick = onClick,
         onLongClick = onLongClick,
         onLongClickLabel = onLongClickLabel,
@@ -88,6 +104,9 @@ fun ExpressiveListItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     style: ListItemStyle = LocalListItemStyle.currentExpressive,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
+    indication: Indication? = ripple(),
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -97,6 +116,9 @@ fun ExpressiveListItem(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit,
 ) {
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
+    }
     InteractiveListItem(
         modifier = modifier,
         headlineContent = content,
@@ -104,7 +126,8 @@ fun ExpressiveListItem(
         trailingContent = trailingContent,
         overlineContent = overlineContent,
         supportingContent = supportingContent,
-        style=style,
+        style = finalStyle.value,
+        indication = indication,
         enabled = enabled,
         selected = checked,
         applySemantics = {
@@ -125,6 +148,9 @@ fun ExpressiveListItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     style: ListItemStyle = LocalListItemStyle.currentExpressive,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
+    indication: Indication? = ripple(),
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -134,6 +160,9 @@ fun ExpressiveListItem(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit,
 ) {
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
+    }
     InteractiveListItem(
         modifier = modifier,
         headlineContent = content,
@@ -141,7 +170,8 @@ fun ExpressiveListItem(
         trailingContent = trailingContent,
         overlineContent = overlineContent,
         supportingContent = supportingContent,
-        style=style,
+        style = finalStyle.value,
+        indication = indication,
         enabled = enabled,
         selected = selected,
         applySemantics = {
@@ -168,6 +198,7 @@ internal fun InteractiveListItem(
     selected: Boolean = false,
     style: ListItemStyle = LocalListItemStyle.currentExpressive,
     applySemantics: SemanticsPropertyReceiver.() -> Unit,
+    indication: Indication? = ripple(),
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
@@ -221,7 +252,7 @@ internal fun InteractiveListItem(
                 .clip(containerShape)
                 .combinedClickable(
                     interactionSource = interactionSource,
-                    indication = ripple(),
+                    indication = indication,
                     enabled = enabled,
                     onLongClick = onLongClick,
                     onLongClickLabel = onLongClickLabel,
@@ -233,7 +264,7 @@ internal fun InteractiveListItem(
                     modifier = Modifier.align(Alignment.CenterStart)
                         .padding(realPadding)
                 ) {
-                    ListItemLeading(realAlignment, leadingContent,leadingColor)
+                    ListItemLeading(realAlignment, leadingContent, leadingColor)
                     Column(
                         modifier = Modifier.weight(bodyPercent).align(realAlignment),
                         verticalArrangement = if (bodyItemSpace != null && bodyItemSpace.value > 0)
@@ -277,7 +308,7 @@ context(scope: RowScope)
 private fun ListItemStyle.ListItemLeading(
     alignment: Alignment.Vertical,
     content: @Composable (() -> Unit)?,
-    contentColor : Color,
+    contentColor: Color,
 ) {
     with(scope) {
         content?.let { decor ->
@@ -292,7 +323,7 @@ private fun ListItemStyle.ListItemLeading(
                         size(leadingSize)
                     }
             ) {
-                ListItemIconBox(leadingIconStyle, decor,contentColor)
+                ListItemIconBox(leadingIconStyle, decor, contentColor)
             }
         }
     }
@@ -303,7 +334,7 @@ context(scope: RowScope)
 private fun ListItemStyle.ListItemTrailing(
     alignment: Alignment.Vertical,
     content: @Composable (() -> Unit)?,
-    contentColor : Color,
+    contentColor: Color,
 ) {
     with(scope) {
         content?.let { decor ->
@@ -318,7 +349,7 @@ private fun ListItemStyle.ListItemTrailing(
                         size(trailingSize)
                     }
             ) {
-                ListItemIconBox(trailingIconStyle, decor,contentColor)
+                ListItemIconBox(trailingIconStyle, decor, contentColor)
             }
         }
     }
@@ -328,7 +359,7 @@ private fun ListItemStyle.ListItemTrailing(
 private fun ListItemStyle.ListItemIconBox(
     style: ListItemIconStyle = leadingIconStyle,
     content: @Composable () -> Unit,
-    contentColor : Color,
+    contentColor: Color,
 ) {
     Box(
         modifier = Modifier
@@ -347,6 +378,7 @@ private fun ListItemStyle.ListItemIconBox(
         }
     }
 }
+
 //</editor-fold>
 private fun Modifier.zIndexLambda(zIndex: FloatProducer): Modifier =
     layout { measurable, constraints ->

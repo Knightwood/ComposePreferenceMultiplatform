@@ -1,6 +1,8 @@
 package androidy.ui.material3.listitem
 
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,7 +12,9 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidy.ui.material3.listitem.interactive.StateShapes
+import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
+import androidy.ui.material3.listitem.normal_style.merge
 import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("SegmentedListItem")
@@ -20,8 +24,10 @@ fun SegmentedListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    style: ListItemStyle = LocalListItemStyle.currentSegmentedExpressive,
-    shapes: StateShapes = style.containerShape,
+    style: ListItemStyle = LocalListItemStyle.currentSegmented,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
+    indication: Indication? = ripple(),
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -31,8 +37,8 @@ fun SegmentedListItem(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit,
 ) {
-    val finalStyle = remember(style, shapes) {
-        mutableStateOf(style.copy(shapes))
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
@@ -42,6 +48,7 @@ fun SegmentedListItem(
         overlineContent = overlineContent,
         supportingContent = supportingContent,
         style = finalStyle.value,
+        indication = indication,
         enabled = enabled,
         selected = false,
         applySemantics = {},
@@ -58,8 +65,10 @@ fun SegmentedListItem(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    style: ListItemStyle = LocalListItemStyle.currentSegmentedExpressive,
-    shapes: StateShapes = style.containerShape,
+    style: ListItemStyle = LocalListItemStyle.currentSegmented,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
+    indication: Indication? = ripple(),
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -69,8 +78,8 @@ fun SegmentedListItem(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit,
 ) {
-    val finalStyle = remember(style, shapes) {
-        mutableStateOf(style.copy(shapes))
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
@@ -80,6 +89,7 @@ fun SegmentedListItem(
         overlineContent = overlineContent,
         supportingContent = supportingContent,
         style = finalStyle.value,
+        indication = indication,
         enabled = enabled,
         selected = checked,
         applySemantics = {
@@ -99,8 +109,10 @@ fun SegmentedListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    style: ListItemStyle = LocalListItemStyle.currentSegmentedExpressive,
-    shapes: StateShapes = style.containerShape,
+    style: ListItemStyle = LocalListItemStyle.currentSegmented,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
+    indication: Indication? = ripple(),
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     overlineContent: @Composable (() -> Unit)? = null,
@@ -110,8 +122,8 @@ fun SegmentedListItem(
     interactionSource: MutableInteractionSource? = null,
     content: @Composable () -> Unit,
 ) {
-    val finalStyle = remember(style, shapes) {
-        mutableStateOf(style.copy(shapes))
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
@@ -121,6 +133,7 @@ fun SegmentedListItem(
         overlineContent = overlineContent,
         supportingContent = supportingContent,
         style = finalStyle.value,
+        indication = indication,
         enabled = enabled,
         selected = selected,
         applySemantics = {

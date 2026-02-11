@@ -19,6 +19,8 @@ import androidy.ui.material3.listitem.interactive.StateColors
 import androidy.ui.material3.listitem.interactive.StateElevation
 import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.ListItemType
+import androidy.ui.material3.listitem.expressive_style.BasicExpressiveListItemTokens
+import androidy.ui.material3.listitem.expressive_style.ExpressiveListItemTokens
 import androidy.ui.material3.listitem.expressive_style.InteractiveListBottomPadding
 import androidy.ui.material3.listitem.expressive_style.InteractiveListEndPadding
 import androidy.ui.material3.listitem.expressive_style.InteractiveListStartPadding
@@ -99,44 +101,79 @@ constructor(
     val trailingIconStyle: ListItemIconStyle,
 
     ) {
-    constructor(
+
+    //全参数平展开的构造函数
+    constructor (
         containerShape: Shape,
+        containerSelectedShape: Shape = containerShape,
+        containerPressedShape: Shape = containerShape,
+        containerFocusedShape: Shape = containerShape,
+        containerHoveredShape: Shape = containerShape,
+        containerDraggedShape: Shape = containerShape,
+
         containerColor: Color,
-        containerTonalElevation: Dp = ListItemTokens.ItemContainerElevation,
-        containerShadowElevation: Dp = ListItemTokens.ItemContainerShadowElevation,
-        containerBorder: BorderStroke? = null,
-        containerHeightMin: Dp = ListItemTokens.ItemContainerHeightMin,
-        containerHeightMax: Dp = ListItemTokens.ItemContainerHeightMax,
-        alignment: ListItemContentAlignment = ListItemContentAlignment(
-            oneline = Alignment.CenterVertically,
-            threeline = Alignment.Top,
-        ),
-        contentPadding: ListItemContentPaddingValues = ListItemContentPaddingValues.default(),
-        leadingPadding: PaddingValues = PaddingValues(end = ListItemTokens.LeadingContentEndPadding),
+        disabledContainerColor: Color,
+        selectedContainerColor: Color = containerColor,
+        draggedContainerColor: Color = containerColor,
+
+        containerTonalElevation: Dp,
+        containerTonalDraggedElevation: Dp = containerTonalElevation,
+
+        containerShadowElevation: Dp,
+        containerShadowDraggedElevation: Dp = containerShadowElevation,
+
+        containerBorder: BorderStroke?,
+        containerHeightMin: Dp,
+        containerHeightMax: Dp,
+        alignment: ListItemContentAlignment,
+        contentPadding: ListItemContentPaddingValues,
+        leadingPadding: PaddingValues,
         leadingSize: DpSize = DpSize.Unspecified,
         leadingPercent: Float? = null,
-        bodyPadding: PaddingValues = PaddingValues(0.dp),
+        bodyPadding: PaddingValues,
         bodyItemSpace: Dp? = null,
         bodyPercent: Float = 1f,
-        trailingPadding: PaddingValues = PaddingValues(start = ListItemTokens.TrailingContentStartPadding),
+        trailingPadding: PaddingValues,
         trailingSize: DpSize = DpSize.Unspecified,
         trailingPercent: Float? = null,
+
         overlineTextStyle: TextStyle,
-        overlineColor: Color,
-        disabledOverlineColor: Color,
+        overlineContentColor: Color,
+        disabledOverlineContentColor: Color,
+        selectedOverlineContentColor: Color = overlineContentColor,
+        draggedOverlineContentColor: Color = overlineContentColor,
+
         headlineTextStyle: TextStyle,
-        headlineColor: Color,
-        disabledHeadlineColor: Color,
+        headlineContentColor: Color,
+        disabledHeadlineContentColor: Color,
+        selectedHeadlineContentColor: Color = headlineContentColor,
+        draggedHeadlineContentColor: Color = headlineContentColor,
+
         supportingTextStyle: TextStyle,
-        supportingTextColor: Color,
-        disabledSupportingTextColor: Color,
+        supportingContentColor: Color,
+        disabledSupportingContentColor: Color,
+        selectedSupportingContentColor: Color = supportingContentColor,
+        draggedSupportingContentColor: Color = supportingContentColor,
+
         leadingIconStyle: ListItemIconStyle,
         trailingIconStyle: ListItemIconStyle,
     ) : this(
-        containerShape = StateShapes(containerShape),
-        containerColor = StateColors(containerColor),
-        containerTonalElevation = StateElevation(containerTonalElevation),
-        containerShadowElevation = StateElevation(containerShadowElevation),
+        containerShape = StateShapes(
+            containerShape,
+            containerSelectedShape,
+            containerPressedShape,
+            containerFocusedShape,
+            containerHoveredShape,
+            containerDraggedShape
+        ),
+        containerColor = StateColors(
+            containerColor,
+            disabledColor = disabledContainerColor,
+            selectedColor = selectedContainerColor,
+            draggedColor = draggedContainerColor
+        ),
+        containerTonalElevation = StateElevation(containerTonalElevation, containerTonalDraggedElevation),
+        containerShadowElevation = StateElevation(containerShadowElevation, containerShadowDraggedElevation),
         containerBorder = containerBorder,
         containerHeightMin = containerHeightMin,
         containerHeightMax = containerHeightMax,
@@ -152,22 +189,46 @@ constructor(
         trailingSize = trailingSize,
         trailingPercent = trailingPercent,
         overlineTextStyle = overlineTextStyle,
-        overlineColor = StateColors(overlineColor, disabledOverlineColor),
+        overlineColor = StateColors(
+            overlineContentColor, disabledOverlineContentColor,
+            selectedOverlineContentColor, draggedOverlineContentColor
+        ),
         headlineTextStyle = headlineTextStyle,
-        headlineColor = StateColors(headlineColor, disabledHeadlineColor),
+        headlineColor = StateColors(
+            headlineContentColor, disabledHeadlineContentColor,
+            selectedHeadlineContentColor, draggedHeadlineContentColor
+        ),
         supportingTextStyle = supportingTextStyle,
-        supportingTextColor = StateColors(supportingTextColor, disabledSupportingTextColor),
+        supportingTextColor = StateColors(
+            supportingContentColor, disabledSupportingContentColor,
+            selectedSupportingContentColor, draggedSupportingContentColor
+        ),
         leadingIconStyle = leadingIconStyle,
         trailingIconStyle = trailingIconStyle,
     )
 
+    //全参数平展开的copy函数
     fun copy(
         /* 整体样式 */
         /*----------------------------------------------*/
         containerShape: Shape? = null,
+        containerSelectedShape: Shape? = null,
+        containerPressedShape: Shape? = null,
+        containerFocusedShape: Shape? = null,
+        containerHoveredShape: Shape? = null,
+        containerDraggedShape: Shape? = null,
+
         containerColor: Color? = null,
+        disabledContainerColor: Color? = null,
+        selectedContainerColor: Color? = null,
+        draggedContainerColor: Color? = null,
+
         containerTonalElevation: Dp? = null,
+        containerTonalDraggedElevation: Dp? = null,
+
         containerShadowElevation: Dp? = null,
+        containerShadowDraggedElevation: Dp? = null,
+
         containerBorder: BorderStroke? = null,
         containerHeightMin: Dp? = null,
         containerHeightMax: Dp? = null,
@@ -198,16 +259,22 @@ constructor(
 
         /* overline,headline,supporting的文本样式 */
         overlineTextStyle: TextStyle? = null,
-        overlineColor: Color? = null,
-        disabledOverlineColor: Color? = null,
+        overlineContentColor: Color? = null,
+        disabledOverlineContentColor: Color? = null,
+        selectedOverlineContentColor: Color? = null,
+        draggedOverlineContentColor: Color? = null,
 
         headlineTextStyle: TextStyle? = null,
-        headlineColor: Color? = null,
-        disabledHeadlineColor: Color? = null,
+        headlineContentColor: Color? = null,
+        disabledHeadlineContentColor: Color? = null,
+        selectedHeadlineContentColor: Color? = null,
+        draggedHeadlineContentColor: Color? = null,
 
         supportingTextStyle: TextStyle? = null,
-        supportingTextColor: Color? = null,
-        disabledSupportingTextColor: Color? = null,
+        supportingContentColor: Color? = null,
+        disabledSupportingContentColor: Color? = null,
+        selectedSupportingContentColor: Color? = null,
+        draggedSupportingContentColor: Color? = null,
         /* overline,headline,supporting的文本样式 */
 
         /* Icon的默认样式 */
@@ -216,12 +283,29 @@ constructor(
     ): ListItemStyle {
         return ListItemStyle(
             containerShape = containerShape ?: this.containerShape.shape,
+            containerSelectedShape = containerSelectedShape ?: this.containerShape.selectedShape,
+            containerPressedShape = containerPressedShape ?: this.containerShape.pressedShape,
+            containerFocusedShape = containerFocusedShape ?: this.containerShape.focusedShape,
+            containerHoveredShape = containerHoveredShape ?: this.containerShape.hoveredShape,
+            containerDraggedShape = containerDraggedShape ?: this.containerShape.draggedShape,
+
             containerColor = containerColor invalidUse { this.containerColor.enabledColor },
+            disabledContainerColor = disabledContainerColor invalidUse { this.containerColor.disabledColor },
+            selectedContainerColor = selectedContainerColor invalidUse { this.containerColor.selectedColor },
+            draggedContainerColor = draggedContainerColor invalidUse { this.containerColor.draggedColor },
+
             containerTonalElevation = containerTonalElevation ?: this.containerTonalElevation.elevation,
+            containerTonalDraggedElevation = containerTonalDraggedElevation
+                ?: this.containerTonalElevation.draggedElevation,
+
             containerShadowElevation = containerShadowElevation ?: this.containerShadowElevation.elevation,
+            containerShadowDraggedElevation = containerShadowDraggedElevation
+                ?: this.containerShadowElevation.draggedElevation,
+
             containerBorder = containerBorder ?: this.containerBorder,
             containerHeightMin = containerHeightMin ?: this.containerHeightMin,
             containerHeightMax = containerHeightMax ?: this.containerHeightMax,
+
             alignment = alignment ?: this.alignment,
             contentPadding = contentPadding ?: this.contentPadding,
             leadingPadding = leadingPadding ?: this.leadingPadding,
@@ -233,20 +317,33 @@ constructor(
             trailingPadding = trailingPadding ?: this.trailingPadding,
             trailingSize = trailingSize invalidUse { this.trailingSize },
             trailingPercent = trailingPercent ?: this.trailingPercent,
+
             overlineTextStyle = overlineTextStyle ?: this.overlineTextStyle,
-            overlineColor = overlineColor invalidUse { this.overlineColor.enabledColor },
-            disabledOverlineColor = disabledOverlineColor invalidUse { this.overlineColor.disabledColor },
+            overlineContentColor = overlineContentColor invalidUse { this.overlineColor.enabledColor },
+            disabledOverlineContentColor = disabledOverlineContentColor invalidUse { this.overlineColor.disabledColor },
+            selectedOverlineContentColor = selectedOverlineContentColor invalidUse { this.overlineColor.selectedColor },
+            draggedOverlineContentColor = draggedOverlineContentColor invalidUse { this.overlineColor.draggedColor },
+
             headlineTextStyle = headlineTextStyle ?: this.headlineTextStyle,
-            headlineColor = headlineColor invalidUse { this.headlineColor.enabledColor },
-            disabledHeadlineColor = disabledHeadlineColor invalidUse { this.headlineColor.disabledColor },
+            headlineContentColor = headlineContentColor invalidUse { this.headlineColor.enabledColor },
+            disabledHeadlineContentColor = disabledHeadlineContentColor invalidUse { this.headlineColor.disabledColor },
+            selectedHeadlineContentColor = selectedHeadlineContentColor invalidUse { this.headlineColor.selectedColor },
+            draggedHeadlineContentColor = draggedHeadlineContentColor invalidUse { this.headlineColor.draggedColor },
+
             supportingTextStyle = supportingTextStyle ?: this.supportingTextStyle,
-            supportingTextColor = supportingTextColor invalidUse { this.supportingTextColor.enabledColor },
-            disabledSupportingTextColor = disabledSupportingTextColor invalidUse { this.supportingTextColor.disabledColor },
+            supportingContentColor = supportingContentColor invalidUse { this.supportingTextColor.enabledColor },
+            disabledSupportingContentColor = disabledSupportingContentColor invalidUse { this.supportingTextColor.disabledColor },
+            selectedSupportingContentColor = selectedSupportingContentColor invalidUse { this.supportingTextColor.selectedColor },
+            draggedSupportingContentColor = draggedSupportingContentColor invalidUse { this.supportingTextColor.draggedColor },
+
             leadingIconStyle = leadingIconStyle ?: this.leadingIconStyle,
             trailingIconStyle = trailingIconStyle ?: this.trailingIconStyle,
         )
     }
 
+    /**
+     * 非平展参数的copy函数
+     */
     fun copy(
         /* 整体样式 */
         /*----------------------------------------------*/
@@ -277,14 +374,14 @@ constructor(
         headlineColor: StateColors? = null,
 
         supportingTextStyle: TextStyle? = null,
-        supportingTextColor: StateColors? = null,
+        supportingColor: StateColors? = null,
 
         leadingIconStyle: ListItemIconStyle? = null,
         trailingIconStyle: ListItemIconStyle? = null,
     ): ListItemStyle {
         return ListItemStyle(
             containerShape = containerShape ?: this.containerShape,
-            containerColor = containerColor?: this.containerColor,
+            containerColor = containerColor ?: this.containerColor,
             containerTonalElevation = containerTonalElevation ?: this.containerTonalElevation,
             containerShadowElevation = containerShadowElevation ?: this.containerShadowElevation,
             containerBorder = containerBorder ?: this.containerBorder,
@@ -306,7 +403,7 @@ constructor(
             headlineTextStyle = headlineTextStyle ?: this.headlineTextStyle,
             headlineColor = headlineColor ?: this.headlineColor,
             supportingTextStyle = supportingTextStyle ?: this.supportingTextStyle,
-            supportingTextColor = supportingTextColor ?:this.supportingTextColor,
+            supportingTextColor = supportingColor ?: this.supportingTextColor,
             leadingIconStyle = leadingIconStyle ?: this.leadingIconStyle,
             trailingIconStyle = trailingIconStyle ?: this.trailingIconStyle,
         )
@@ -333,8 +430,8 @@ constructor(
     }
 
     /** The container color of this [ListItem] based on enabled state */
-    internal fun containerColor(): Color {
-        return containerColor.enabledColor
+    internal fun containerColor(enabled: Boolean): Color {
+        return containerColor.get(enabled)
     }
 
     /** The color of this [ListItem]'s headline text based on enabled state */
@@ -413,6 +510,9 @@ data class ListItemIconStyle(
     )
 
     companion object {
+        //<editor-fold desc="普通样式">
+
+
         @Composable
         fun leadingAvatarStyle(
             contentColor: Color = ListItemTokens.ItemLeadingAvatarLabelColor.value,
@@ -535,6 +635,152 @@ data class ListItemIconStyle(
                 disabledContentColor = disabledIconColor,
             )
         }
+        //</editor-fold>
+
+        //<editor-fold desc="expressive样式 "> // 实际上与普通样式相比除了形状改成圆角外没有其他变化
+        @Composable
+        fun expressiveLeadingAvatarStyle(
+            contentColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarLabelColor.value,
+            disabledContentColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarLabelColor.value.copy(
+                alpha = ExpressiveListItemTokens.ItemDisabledLeadingIconOpacity
+            ),
+            backgroundColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarColor.value,
+            shape: Shape = ExpressiveListItemTokens.ItemLeadingAvatarShape.value,
+            size: DpSize = DpSize(ExpressiveListItemTokens.ItemLeadingAvatarSize),
+            textStyle: TextStyle = ExpressiveListItemTokens.ItemLeadingAvatarLabelFont.value,
+            selectedContentColor: Color = contentColor,
+            draggedContentColor: Color = contentColor,
+        ) = ListItemIconStyle(
+            shape = shape,
+            backgroundColor = backgroundColor,
+            textStyle = textStyle,
+            size = size,
+            stateColors = StateColors(
+                contentColor,
+                disabledContentColor,
+                selectedContentColor,
+                draggedContentColor
+            )
+        )
+
+        @Composable
+        fun expressiveLeadingImageStyle(
+            contentColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarLabelColor.value,
+            disabledContentColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarLabelColor.value.copy(
+                alpha = ExpressiveListItemTokens.ItemDisabledLeadingIconOpacity
+            ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = ExpressiveListItemTokens.ItemLeadingImageExpressiveShape.value,
+            size: DpSize = DpSize(
+                ExpressiveListItemTokens.ItemLeadingImageWidth,
+                ExpressiveListItemTokens.ItemLeadingImageHeight,
+            ),
+            textStyle: TextStyle = ExpressiveListItemTokens.ItemLeadingAvatarLabelFont.value,
+            selectedContentColor: Color = contentColor,
+            draggedContentColor: Color = contentColor,
+        ) = ListItemIconStyle(
+            shape = shape,
+            backgroundColor = backgroundColor,
+            textStyle = textStyle,
+            size = size,
+            stateColors = StateColors(
+                contentColor,
+                disabledContentColor,
+                selectedContentColor,
+                draggedContentColor
+            )
+        )
+
+        @Composable
+        fun expressiveLeadingVideoStyle(
+            small: Boolean = true,
+            contentColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarLabelColor.value,
+            disabledContentColor: Color = ExpressiveListItemTokens.ItemLeadingAvatarLabelColor.value.copy(
+                alpha = ExpressiveListItemTokens.ItemDisabledLeadingIconOpacity
+            ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = ExpressiveListItemTokens.ItemLeadingVideoShape.value,
+            size: DpSize = if (small) {
+                DpSize(
+                    ExpressiveListItemTokens.ItemSmallLeadingVideoWidth,
+                    ExpressiveListItemTokens.ItemSmallLeadingVideoHeight,
+                )
+            } else {
+                DpSize(
+                    ExpressiveListItemTokens.ItemLargeLeadingVideoWidth,
+                    ExpressiveListItemTokens.ItemLargeLeadingVideoHeight,
+                )
+            },
+            textStyle: TextStyle = ExpressiveListItemTokens.ItemLeadingAvatarLabelFont.value,
+            selectedContentColor: Color = contentColor,
+            draggedContentColor: Color = contentColor,
+        ) = ListItemIconStyle(
+            shape = shape,
+            backgroundColor = backgroundColor,
+            textStyle = textStyle,
+            size = size,
+            stateColors = StateColors(
+                contentColor,
+                disabledContentColor,
+                selectedContentColor,
+                draggedContentColor
+            )
+        )
+        @Composable
+        fun expressiveLeadingIconStyle(
+            contentColor: Color = ExpressiveListItemTokens.ItemLeadingIconColor.value,
+            disabledContentColor: Color = ExpressiveListItemTokens.ItemDisabledLeadingIconColor.value.copy(
+                alpha = ExpressiveListItemTokens.ItemDisabledLeadingIconOpacity
+            ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = RectangleShape,
+            size: DpSize = DpSize(ExpressiveListItemTokens.ItemLeadingIconExpressiveSize),
+            textStyle: TextStyle = ExpressiveListItemTokens.ItemLeadingAvatarLabelFont.value,
+            selectedContentColor: Color = contentColor,
+            draggedContentColor: Color = contentColor,
+        ) = ListItemIconStyle(
+            shape = shape,
+            backgroundColor = backgroundColor,
+            textStyle = textStyle,
+            size = size,
+            stateColors = StateColors(
+                contentColor,
+                disabledContentColor,
+                selectedContentColor,
+                draggedContentColor
+            )
+        )
+
+        /**
+         * @param size 通常不给trailIcon限制尺寸，避免无法放下Button、text等
+         * 若需要设置size，尺寸可以参考[BasicExpressiveListItemTokens.ItemTrailingIconExpressiveSize]
+         */
+        @Composable
+        fun expressiveTrailingIconStyle(
+            contentColor: Color = ExpressiveListItemTokens.ItemTrailingIconColor.value,
+            disabledContentColor: Color = ExpressiveListItemTokens.ItemDisabledTrailingIconColor.value.copy(
+                alpha = ExpressiveListItemTokens.ItemDisabledTrailingIconOpacity
+            ),
+            backgroundColor: Color = Color.Transparent,
+            shape: Shape = RectangleShape,
+            size: DpSize = DpSize.Unspecified,
+            textStyle: TextStyle = ExpressiveListItemTokens.ItemTrailingSupportingTextFont.value,
+            selectedContentColor: Color = contentColor,
+            draggedContentColor: Color = contentColor,
+        ) = ListItemIconStyle(
+            shape = shape,
+            backgroundColor = backgroundColor,
+            textStyle = textStyle,
+            size = size,
+            stateColors = StateColors(
+                contentColor,
+                disabledContentColor,
+                selectedContentColor,
+                draggedContentColor
+            )
+        )
+        //</editor-fold>
+
     }
 }
 

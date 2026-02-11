@@ -12,7 +12,7 @@ internal val ExpressiveListItemTokens = BasicExpressiveListItemTokens()
  */
 internal open class BasicExpressiveListItemTokens : BasicListItemTokens() {
 //    val FocusIndicatorColor = ColorSchemeKeyTokens.Secondary
-    val ContainerShape = ShapeKeyTokens.CornerLarge
+    val ContainerShape = ShapeKeyTokens.CornerLarge//生成segmented listitem 圆角形状时使用
     val SegmentedGap = 2.0.dp
     val ItemSegmentedContainerColor = ColorSchemeKeyTokens.Surface
     val ItemDisabledStateLayerOpacity = 0.1f

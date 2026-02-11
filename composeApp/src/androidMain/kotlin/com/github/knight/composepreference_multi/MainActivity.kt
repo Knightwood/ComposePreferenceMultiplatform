@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
     fun getHolder(): DataStorePreferenceHolder {
         //1. 使用dataStore存储偏好值
-        val ds = getDataStore(applicationContext, "test.pb")
+        val ds = getDataStore(applicationContext, "test.preferences_pb")
         val holder = DataStorePreferenceHolder.instance(ds)
 
         //2. 使用mmkv存储偏好值

@@ -70,7 +70,7 @@ fun BaselineListItem(
             ),
             shape = containerShape.get(),
             tonalElevation = containerTonalElevation.get(),
-            color = containerColor(),
+            color = containerColor(enabled),
             shadowElevation = containerShadowElevation.get(),
             border = containerBorder,
         ) {

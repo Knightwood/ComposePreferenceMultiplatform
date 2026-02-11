@@ -39,7 +39,7 @@ object LocalListItemStyle {
         @Composable
         get() = LocalExpressiveListItemStyle.current
 
-    val currentSegmentedExpressive
+    val currentSegmented
         @Composable
         get() = LocalSegmentedExpressiveListItemStyle.current
 }

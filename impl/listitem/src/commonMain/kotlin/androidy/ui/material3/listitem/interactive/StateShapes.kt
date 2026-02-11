@@ -4,9 +4,12 @@ import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import org.slf4j.LoggerFactory
 
 @Immutable
 class StateShapes(
@@ -95,17 +98,21 @@ class StateShapes(
                     hoveredShape is RoundedCornerShape &&
                     draggedShape is RoundedCornerShape
 
-
+private val logger = LoggerFactory.getLogger("StateShapes")
     @Composable
     fun collectAsState(
         selected: Boolean,
         state: InteractiveState,
         animationSpec: () -> FiniteAnimationSpec<Float>,
     ): Shape {
+        LaunchedEffect(state.isHovered, state.isPressed, state.isFocused, state.isDragged) {
+            val a = state
+            logger.info("interactiveState: isHovered: ${a.isHovered}; isPressed: ${a.isPressed}; isFocused: ${a.isFocused}; isDragged: ${a.isDragged} ")
+        }
         return shapeForInteraction(
             selected,
             state.isPressed,
-            state.isFocused,
+            false,//jvm平台下此状态永远为true，会导致shape无法回到正常状态
             state.isHovered,
             state.isDragged,
             animationSpec,

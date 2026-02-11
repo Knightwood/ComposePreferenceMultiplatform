@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
@@ -40,8 +41,8 @@ object ExpressiveListItemDefaults {
     val expressiveDefaultStyle: ListItemStyle
         @Composable
         get() {
-            return cached ?: ExpressiveListItemStyle(
-                containerShape = ExpressiveListItemTokens.ContainerShape.value,
+            return cached ?: ListItemStyle(
+                containerShape = ExpressiveListItemTokens.ItemContainerExpressiveShape.value,
                 containerSelectedShape = ExpressiveListItemTokens.ItemSelectedContainerExpressiveShape.value,
                 containerPressedShape = ExpressiveListItemTokens.ItemPressedContainerExpressiveShape.value,
                 containerFocusedShape = ExpressiveListItemTokens.ItemFocusedContainerExpressiveShape.value,
@@ -49,9 +50,7 @@ object ExpressiveListItemDefaults {
                 containerDraggedShape = ExpressiveListItemTokens.ItemDraggedContainerExpressiveShape.value,
 
                 containerColor = ExpressiveListItemTokens.ItemContainerColor.value,
-                disabledContainerColor = ExpressiveListItemTokens.ItemContainerColor.value.copy(
-                    alpha = ExpressiveListItemTokens.ItemDisabledLabelTextOpacity
-                ),
+                disabledContainerColor = ExpressiveListItemTokens.ItemContainerColor.value,
                 selectedContainerColor = ExpressiveListItemTokens.ItemSelectedContainerColor.value,
                 draggedContainerColor = ExpressiveListItemTokens.ItemContainerColor.value,
 
@@ -64,11 +63,19 @@ object ExpressiveListItemDefaults {
                 containerBorder = null,
                 containerHeightMin = ExpressiveListItemTokens.ItemOneLineContainerHeight,
                 containerHeightMax = ExpressiveListItemTokens.ItemThreeLineContainerHeight,
+                alignment = ListItemContentAlignment(
+                    oneline = Alignment.CenterVertically,
+                    threeline = Alignment.Top,
+                ),
+                contentPadding = ListItemContentPaddingValues.expressiveDefaults(),
+                leadingPadding = PaddingValues(end = InteractiveListInternalSpacing),
+
                 leadingSize = DpSize.Unspecified,
                 leadingPercent = null,
                 bodyPadding = PaddingValues(0.dp),
                 bodyItemSpace = null,
                 bodyPercent = 1f,
+                trailingPadding = PaddingValues(start = InteractiveListInternalSpacing),
                 trailingSize = DpSize.Unspecified,
                 trailingPercent = null,
 
@@ -93,8 +100,8 @@ object ExpressiveListItemDefaults {
                 disabledSupportingContentColor = ExpressiveListItemTokens.ItemDisabledSupportingTextColor.value.copy(
                     alpha = ExpressiveListItemTokens.ItemDisabledSupportingTextOpacity
                 ),
-                selectedSupportingTextColor = ExpressiveListItemTokens.ItemSelectedSupportingTextColor.value,
-                draggedSupportingTextColor = ExpressiveListItemTokens.ItemDraggedSupportingTextColor.value,
+                selectedSupportingContentColor = ExpressiveListItemTokens.ItemSelectedSupportingTextColor.value,
+                draggedSupportingContentColor = ExpressiveListItemTokens.ItemDraggedSupportingTextColor.value,
 
                 leadingIconStyle = ListItemIconStyle.Companion.expressiveLeadingIconStyle(),
                 trailingIconStyle = ListItemIconStyle.Companion.expressiveTrailingIconStyle(),
@@ -102,9 +109,8 @@ object ExpressiveListItemDefaults {
         }
 
 
-
     @Composable
-    fun style( ) =expressiveDefaultStyle
+    fun style() = expressiveDefaultStyle
 
     @Composable
     fun style(
@@ -180,7 +186,7 @@ object ExpressiveListItemDefaults {
         leadingIconStyle: ListItemIconStyle? = null,
         trailingIconStyle: ListItemIconStyle? = null,
     ): ListItemStyle {
-        val base =  expressiveDefaultStyle
+        val base = expressiveDefaultStyle
         return base.copy(
             containerShape = containerShape,
             containerSelectedShape = containerSelectedShape,
@@ -231,8 +237,8 @@ object ExpressiveListItemDefaults {
             supportingTextStyle = supportingTextStyle,
             supportingContentColor = supportingContentColor,
             disabledSupportingContentColor = disabledSupportingContentColor,
-            selectedSupportingTextColor = selectedSupportingTextColor,
-            draggedSupportingTextColor = draggedSupportingTextColor,
+            selectedSupportingContentColor = selectedSupportingTextColor,
+            draggedSupportingContentColor = draggedSupportingTextColor,
 
             leadingIconStyle = leadingIconStyle,
             trailingIconStyle = trailingIconStyle,

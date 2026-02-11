@@ -16,6 +16,7 @@ import androidy.ui.material3.listitem.normal_style.ListItemContentAlignment
 import androidy.ui.material3.listitem.normal_style.ListItemContentPaddingValues
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
+import androidy.ui.material3.listitem.normal_style.shapes
 
 object SegmentedListItemStyleDefaults {
     internal var segmentedCached: ListItemStyle? = null
@@ -165,8 +166,8 @@ object SegmentedListItemStyleDefaults {
             supportingTextStyle = supportingTextStyle,
             supportingContentColor = supportingContentColor,
             disabledSupportingContentColor = disabledSupportingContentColor,
-            selectedSupportingTextColor = selectedSupportingTextColor,
-            draggedSupportingTextColor = draggedSupportingTextColor,
+            selectedSupportingContentColor = selectedSupportingTextColor,
+            draggedSupportingContentColor = draggedSupportingTextColor,
 
             leadingIconStyle = leadingIconStyle,
             trailingIconStyle = trailingIconStyle,
