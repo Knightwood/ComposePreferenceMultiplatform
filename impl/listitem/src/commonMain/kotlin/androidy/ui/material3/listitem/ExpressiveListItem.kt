@@ -2,7 +2,6 @@ package androidy.ui.material3.listitem
 
 import androidx.compose.foundation.Indication
 import androidx.compose.ui.layout.layout
-import androidy.ui.material3.listitem.expressive_style.FloatProducer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
+import androidy.ui.material3.listitem.basic.FloatProducer
 import androidy.ui.material3.listitem.basic.takeIf
 import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.interactive.rememberInteractiveState

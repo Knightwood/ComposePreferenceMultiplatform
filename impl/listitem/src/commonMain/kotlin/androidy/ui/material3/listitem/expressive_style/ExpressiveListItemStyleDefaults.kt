@@ -12,13 +12,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidy.ui.material3.listitem.m3_tokens.value
+import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemContentAlignment
 import androidy.ui.material3.listitem.normal_style.ListItemContentPaddingValues
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
+import androidy.ui.material3.listitem.normal_style.colors
 
 object ExpressiveListItemDefaults {
     internal var cached: ListItemStyle? = null
+    internal var colorsCache: ListItemColors? = null
 
     /** The default padding applied to all content within a list item. */
     val ContentPadding: PaddingValues = ListItemContentPaddingValues.expressiveDefaults()()
@@ -38,7 +41,7 @@ object ExpressiveListItemDefaults {
     val contentColor: Color
         @Composable @ReadOnlyComposable get() = ExpressiveListItemTokens.ItemLabelTextColor.value
 
-    val expressiveDefaultStyle: ListItemStyle
+    internal val expressiveDefaultStyle: ListItemStyle
         @Composable
         get() {
             return cached ?: ListItemStyle(
@@ -108,6 +111,17 @@ object ExpressiveListItemDefaults {
             ).also { cached = it }
         }
 
+    internal val expressiveDefaultShapes
+        @Composable
+        get() = this.expressiveDefaultStyle.containerShape
+
+    internal val expressiveDefaultColors: ListItemColors
+        @Composable
+        get() {
+            return colorsCache ?: expressiveDefaultStyle.colors().also {
+                colorsCache = it
+            }
+        }
 
     @Composable
     fun style() = expressiveDefaultStyle
@@ -242,6 +256,89 @@ object ExpressiveListItemDefaults {
 
             leadingIconStyle = leadingIconStyle,
             trailingIconStyle = trailingIconStyle,
+        )
+    }
+
+
+    @Composable
+    fun shapes() = expressiveDefaultShapes
+
+    @Composable
+    fun shapes(
+        shape: Shape? = null,
+        selectedShape: Shape? = null,
+        pressedShape: Shape? = null,
+        focusedShape: Shape? = null,
+        hoveredShape: Shape? = null,
+        draggedShape: Shape? = null,
+    ) = expressiveDefaultShapes.copy(
+        shape = shape,
+        selectedShape = selectedShape,
+        pressedShape = pressedShape,
+        focusedShape = focusedShape,
+        hoveredShape = hoveredShape,
+        draggedShape = draggedShape,
+    )
+
+    @Composable
+    fun colors() = this.expressiveDefaultColors
+
+    @Composable
+    fun colors(
+        // default
+        containerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        leadingContentColor: Color = Color.Unspecified,
+        trailingContentColor: Color = Color.Unspecified,
+        overlineContentColor: Color = Color.Unspecified,
+        supportingContentColor: Color = Color.Unspecified,
+        // disabled
+        disabledContainerColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified,
+        disabledLeadingContentColor: Color = Color.Unspecified,
+        disabledTrailingContentColor: Color = Color.Unspecified,
+        disabledOverlineContentColor: Color = Color.Unspecified,
+        disabledSupportingContentColor: Color = Color.Unspecified,
+        // selected
+        selectedContainerColor: Color = Color.Unspecified,
+        selectedContentColor: Color = Color.Unspecified,
+        selectedLeadingContentColor: Color = Color.Unspecified,
+        selectedTrailingContentColor: Color = Color.Unspecified,
+        selectedOverlineContentColor: Color = Color.Unspecified,
+        selectedSupportingContentColor: Color = Color.Unspecified,
+        // dragged
+        draggedContainerColor: Color = Color.Unspecified,
+        draggedContentColor: Color = Color.Unspecified,
+        draggedLeadingContentColor: Color = Color.Unspecified,
+        draggedTrailingContentColor: Color = Color.Unspecified,
+        draggedOverlineContentColor: Color = Color.Unspecified,
+        draggedSupportingContentColor: Color = Color.Unspecified,
+    ): ListItemColors {
+        return this.expressiveDefaultColors.copy(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            leadingContentColor = leadingContentColor,
+            trailingContentColor = trailingContentColor,
+            overlineContentColor = overlineContentColor,
+            supportingContentColor = supportingContentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor,
+            disabledLeadingContentColor = disabledLeadingContentColor,
+            disabledTrailingContentColor = disabledTrailingContentColor,
+            disabledOverlineContentColor = disabledOverlineContentColor,
+            disabledSupportingContentColor = disabledSupportingContentColor,
+            selectedContainerColor = selectedContainerColor,
+            selectedContentColor = selectedContentColor,
+            selectedLeadingContentColor = selectedLeadingContentColor,
+            selectedTrailingContentColor = selectedTrailingContentColor,
+            selectedOverlineContentColor = selectedOverlineContentColor,
+            selectedSupportingContentColor = selectedSupportingContentColor,
+            draggedContainerColor = draggedContainerColor,
+            draggedContentColor = draggedContentColor,
+            draggedLeadingContentColor = draggedLeadingContentColor,
+            draggedTrailingContentColor = draggedTrailingContentColor,
+            draggedOverlineContentColor = draggedOverlineContentColor,
+            draggedSupportingContentColor = draggedSupportingContentColor,
         )
     }
 }

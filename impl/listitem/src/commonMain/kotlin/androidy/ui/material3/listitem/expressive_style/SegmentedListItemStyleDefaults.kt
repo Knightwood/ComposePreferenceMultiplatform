@@ -6,20 +6,23 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.m3_tokens.value
+import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemContentAlignment
 import androidy.ui.material3.listitem.normal_style.ListItemContentPaddingValues
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
-import androidy.ui.material3.listitem.normal_style.shapes
+import androidy.ui.material3.listitem.normal_style.colors
 
 object SegmentedListItemStyleDefaults {
     internal var segmentedCached: ListItemStyle? = null
+    internal var colorsCache: ListItemColors? = null
     internal val segmentedDefaultStyle: ListItemStyle
         @Composable
         get() {
@@ -31,12 +34,17 @@ object SegmentedListItemStyleDefaults {
 
     val SegmentedGap: Dp = ExpressiveListItemTokens.SegmentedGap
 
-    internal val defaultShapes
+    internal val segmentedDefaultShapes
         @Composable
         get() = this.segmentedDefaultStyle.containerShape
 
-    @Composable
-    fun shapes() = defaultShapes
+    internal val segmentedDefaultColors: ListItemColors
+        @Composable
+        get() {
+            return colorsCache ?: segmentedDefaultStyle.colors().also {
+                colorsCache = it
+            }
+        }
 
     @Composable
     fun style() = segmentedDefaultStyle
@@ -115,8 +123,7 @@ object SegmentedListItemStyleDefaults {
         leadingIconStyle: ListItemIconStyle? = null,
         trailingIconStyle: ListItemIconStyle? = null,
     ): ListItemStyle {
-        val base = segmentedDefaultStyle
-        return base.copy(
+        return segmentedDefaultStyle.copy(
             containerShape = containerShape,
             containerSelectedShape = containerSelectedShape,
             containerPressedShape = containerPressedShape,
@@ -171,6 +178,88 @@ object SegmentedListItemStyleDefaults {
 
             leadingIconStyle = leadingIconStyle,
             trailingIconStyle = trailingIconStyle,
+        )
+    }
+
+    @Composable
+    fun shapes() = segmentedDefaultShapes
+
+    @Composable
+    fun shapes(
+        shape: Shape? = null,
+        selectedShape: Shape? = null,
+        pressedShape: Shape? = null,
+        focusedShape: Shape? = null,
+        hoveredShape: Shape? = null,
+        draggedShape: Shape? = null,
+    ) = segmentedDefaultShapes.copy(
+        shape = shape,
+        selectedShape = selectedShape,
+        pressedShape = pressedShape,
+        focusedShape = focusedShape,
+        hoveredShape = hoveredShape,
+        draggedShape = draggedShape,
+    )
+
+    @Composable
+    fun colors() = this.segmentedDefaultColors
+
+    @Composable
+    fun colors(
+        // default
+        containerColor: Color = Color.Unspecified,
+        contentColor: Color = Color.Unspecified,
+        leadingContentColor: Color = Color.Unspecified,
+        trailingContentColor: Color = Color.Unspecified,
+        overlineContentColor: Color = Color.Unspecified,
+        supportingContentColor: Color = Color.Unspecified,
+        // disabled
+        disabledContainerColor: Color = Color.Unspecified,
+        disabledContentColor: Color = Color.Unspecified,
+        disabledLeadingContentColor: Color = Color.Unspecified,
+        disabledTrailingContentColor: Color = Color.Unspecified,
+        disabledOverlineContentColor: Color = Color.Unspecified,
+        disabledSupportingContentColor: Color = Color.Unspecified,
+        // selected
+        selectedContainerColor: Color = Color.Unspecified,
+        selectedContentColor: Color = Color.Unspecified,
+        selectedLeadingContentColor: Color = Color.Unspecified,
+        selectedTrailingContentColor: Color = Color.Unspecified,
+        selectedOverlineContentColor: Color = Color.Unspecified,
+        selectedSupportingContentColor: Color = Color.Unspecified,
+        // dragged
+        draggedContainerColor: Color = Color.Unspecified,
+        draggedContentColor: Color = Color.Unspecified,
+        draggedLeadingContentColor: Color = Color.Unspecified,
+        draggedTrailingContentColor: Color = Color.Unspecified,
+        draggedOverlineContentColor: Color = Color.Unspecified,
+        draggedSupportingContentColor: Color = Color.Unspecified,
+    ): ListItemColors {
+        return this.segmentedDefaultColors.copy(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            leadingContentColor = leadingContentColor,
+            trailingContentColor = trailingContentColor,
+            overlineContentColor = overlineContentColor,
+            supportingContentColor = supportingContentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor,
+            disabledLeadingContentColor = disabledLeadingContentColor,
+            disabledTrailingContentColor = disabledTrailingContentColor,
+            disabledOverlineContentColor = disabledOverlineContentColor,
+            disabledSupportingContentColor = disabledSupportingContentColor,
+            selectedContainerColor = selectedContainerColor,
+            selectedContentColor = selectedContentColor,
+            selectedLeadingContentColor = selectedLeadingContentColor,
+            selectedTrailingContentColor = selectedTrailingContentColor,
+            selectedOverlineContentColor = selectedOverlineContentColor,
+            selectedSupportingContentColor = selectedSupportingContentColor,
+            draggedContainerColor = draggedContainerColor,
+            draggedContentColor = draggedContentColor,
+            draggedLeadingContentColor = draggedLeadingContentColor,
+            draggedTrailingContentColor = draggedTrailingContentColor,
+            draggedOverlineContentColor = draggedOverlineContentColor,
+            draggedSupportingContentColor = draggedSupportingContentColor,
         )
     }
 

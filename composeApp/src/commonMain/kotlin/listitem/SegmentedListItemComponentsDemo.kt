@@ -1,7 +1,12 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -99,4 +104,15 @@ private fun SegmentedListItemCheckBoxGroup(
         shapes = SegmentedListItemStyleDefaults.segmentedShape(index, 3),
         onCheckedChange = { onChecked(it) }
     )
+//
+//    ListItem(
+//        content = { Text("Option $index") },
+//        supportingContent = { Text("this is option $index") },
+//        leadingContent = { Checkbox(checked = checked, onCheckedChange = { onChecked(it) }) },
+//        trailingContent = { Text("Trailing") },
+//        checked = checked,
+//        colors = ListItemDefaults.segmentedColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+//        shapes = ListItemDefaults.segmentedShapes(index, 3),
+//        onCheckedChange = { onChecked(it) }
+//    )
 }

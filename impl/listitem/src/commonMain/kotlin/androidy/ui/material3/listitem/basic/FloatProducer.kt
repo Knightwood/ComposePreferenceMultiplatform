@@ -1,4 +1,4 @@
-package androidy.ui.material3.listitem.expressive_style
+package androidy.ui.material3.listitem.basic
 
 /**
  * Alternative to `() -> Float` but avoids boxing.

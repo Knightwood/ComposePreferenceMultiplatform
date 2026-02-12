@@ -2,11 +2,12 @@ package androidy.ui.material3.listitem.normal_style
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import androidy.ui.material3.listitem.basic.invalidUse
 import androidy.ui.material3.listitem.interactive.StateColors
 import androidy.ui.material3.listitem.interactive.StateShapes
 
 @Immutable
-data class ListItemColors(
+class ListItemColors(
     // default
     val containerColor: Color,
     val contentColor: Color,
@@ -35,7 +36,80 @@ data class ListItemColors(
     val draggedTrailingContentColor: Color = trailingContentColor,
     val draggedOverlineContentColor: Color = overlineContentColor,
     val draggedSupportingContentColor: Color = supportingContentColor,
-)
+){
+    fun copy(
+        // default
+        containerColor: Color = this.containerColor,
+        contentColor: Color = this.contentColor,
+        leadingContentColor: Color = this.leadingContentColor,
+        trailingContentColor: Color = this.trailingContentColor,
+        overlineContentColor: Color = this.overlineContentColor,
+        supportingContentColor: Color = this.supportingContentColor,
+        // disabled
+        disabledContainerColor: Color = this.disabledContainerColor,
+        disabledContentColor: Color = this.disabledContentColor,
+        disabledLeadingContentColor: Color = this.disabledLeadingContentColor,
+        disabledTrailingContentColor: Color = this.disabledTrailingContentColor,
+        disabledOverlineContentColor: Color = this.disabledOverlineContentColor,
+        disabledSupportingContentColor: Color = this.disabledSupportingContentColor,
+        // selected
+        selectedContainerColor: Color = this.selectedContainerColor,
+        selectedContentColor: Color = this.selectedContentColor,
+        selectedLeadingContentColor: Color = this.selectedLeadingContentColor,
+        selectedTrailingContentColor: Color = this.selectedTrailingContentColor,
+        selectedOverlineContentColor: Color = this.selectedOverlineContentColor,
+        selectedSupportingContentColor: Color = this.selectedSupportingContentColor,
+        // dragged
+        draggedContainerColor: Color = this.draggedContainerColor,
+        draggedContentColor: Color = this.draggedContentColor,
+        draggedLeadingContentColor: Color = this.draggedLeadingContentColor,
+        draggedTrailingContentColor: Color = this.draggedTrailingContentColor,
+        draggedOverlineContentColor: Color = this.draggedOverlineContentColor,
+        draggedSupportingContentColor: Color = this.draggedSupportingContentColor,
+    ): ListItemColors {
+        return ListItemColors(
+            containerColor = containerColor.invalidUse { this.containerColor },
+            contentColor = contentColor.invalidUse { this.contentColor },
+            leadingContentColor = leadingContentColor.invalidUse { this.leadingContentColor },
+            trailingContentColor = trailingContentColor.invalidUse { this.trailingContentColor },
+            overlineContentColor = overlineContentColor.invalidUse { this.overlineContentColor },
+            supportingContentColor =
+                supportingContentColor.invalidUse { this.supportingContentColor },
+            disabledContainerColor =
+                disabledContainerColor.invalidUse { this.disabledContainerColor },
+            disabledContentColor = disabledContentColor.invalidUse { this.disabledContentColor },
+            disabledLeadingContentColor =
+                disabledLeadingContentColor.invalidUse { this.disabledLeadingContentColor },
+            disabledTrailingContentColor =
+                disabledTrailingContentColor.invalidUse { this.disabledTrailingContentColor },
+            disabledOverlineContentColor =
+                disabledOverlineContentColor.invalidUse { this.disabledOverlineContentColor },
+            disabledSupportingContentColor =
+                disabledSupportingContentColor.invalidUse { this.disabledSupportingContentColor },
+            selectedContainerColor =
+                selectedContainerColor.invalidUse { this.selectedContainerColor },
+            selectedContentColor = selectedContentColor.invalidUse { this.selectedContentColor },
+            selectedLeadingContentColor =
+                selectedLeadingContentColor.invalidUse { this.selectedLeadingContentColor },
+            selectedTrailingContentColor =
+                selectedTrailingContentColor.invalidUse { this.selectedTrailingContentColor },
+            selectedOverlineContentColor =
+                selectedOverlineContentColor.invalidUse { this.selectedOverlineContentColor },
+            selectedSupportingContentColor =
+                selectedSupportingContentColor.invalidUse { this.selectedSupportingContentColor },
+            draggedContainerColor = draggedContainerColor.invalidUse { this.draggedContainerColor },
+            draggedContentColor = draggedContentColor.invalidUse { this.draggedContentColor },
+            draggedLeadingContentColor =
+                draggedLeadingContentColor.invalidUse { this.draggedLeadingContentColor },
+            draggedTrailingContentColor =
+                draggedTrailingContentColor.invalidUse { this.draggedTrailingContentColor },
+            draggedOverlineContentColor =
+                draggedOverlineContentColor.invalidUse { this.draggedOverlineContentColor },
+            draggedSupportingContentColor =
+                draggedSupportingContentColor.invalidUse { this.draggedSupportingContentColor },
+        )
+    }
+}
 
 fun ListItemStyle.shapes() = this.containerShape
 
