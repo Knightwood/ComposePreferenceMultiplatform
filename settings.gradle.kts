@@ -36,6 +36,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":composeApp2")
 //ui实现
 include(":impl:listitem")
 include(":impl:ui")
@@ -50,12 +51,12 @@ include(":helper:datastore-helper")
 include(":helper:mmkv-helper")
 include(":helper:preference-helper")
 //aop
-//include(":aop:floor-core")
-//include(":aop:floor-core-ksp")
-//include(":aop:floor-datastore")
-//include(":aop:floor-datastore-ksp")
-//include(":aop:floor-mmkv")
-//include(":aop:floor-mmkv-ksp")
+include(":aop:floor-core")
+include(":aop:floor-core-ksp")
+include(":aop:floor-datastore")
+include(":aop:floor-datastore-ksp")
+include(":aop:floor-mmkv")
+include(":aop:floor-mmkv-ksp")
 
 //  前缀               +组件库名       +module名 +版本号
 //com.github.knightwood.kmp-preference:ui       :1.0.0

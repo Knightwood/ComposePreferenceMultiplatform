@@ -90,7 +90,9 @@ object KVAnnotationUtils {
             }
         } else {
             if (!isNullable) {
-                check(tmp0.contains("null"))
+                if(tmp0.contains("null")){
+                    throw IllegalArgumentException("${propertyDeclaration.simpleName.asString()} is not nullable, but defaultValue is null")
+                }
             }
             return "?:$tmp0"
         }

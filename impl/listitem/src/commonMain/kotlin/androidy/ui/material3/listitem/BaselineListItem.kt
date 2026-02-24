@@ -206,8 +206,7 @@ private fun ListItemStyle.ListItemIconBox(
 
 @Composable
 internal fun TextUnit.roundToPx(): Int {
-    val localDensity = LocalDensity.current
-    return localDensity.run {
+    return with(LocalDensity.current) {
         roundToPx()
     }
 }
