@@ -12,15 +12,15 @@ import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
 
 @Composable
-fun PreferenceItem(
+fun PreferencesHintCard(
     modifier: Modifier = Modifier,
-    style: ListItemStyle = LocalPreferenceTheme.current.itemStyle,
+    style: ListItemStyle = LocalPreferenceTheme.current.hintCardItemStyle,
     shapes: StateShapes? = null,
     colors: ListItemColors? = null,
     enabled: Boolean = true,
     indication: Indication? = ripple(),
     interactionSource: MutableInteractionSource? = null,
-    onClick: () -> Unit={},
+    onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     start: @Composable (() -> Unit)? = null,

@@ -17,6 +17,7 @@ import androidy.ui.material3.listitem.normal_style.ListItemContentAlignment
 import androidy.ui.material3.listitem.normal_style.ListItemContentPaddingValues
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
+import androidy.ui.material3.listitem.normal_style.ListItemStyleType
 import androidy.ui.material3.listitem.normal_style.colors
 
 object ExpressiveListItemDefaults {
@@ -108,6 +109,7 @@ object ExpressiveListItemDefaults {
 
                 leadingIconStyle = ListItemIconStyle.Companion.expressiveLeadingIconStyle(),
                 trailingIconStyle = ListItemIconStyle.Companion.expressiveTrailingIconStyle(),
+                type = ListItemStyleType.EXPRESSIVE
             ).also { cached = it }
         }
 

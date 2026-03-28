@@ -13,8 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidy.preference.ui.basic.harmonizeWithPrimary
-import androidy.preference.uiauto.PreferenceNodeBase
-import androidy.preference.ui.component.PreferenceSwitch as FossPreferenceSwitch
+import androidy.preference.ui.component.PreferenceSwitchItem as FossPreferenceSwitch
 import androidy.preference.ui.component.PreferenceSwitchWithContainer as FossPreferenceSwitchWithContainer
 import androidy.preference.ui.component.PreferenceWithDividerSwitch as FossPreferenceWithDividerSwitch
 

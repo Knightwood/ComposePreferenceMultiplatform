@@ -99,8 +99,8 @@ constructor(
     /* Icon的默认样式 */
     val leadingIconStyle: ListItemIconStyle,
     val trailingIconStyle: ListItemIconStyle,
-
-    ) {
+    val type: ListItemStyleType = ListItemStyleType.BASELINE,
+) {
 
     //全参数平展开的构造函数
     constructor (
@@ -157,6 +157,7 @@ constructor(
 
         leadingIconStyle: ListItemIconStyle,
         trailingIconStyle: ListItemIconStyle,
+        type: ListItemStyleType = ListItemStyleType.BASELINE,
     ) : this(
         containerShape = StateShapes(
             containerShape,
@@ -205,6 +206,7 @@ constructor(
         ),
         leadingIconStyle = leadingIconStyle,
         trailingIconStyle = trailingIconStyle,
+        type = type
     )
 
     //全参数平展开的copy函数
@@ -280,6 +282,7 @@ constructor(
         /* Icon的默认样式 */
         leadingIconStyle: ListItemIconStyle? = null,
         trailingIconStyle: ListItemIconStyle? = null,
+        type: ListItemStyleType? = null,
     ): ListItemStyle {
         return ListItemStyle(
             containerShape = containerShape ?: this.containerShape.shape,
@@ -338,6 +341,7 @@ constructor(
 
             leadingIconStyle = leadingIconStyle ?: this.leadingIconStyle,
             trailingIconStyle = trailingIconStyle ?: this.trailingIconStyle,
+            type = type ?: this.type,
         )
     }
 
@@ -378,6 +382,7 @@ constructor(
 
         leadingIconStyle: ListItemIconStyle? = null,
         trailingIconStyle: ListItemIconStyle? = null,
+        type: ListItemStyleType? = null,
     ): ListItemStyle {
         return ListItemStyle(
             containerShape = containerShape ?: this.containerShape,
@@ -406,6 +411,7 @@ constructor(
             supportingTextColor = supportingColor ?: this.supportingTextColor,
             leadingIconStyle = leadingIconStyle ?: this.leadingIconStyle,
             trailingIconStyle = trailingIconStyle ?: this.trailingIconStyle,
+            type = type ?: this.type,
         )
     }
 
@@ -726,6 +732,7 @@ data class ListItemIconStyle(
                 draggedContentColor
             )
         )
+
         @Composable
         fun expressiveLeadingIconStyle(
             contentColor: Color = ExpressiveListItemTokens.ItemLeadingIconColor.value,
@@ -853,3 +860,7 @@ data class ListItemContentAlignment(
 
 @Stable
 fun DpSize(wh: Dp): DpSize = DpSize(wh, wh)
+
+enum class ListItemStyleType {
+    BASELINE, EXPRESSIVE, SEGMENTED
+}

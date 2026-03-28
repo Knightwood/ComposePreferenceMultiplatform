@@ -12,9 +12,9 @@ import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
 
 @Composable
-fun PreferenceItem(
+fun PreferencesCautionCard(
     modifier: Modifier = Modifier,
-    style: ListItemStyle = LocalPreferenceTheme.current.itemStyle,
+    style: ListItemStyle = LocalPreferenceTheme.current.cautionCardItemStyle,
     shapes: StateShapes? = null,
     colors: ListItemColors? = null,
     enabled: Boolean = true,
@@ -43,3 +43,4 @@ fun PreferenceItem(
     description = description,
     title = title
 )
+

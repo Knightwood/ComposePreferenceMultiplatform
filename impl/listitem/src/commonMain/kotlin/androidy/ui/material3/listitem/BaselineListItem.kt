@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.heightIn
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,13 +29,17 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import androidy.ui.material3.listitem.basic.takeIf
+import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.m3_tokens.ProvideContentColorTextStyle
+import androidy.ui.material3.listitem.normal_style.ListItemColors
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
 import androidy.ui.material3.listitem.normal_style.ListItemTokens
+import androidy.ui.material3.listitem.normal_style.merge
 
 private val logger = org.slf4j.LoggerFactory.getLogger("ListItem")
 
@@ -49,8 +55,13 @@ fun BaselineListItem(
     trailingContent: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
     style: ListItemStyle = LocalListItemStyle.current,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
 ) {
-    with(style) {
+    val finalStyle = remember(style, shapes, colors) {
+        mutableStateOf(style.merge(colors, shapes))
+    }
+    with(finalStyle.value) {
         var supportingContentHeight: Int by remember { mutableIntStateOf(0) }
         val onelineHeightLimit = 30.sp.roundToPx()
         val listItemType by remember {
@@ -143,7 +154,7 @@ private fun ListItemStyle.ListItemLeading(
                     .takeIf({ leadingPercent != null }) {
                         weight(leadingPercent!!)
                     }
-                    .takeIf({  leadingSize.isSpecified  }) {
+                    .takeIf({ leadingSize.isSpecified }) {
                         size(leadingSize)
                     }
             ) {

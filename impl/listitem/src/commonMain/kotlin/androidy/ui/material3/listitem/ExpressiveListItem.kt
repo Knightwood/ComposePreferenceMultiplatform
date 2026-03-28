@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -71,14 +69,14 @@ fun ExpressiveListItem(
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
 ) {
     val finalStyle = remember(style, shapes, colors) {
         mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
-        headlineContent = content,
+        headlineContent = headlineContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
         overlineContent = overlineContent,
@@ -114,14 +112,14 @@ fun ExpressiveListItem(
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
 ) {
     val finalStyle = remember(style, shapes, colors) {
         mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
-        headlineContent = content,
+        headlineContent = headlineContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
         overlineContent = overlineContent,
@@ -158,14 +156,14 @@ fun ExpressiveListItem(
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
 ) {
     val finalStyle = remember(style, shapes, colors) {
         mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
-        headlineContent = content,
+        headlineContent = headlineContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
         overlineContent = overlineContent,

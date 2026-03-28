@@ -1,114 +1,154 @@
 package androidy.preference.ui.component
 
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import androidy.preference.ui.theme.Preferences
+import androidy.preference.ui.basic.BasicPreferenceItem
 import androidy.preference.ui.basic.ComposeSwitch
-import androidy.preference.ui.basic.SamplePreference
-import androidy.preference.ui.basic.harmonizeWithPrimary
+import androidy.preference.ui.theme.LocalPreferenceTheme
+import androidy.ui.material3.listitem.interactive.StateShapes
+import androidy.ui.material3.listitem.normal_style.ListItemColors
+import androidy.ui.material3.listitem.normal_style.ListItemStyle
 
 @Composable
-fun PreferenceSwitch(
+fun PreferenceSwitchItem(
     modifier: Modifier = Modifier,
-    isChecked: Boolean,
-    title: String,
-    icon: Any? = null,
-    desc: String? = null,
+    style: ListItemStyle = LocalPreferenceTheme.current.itemStyle,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
     enabled: Boolean = true,
-    onChecked: ((Boolean) -> Unit)? = null,
-) {
-    SamplePreference(
-        modifier = modifier,
-        title = title, icon = icon, desc = desc,
-        enabled = enabled, onClick = {
-            onChecked?.invoke(!isChecked)
-        },
-        end = {
-            ComposeSwitch(isChecked = isChecked, onCheckedChange = onChecked)
-        }
-    )
-}
+    indication: Indication? = ripple(),
+    interactionSource: MutableInteractionSource? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null,
+    start: @Composable (() -> Unit)? = null,
+    end: @Composable (() -> Unit)? = {
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
+    },
+    description: @Composable (() -> Unit)? = null,
+    title: @Composable () -> Unit,
+) = BasicPreferenceItem(
+    modifier = modifier,
+    style = style,
+    shapes = shapes,
+    colors = colors,
+    enabled = enabled,
+    indication = indication,
+    interactionSource = interactionSource,
+    checked = checked,
+    onCheckedChange = onCheckedChange,
+    onLongClick = onLongClick,
+    onLongClickLabel = onLongClickLabel,
+    start = start,
+    end = end,
+    description = description,
+    title = title
+)
 
 
 @Composable
 fun PreferenceSwitchWithContainer(
     modifier: Modifier = Modifier,
-    boxMarginValues: PaddingValues = PaddingValues(
-        start = 16.dp,
-        end = 16.dp
-    ),
-    color: Color = MaterialTheme.colorScheme.errorContainer.harmonizeWithPrimary(),
-    shape: Shape = RoundedCornerShape(28.dp),
-    isChecked: Boolean,
-    title: String,
-    icon: Any? = null,
-    desc: String? = null,
+    style: ListItemStyle = LocalPreferenceTheme.current.cautionCardItemStyle,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
     enabled: Boolean = true,
-    onChecked: ((Boolean) -> Unit)? = null,
-) {
-    Preferences.CopyTheme(
-        dimenProvider = { copy(boxMarginValues = boxMarginValues) },
-        boxStyleProvider = { copy(color = color, shape = shape) }
-    ) {
-        PreferenceSwitch(
-            modifier = modifier,
-            isChecked = isChecked,
-            title = title,
-            icon = icon,
-            desc = desc,
-            enabled = enabled,
-            onChecked = onChecked
+    indication: Indication? = ripple(),
+    interactionSource: MutableInteractionSource? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null,
+    start: @Composable (() -> Unit)? = null,
+    end: @Composable (() -> Unit)? = {
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
         )
-    }
-
-}
+    },
+    description: @Composable (() -> Unit)? = null,
+    title: @Composable () -> Unit,
+) = BasicPreferenceItem(
+    modifier = modifier,
+    style = style,
+    shapes = shapes,
+    colors = colors,
+    enabled = enabled,
+    indication = indication,
+    interactionSource = interactionSource,
+    checked = checked,
+    onCheckedChange = onCheckedChange,
+    onLongClick = onLongClick,
+    onLongClickLabel = onLongClickLabel,
+    start = start,
+    end = end,
+    description = description,
+    title = title
+)
 
 
 @Composable
 fun PreferenceWithDividerSwitch(
     modifier: Modifier = Modifier,
-    isChecked: Boolean,
-    title: String,
-    icon: Any? = null,
-    desc: String? = null,
+    style: ListItemStyle = LocalPreferenceTheme.current.itemStyle,
+    shapes: StateShapes? = null,
+    colors: ListItemColors? = null,
     enabled: Boolean = true,
-    onClick: (() -> Unit) = {},
-    onChecked: ((Boolean) -> Unit)? = null,
-) {
-    SamplePreference(
-        modifier = modifier,
-        title = title, icon = icon, desc = desc,
-        enabled = enabled, onClick = onClick,
-        end = {
-            Row(
+    indication: Indication? = ripple(),
+    interactionSource: MutableInteractionSource? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    onClick: () -> Unit={},
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null,
+    start: @Composable (() -> Unit)? = null,
+    end: @Composable (() -> Unit)? = {
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Min),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            VerticalDivider(
                 modifier = Modifier
-                    .height(IntrinsicSize.Min)
-                    .align(Alignment.Center),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .padding(end = 16.dp),
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    thickness = 2f.dp
-                )
-                ComposeSwitch(isChecked = isChecked, onCheckedChange = onChecked)
-            }
+                    .height(24.dp)
+                    .padding(end = 16.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                thickness = 2f.dp
+            )
+            ComposeSwitch(isChecked = checked, onCheckedChange = onCheckedChange)
         }
-    )
-
-}
-
+    },
+    description: @Composable (() -> Unit)? = null,
+    title: @Composable () -> Unit,
+) = BasicPreferenceItem(
+    modifier = modifier,
+    style = style,
+    shapes = shapes,
+    colors = colors,
+    enabled = enabled,
+    indication = indication,
+    interactionSource = interactionSource,
+    onClick = onClick,
+    onLongClick = onLongClick,
+    onLongClickLabel = onLongClickLabel,
+    start = start,
+    end = end,
+    description = description,
+    title = title
+)

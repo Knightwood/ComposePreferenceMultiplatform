@@ -15,7 +15,7 @@ import androidy.ui.material3.listitem.ExpressiveListItem
 fun ColumnScope.ExpressiveListItemComponentsDemo() {
     Text("normal")
     ExpressiveListItem(
-        content = { Text("普通可点击的ListItem") },
+        headlineContent = { Text("普通可点击的ListItem") },
         supportingContent = { Text(longText) },
         leadingContent = { leading() },
         trailingContent = { OutlinedButton(onClick = {}){Text("Button")} },
@@ -23,7 +23,7 @@ fun ColumnScope.ExpressiveListItemComponentsDemo() {
     )
     ExpressiveListItem(
         enabled = false,
-        content = { Text("Headline") },
+        headlineContent = { Text("Headline") },
         supportingContent = { Text("禁用的ListItem") },
         leadingContent = { leading() },
         trailingContent = { Text("Trailing") },
@@ -31,7 +31,7 @@ fun ColumnScope.ExpressiveListItemComponentsDemo() {
     )
     ExpressiveListItem(
         selected = true,
-        content = { Text("Headline") },
+        headlineContent = { Text("Headline") },
         supportingContent = { Text("被选择的ListItem") },
         leadingContent = { leading() },
         trailingContent = { Text("Trailing") },
@@ -55,7 +55,7 @@ private fun ExpressiveListItemRadioGroup(
     onSelected: (Int) -> Unit,
 ) {
     ExpressiveListItem(
-        content = { Text("Option $index") },
+        headlineContent = { Text("Option $index") },
         supportingContent = { Text("this is option $index") },
         leadingContent = { RadioButton(selected = selectedIndex == index, onClick = { onSelected(index) }) },
         trailingContent = { Text("Trailing") },
@@ -71,7 +71,7 @@ private fun ExpressiveListItemCheckBoxGroup(
     onChecked: (Boolean) -> Unit,
 ) {
     ExpressiveListItem(
-        content = { Text("Option $index") },
+        headlineContent = { Text("Option $index") },
         supportingContent = { Text("this is option $index") },
         leadingContent = { Checkbox(checked = checked, onCheckedChange = { onChecked(it) }) },
         trailingContent = { Text("Trailing") },

@@ -35,14 +35,14 @@ fun SegmentedListItem(
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
 ) {
     val finalStyle = remember(style, shapes, colors) {
         mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
-        headlineContent = content,
+        headlineContent = headlineContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
         overlineContent = overlineContent,
@@ -76,14 +76,14 @@ fun SegmentedListItem(
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
 ) {
     val finalStyle = remember(style, shapes, colors) {
         mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
-        headlineContent = content,
+        headlineContent = headlineContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
         overlineContent = overlineContent,
@@ -120,14 +120,14 @@ fun SegmentedListItem(
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
+    headlineContent: @Composable () -> Unit,
 ) {
     val finalStyle = remember(style, shapes, colors) {
         mutableStateOf(style.merge(colors, shapes))
     }
     InteractiveListItem(
         modifier = modifier,
-        headlineContent = content,
+        headlineContent = headlineContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
         overlineContent = overlineContent,

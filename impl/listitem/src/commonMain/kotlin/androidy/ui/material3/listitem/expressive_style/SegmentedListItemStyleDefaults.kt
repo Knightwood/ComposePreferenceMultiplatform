@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -18,6 +17,7 @@ import androidy.ui.material3.listitem.normal_style.ListItemContentAlignment
 import androidy.ui.material3.listitem.normal_style.ListItemContentPaddingValues
 import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
+import androidy.ui.material3.listitem.normal_style.ListItemStyleType
 import androidy.ui.material3.listitem.normal_style.colors
 
 object SegmentedListItemStyleDefaults {
@@ -29,6 +29,7 @@ object SegmentedListItemStyleDefaults {
             return segmentedCached ?: ExpressiveListItemDefaults.expressiveDefaultStyle.copy(
                 containerColor = ExpressiveListItemTokens.ItemSegmentedContainerColor.value,
                 disabledContainerColor = ExpressiveListItemTokens.ItemSegmentedContainerColor.value,
+                type = ListItemStyleType.SEGMENTED,
             ).also { segmentedCached = it }
         }
 
@@ -263,25 +264,31 @@ object SegmentedListItemStyleDefaults {
         )
     }
 
+    /**
+     * @param index the index of the segment listitem
+     * @param count the total number of segment listitem
+     * @param defaultShapes 用户当前使用的形状，如果不传递此参数，则认为用户在使用默认样式中的形状
+     */
     @Composable
     fun segmentedShape(
         index: Int,
         count: Int,
         defaultShapes: StateShapes = shapes(),
     ): StateShapes {
-        val overrideShape = ExpressiveListItemTokens.ContainerShape.value
-        return remember(index, count, defaultShapes, overrideShape) {
+        // token default shapes
+        val tokenDefaultShape = ExpressiveListItemTokens.ContainerShape.value
+        return remember(index, count, defaultShapes, tokenDefaultShape) {
             when {
                 count == 1 -> defaultShapes
 
                 index == 0 -> {
-                    val defaultBaseShape = defaultShapes.shape
-                    if (defaultBaseShape is CornerBasedShape && overrideShape is CornerBasedShape) {
+                    val userUsedBaseShape = defaultShapes.shape
+                    if (userUsedBaseShape is CornerBasedShape && tokenDefaultShape is CornerBasedShape) {
                         defaultShapes.copy(
                             shape =
-                                defaultBaseShape.copy(
-                                    topStart = overrideShape.topStart,
-                                    topEnd = overrideShape.topEnd,
+                                userUsedBaseShape.copy(
+                                    topStart = tokenDefaultShape.topStart,
+                                    topEnd = tokenDefaultShape.topEnd,
                                 )
                         )
                     } else {
@@ -291,12 +298,12 @@ object SegmentedListItemStyleDefaults {
 
                 index == count - 1 -> {
                     val defaultBaseShape = defaultShapes.shape
-                    if (defaultBaseShape is CornerBasedShape && overrideShape is CornerBasedShape) {
+                    if (defaultBaseShape is CornerBasedShape && tokenDefaultShape is CornerBasedShape) {
                         defaultShapes.copy(
                             shape =
                                 defaultBaseShape.copy(
-                                    bottomStart = overrideShape.bottomStart,
-                                    bottomEnd = overrideShape.bottomEnd,
+                                    bottomStart = tokenDefaultShape.bottomStart,
+                                    bottomEnd = tokenDefaultShape.bottomEnd,
                                 )
                         )
                     } else {

@@ -2,6 +2,7 @@ package androidy.ui.material3.listitem
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.compositionLocalOf
 import androidy.ui.material3.listitem.expressive_style.ExpressiveListItemDefaults
 import androidy.ui.material3.listitem.expressive_style.SegmentedListItemStyleDefaults
@@ -26,6 +27,25 @@ object LocalListItemStyle {
             LocalListItemStyle provides style,
             LocalExpressiveListItemStyle provides expressiveStyle,
             LocalSegmentedExpressiveListItemStyle provides segmentedExpressiveStyle,
+        ) {
+            content()
+        }
+    }
+
+    @Suppress("ComposableNaming")
+    @Composable
+    fun provide(
+        style: ListItemStyle = ListItemDefaults.defaultStyle,
+        expressiveStyle: ListItemStyle = ExpressiveListItemDefaults.expressiveDefaultStyle,
+        segmentedExpressiveStyle: ListItemStyle = SegmentedListItemStyleDefaults.segmentedDefaultStyle,
+        vararg values: ProvidedValue<*>,
+        content: @Composable () -> Unit,
+    ) {
+        CompositionLocalProvider(
+            LocalListItemStyle provides style,
+            LocalExpressiveListItemStyle provides expressiveStyle,
+            LocalSegmentedExpressiveListItemStyle provides segmentedExpressiveStyle,
+            *values
         ) {
             content()
         }

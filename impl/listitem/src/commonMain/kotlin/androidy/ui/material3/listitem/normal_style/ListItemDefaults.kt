@@ -78,6 +78,7 @@ object ListItemDefaults {
                 ),
                 leadingIconStyle = ListItemIconStyle.Companion.leadingIconStyle(),
                 trailingIconStyle = ListItemIconStyle.Companion.trailingIconStyle(),
+                type = ListItemStyleType.BASELINE
             ).also { cached = it }
         }
 

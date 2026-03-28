@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -28,7 +26,7 @@ import kotlin.collections.set
 fun ColumnScope.SegmentedListItemComponentsDemo() {
     Text("normal")
     SegmentedListItem(
-        content = { Text("普通可点击的ListItem") },
+        headlineContent = { Text("普通可点击的ListItem") },
         supportingContent = { Text(longText) },
         leadingContent = { leading() },
         trailingContent = { OutlinedButton(onClick = {}) { Text("Button") } },
@@ -36,7 +34,7 @@ fun ColumnScope.SegmentedListItemComponentsDemo() {
     )
     SegmentedListItem(
         enabled = false,
-        content = { Text("Headline") },
+        headlineContent = { Text("Headline") },
         supportingContent = { Text("禁用的ListItem") },
         leadingContent = { leading() },
         trailingContent = { Text("Trailing") },
@@ -44,7 +42,7 @@ fun ColumnScope.SegmentedListItemComponentsDemo() {
     )
     SegmentedListItem(
         selected = true,
-        content = { Text("Headline") },
+        headlineContent = { Text("Headline") },
         supportingContent = { Text("被选择的ListItem") },
         leadingContent = { leading() },
         trailingContent = { Text("Trailing") },
@@ -73,7 +71,7 @@ private fun SegmentedListItemRadioGroup(
     onSelected: (Int) -> Unit,
 ) {
     SegmentedListItem(
-        content = { Text("Option $index") },
+        headlineContent = { Text("Option $index") },
         supportingContent = { Text("this is option $index") },
         leadingContent = { RadioButton(selected = selectedIndex == index, onClick = { onSelected(index) }) },
         trailingContent = { Text("Trailing") },
@@ -93,7 +91,7 @@ private fun SegmentedListItemCheckBoxGroup(
     onChecked: (Boolean) -> Unit,
 ) {
     SegmentedListItem(
-        content = { Text("Option $index") },
+        headlineContent = { Text("Option $index") },
         supportingContent = { Text("this is option $index") },
         leadingContent = { Checkbox(checked = checked, onCheckedChange = { onChecked(it) }) },
         trailingContent = { Text("Trailing") },

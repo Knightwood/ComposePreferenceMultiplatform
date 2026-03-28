@@ -30,7 +30,7 @@ enum class TypographyKeyTokens {
 }
 
 @Composable
-internal fun ProvideContentColorTextStyle(
+fun ProvideContentColorTextStyle(
     contentColor: Color,
     textStyle: TextStyle,
     vararg values: ProvidedValue<*>,
