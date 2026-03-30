@@ -1,4 +1,3 @@
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -6,7 +5,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,18 +22,20 @@ import androidy.ui.material3.listitem.normal_style.colors
 
 @Composable
 fun CrossComponentsTestScreen() {
-    LocalPreferenceTheme.Provide(
-//        baselineStyle = ListItemDefaults.style(
-//            containerShape = MaterialTheme.shapes.large,
-//            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-//            leadingIconStyle = ListItemIconStyle.leadingAvatarStyle()
-//        ),
-    ) {
-        CrossComponentsTest(
-            Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 8.dp)
-        )
+    LocalListItemStyle.Provide {
+        LocalPreferenceTheme.Provide(
+//            PreferenceDefaults.styleFromProvider(
+//                itemStyle = ExpressiveListItemDefaults.style(
+//                    leadingIconStyle = ListItemIconStyle.leadingAvatarStyle()
+//                ),
+//            )
+        ) {
+            CrossComponentsTest(
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 8.dp)
+            )
+        }
     }
 }
 
@@ -41,11 +47,9 @@ fun CrossComponentsTest(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        PreferenceSubTitle(content = { Text("Item") })
         PreferenceItemTest()
-        PreferenceSubTitle(
-            modifier = Modifier.padding(top = 8.dp),
-            content = { Text("其他") },
-        )
+        PreferenceSubTitle(content = { Text("滑动条") })
         var progress by remember {
             mutableStateOf(0f)
         }
@@ -53,36 +57,69 @@ fun CrossComponentsTest(
             description = {
                 Slider(value = progress, onValueChange = { progress = it })
             },
-            title = { Text("滑动条") },
+            title = { Text("伽马值") },
         )
+        PreferenceSubTitle(content = { Text("杂项") })
+        Others()
+        PreferenceSubTitle(content = { Text("开关") })
         SwitchTest()
         PreferenceSubTitle(content = { Text("多选框") })
         CheckBoxTest()
         PreferenceSubTitle(content = { Text("单选框") })
         RadioTest()
-        PreferenceSubTitle(content = { Text("折叠") })
-        var expand by remember { mutableStateOf(false) }
-        PreferenceCheckBoxItem(
-            title = { Text("折叠") },
-            description = { Text("折叠菜单") },
-            checked = expand,
-            onCheckedChange = { expand = it },
-            end = {
-                IconButton(onClick = { expand = !expand }) {
-                    Icon(
-                        if (expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                        contentDescription = null
-                    )
-                }
-            }
-        )
-        AnimatedVisibility(visible = expand) {
-            Column(modifier = Modifier.padding(top = 12.dp, start = 12.dp, end = 12.dp)) {
-                PreferenceItemTest()
-            }
-        }
     }
 
+}
+
+@Composable
+private fun Others() {
+    var expand by remember { mutableStateOf(false) }
+    PreferenceCollapsedItem(
+        title = { Text("折叠菜单") },
+        description = { Text("折叠菜单") },
+        expand = expand,
+        onExpandChange = { expand = it },
+    ) {
+        Column(modifier = Modifier.padding(vertical = 16.dp)) {
+            PreferenceItem(
+                title = { Text("动画") },
+                start = { Icon(Icons.Outlined.TouchApp, null) },
+                description = { Text("动画反馈、触感反馈") },
+            )
+            PreferenceItem(
+                title = { Text("语言") },
+                description = { Text("中文(zh)") },
+                start = { Icon(Icons.Outlined.Language, null) },
+            )
+        }
+    }
+    var showDialog by remember { mutableStateOf(false) }
+    var alertText by remember { mutableStateOf("") }
+    PreferenceAlertDialog(
+        title = { Text("点击打开弹窗") },
+        description = { Text("在弹窗中使用文本输入框") },
+        start = { Icon(Icons.Outlined.Settings, null) },
+        visible = showDialog,
+        onVisibleChange = { showDialog = it },
+        dialogText = {
+            Column {
+                Text("请输入内容，请输入内容，请输入内容，请输入内容，请输入内容，请输入内容，请输入内容")
+                OutlinedTextField(
+                    placeholder = { Text("请输入内容") },
+                    label = { Text("请输入内容") },
+                    value = alertText,
+                    onValueChange = {
+                        alertText = it
+                    }
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { showDialog = false }) {
+                Text("确定")
+            }
+        }
+    )
 }
 
 @Composable
@@ -91,12 +128,6 @@ private fun PreferenceItemTest() {
         title = { Text("调整您的设置信息") },
         description = { Text("账户、翻译、帮助信息等") },
         start = { Icon(Icons.Outlined.AccountCircle, null) },
-    )
-    PreferenceItem(
-        modifier = Modifier,
-        title = { Text("账户") },
-//        start = { Icon(  Icons.Outlined.AccountCircle,
-//        description = "本地、谷歌",
     )
     PreferenceItem(
         title = { Text("颜色和样式") },
@@ -176,11 +207,6 @@ private fun RadioTest() {
         onClick = { selected = 3 }
     )
 }
-
-data class CheckItemInfo(
-    val title: String,
-    val desc: String,
-)
 
 @Composable
 private fun CheckBoxTest() {

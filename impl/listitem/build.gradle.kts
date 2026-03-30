@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import org.jetbrains.kotlin.config.JvmTarget
+import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.library)
-    id("publish")
+    alias(libs.plugins.vanniktech.mavenPublish)
 }
 //配置java版本
 //https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-dsl-reference.html#targets
@@ -84,3 +84,29 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
+val myMavenName = rootProject.findProperty("my.maven.name") as String? ?: "MyLocalMaven"
+val myMavenUrl = rootProject.findProperty("my.maven.url") as String? ?: "D:\\maven"
+
+group = "androidy.ui.material3.listitem"
+val artifactId = "listitem"
+version = "1.0.0"
+
+publishing {
+    repositories {
+        maven {
+            name = myMavenName
+            url = uri(myMavenUrl)
+        }
+    }
+}
+mavenPublishing {
+    publishToMavenCentral()
+    coordinates(group.toString(), artifactId, version.toString())
+    configure(
+        KotlinMultiplatform()
+    )
+    pom {
+        name.set(project.name)
+        description.set("some preference toolkit library for android and kmp")
+    }
+}

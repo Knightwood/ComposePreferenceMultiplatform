@@ -1,142 +1,222 @@
-//import androidx.compose.foundation.layout.Arrangement
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.PaddingValues
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.foundation.rememberScrollState
-//import androidx.compose.foundation.verticalScroll
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.outlined.AccountCircle
-//import androidx.compose.material.icons.outlined.Language
-//import androidx.compose.material.icons.outlined.TouchApp
-//import androidx.compose.material3.MaterialTheme
-//import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.getValue
-//import androidx.compose.runtime.mutableStateOf
-//import androidx.compose.runtime.remember
-//import androidx.compose.runtime.rememberCoroutineScope
-//import androidx.compose.runtime.setValue
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.unit.dp
-//import androidy.preference.ui.theme.PreferenceIconStyle
-//import androidy.preference.ui.theme.Preferences
-//import androidy.preference.data.core.DependenceNode
-//import androidy.preference.data.core.PreferenceHolder
-//import androidy.preference.ui.component.PreferencesHintCard
-//import androidy.preference.uiauto.PreferenceCollapseItem
-//import androidy.preference.uiauto.PreferenceItem
-//import androidy.preference.uiauto.PreferenceSwitch
-//import androidy.preference.uiauto.PreferenceSwitchWithContainer
-//import androidy.preference.uiauto.PreferencesCautionCard
-//import androidy.preference.uiauto.SetTheme
-//import androidy.ui.material3.listitem.LocalListItemStyle
-//import androidy.ui.material3.listitem.normal_style.ListItemDefaults
-//import androidy.ui.material3.listitem.normal_style.ListItemIconStyle
-//import kotlinx.coroutines.launch
-//@Composable
-//fun AutoComponentsTestScreen(holder: PreferenceHolder) {
-//    LocalListItemStyle.provide(
-//        style = ListItemDefaults.style(
-//            containerShape = MaterialTheme.shapes.large,
-//            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-//            leadingIconStyle = ListItemIconStyle.leadingAvatarStyle()
-//        ),
-//    ) {
-//        AutoComponentsTest(holder)
-//    }
-//}
-//
-//@Composable
-//fun AutoComponentsTest(holder: PreferenceHolder) {
-//    val customNodeName = "customNode"
-//    //创建一个自定义节点
-//    val node = holder.registerDependence(customNodeName, true)
-//    val scope = rememberCoroutineScope()
-//
-//    Preferences.SetTheme(
-//        holder = holder,
-//        iconStyle = PreferenceIconStyle(
-//            paddingValues = PaddingValues(8.dp),
-//            tint = MaterialTheme.colorScheme.onPrimary,
-//            backgroundColor = MaterialTheme.colorScheme.primary,
-//        )
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .verticalScroll(rememberScrollState()),
-//            verticalArrangement = Arrangement.spacedBy(4.dp)
-//        ) {
-//            PreferencesHintCard(
-//                title = "调整您的设置信息",
-//                desc = "账户、翻译、帮助信息等",
-//            )
-//
-//            PreferenceSwitch(
-//                defaultValue = false,
-//                title = "使用新特性",
-//                desc = "实验功能，可能不稳定",
-//                dependenceKey = DependenceNode.rootName,
-//                keyName = "s1"
-//            ) { state ->
-//                //这里获取并修改了当前的enable状态，
-//                //依赖这个节点的会改变显示状态，
-//                //如果当前没有指定依赖，自身也会受到影响
-//                scope.launch {
-//                    holder.getDependence("s1")?.setEnabled(state)
-//                }
-//            }
-//            PreferenceItem(
-//                dependenceKey = "s1",
-//                title = "关联组件",
-//                icon = Icons.Outlined.AccountCircle
-//            )
-//
-//            PreferenceSwitchWithContainer(
-//                title = "调整您的设置信息",
-//                desc = "账户、翻译、帮助信息等",
-//                defaultValue = false,
-//                keyName = "b2",
-//                dependenceKey = DependenceNode.rootName,
-//                icon = Icons.Outlined.AccountCircle,
-//            ) {
-//                scope.launch {
-//                    node.setEnabled(it)
-//                }
-//            }
-//            PreferenceItem(
-//                modifier = Modifier,
-//                title = "账户",
-//                icon = Icons.Outlined.AccountCircle,
-//                dependenceKey = customNodeName,
-//                desc = "本地、谷歌",
-//            )
-//            var expand by remember { mutableStateOf(false) }
-//            PreferenceCollapseItem(
-//                expand = expand,
-//                title = "附加内容",
-//                dependenceKey = customNodeName,
-//                stateChanged = { expand = !expand })
-//            {
-//                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-//                    PreferenceItem(
-//                        title = "动画",
-//                        icon = Icons.Outlined.TouchApp,
-//                        desc = "动画反馈、触感反馈",
-//                    )
-//                    PreferenceItem(
-//                        title = "语言",
-//                        desc = "中文(zh)",
-//                        icon = Icons.Outlined.Language,
-//                    )
-//                }
-//            }
-//            PreferencesCautionCard(
-//                title = "调整您的设置信息",
-//                desc = "账户、翻译、帮助信息等",
-//                dependenceKey = customNodeName,
-//                icon = Icons.Outlined.AccountCircle,
-//            )
-//
-//
-//        }
-//    }
-//}
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidy.preference.data.core.DependenceNode
+import androidy.preference.data.core.PreferenceHolder
+import androidy.preference.ui.component.PreferenceCheckBoxItem
+import androidy.preference.ui.component.PreferenceItem
+import androidy.preference.ui.component.PreferenceRadioButtonItem
+import androidy.preference.ui.component.PreferenceSubTitle
+import androidy.preference.ui.theme.LocalPreferenceTheme
+import androidy.preference.uiauto.component.*
+import androidy.preference.uiauto.domain.LocalAutoPreference
+import androidy.ui.material3.listitem.LocalListItemStyle
+import androidy.ui.material3.listitem.expressive_style.SegmentedListItemStyleDefaults
+import androidy.ui.material3.listitem.normal_style.colors
+import kotlinx.coroutines.launch
+
+@Composable
+fun AutoComponentsTestScreen(holder: PreferenceHolder) {
+    LocalListItemStyle.Provide {
+        LocalPreferenceTheme.Provide {
+            LocalAutoPreference.Provide(holder) {
+                AutoComponentsTest(
+                    holder,
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AutoComponentsTest(
+    holder: PreferenceHolder,
+    modifier: Modifier = Modifier,
+) {
+    val customNodeName = "customNode"
+    //创建一个自定义节点
+    val node = holder.registerDependence(customNodeName, true)
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        PreferenceSubTitle(content = { Text("Item") })
+        AutoPreferencesCautionCard(
+            title = { Text("调整您的设置信息") },
+            dependenceKey = customNodeName,
+            description = { Text("账户、翻译、帮助信息等") },
+            start = { Icon(Icons.Outlined.AccountCircle, null) },
+        )
+        PreferenceSubTitle(content = { Text("折叠") })
+        var expand by remember { mutableStateOf(false) }
+        AutoPreferenceCollapsedItem(
+            title = { Text("折叠菜单") },
+            description = { Text("折叠菜单") },
+            expand = expand,
+            dependenceKey = customNodeName,
+            onExpandChange = { expand = it },
+        ) {
+            Column(modifier = Modifier.padding(vertical = 16.dp)) {
+                PreferenceItem(
+                    title = { Text("动画") },
+                    start = { Icon(Icons.Outlined.TouchApp, null) },
+                    description = { Text("动画反馈、触感反馈") },
+                )
+                PreferenceItem(
+                    title = { Text("语言") },
+                    description = { Text("中文(zh)") },
+                    start = { Icon(Icons.Outlined.Language, null) },
+                )
+            }
+        }
+
+        PreferenceSubTitle(content = { Text("开关") })
+        var checked by remember { mutableStateOf(false) }
+        AutoPreferenceWithDividerSwitch(
+            start = { Icon(Icons.Outlined.CloudSync, null) },
+            checked = checked,
+            dependenceKey = DependenceNode.rootName,
+            keyName = "s1",
+            title = { Text("同步") },
+            description = { Text("同步您的账户数据") },
+            onCheckedChange = {
+                checked = it
+                //这里获取并修改了当前的enable状态，
+                //依赖这个节点的会改变显示状态，
+                //如果当前没有指定依赖，自身也会受到影响
+                scope.launch {
+                    holder.getDependence("s1")?.setEnabled(it)
+                }
+            }
+        )
+        var checked2 by remember { mutableStateOf(false) }
+        AutoPreferenceSwitchItem(
+            start = { Icon(Icons.Outlined.LocalDining, null) },
+            checked = checked2,
+            dependenceKey = "s1",
+            title = { Text("餐馆") },
+            description = { Text("查找附近的餐馆") },
+            onCheckedChange = { checked2 = it },
+            keyName = "s2"
+        )
+        AutoPreferenceSwitchWithContainer(
+            title = { Text("调整您的设置信息") },
+            description = { Text("账户、翻译、帮助信息等") },
+            keyName = "b2",
+            dependenceKey = DependenceNode.rootName,
+            checked = checked2,
+            start = { Icon(Icons.Outlined.AccountCircle, null) },
+            onCheckedChange = {
+                checked2 = it
+                scope.launch {
+                    node.setEnabled(it)
+                }
+            }
+        )
+
+
+        PreferenceSubTitle(content = { Text("多选框") })
+        CheckBoxTest()
+        PreferenceSubTitle(content = { Text("单选框") })
+        RadioTest()
+    }
+
+}
+
+
+
+@Composable
+private fun PreferenceItemTest() {
+
+    PreferenceItem(
+        title = { Text("颜色和样式") },
+        start = { Icon(Icons.Outlined.Palette, null) },
+        description = { Text("主题、色调样式、字体") },
+    )
+    PreferenceItem(
+        title = { Text("动画") },
+        start = { Icon(Icons.Outlined.TouchApp, null) },
+        description = { Text("动画反馈、触感反馈") },
+    )
+    PreferenceItem(
+        title = { Text("语言") },
+        description = { Text("中文(zh)") },
+        start = { Icon(Icons.Outlined.Language, null) },
+    )
+    PreferenceItem(
+        enabled = false,
+        title = { Text("关于") },
+        description = { Text("开源信息、版权") },
+        start = { Icon(Icons.Outlined.TipsAndUpdates, null) },
+    )
+}
+
+
+@Composable
+private fun RadioTest() {
+
+    var selected by remember {
+        mutableStateOf(1)
+    }
+    PreferenceRadioButtonItem(
+        title = { Text("激活背包") },
+        selected = selected == 1,
+        description = { Text("使用更大的背包") },
+        onClick = { selected = 1 }
+    )
+    PreferenceRadioButtonItem(
+        title = { Text("天空材质") },
+        selected = selected == 2,
+        description = { Text("使用更精美的天空材质贴图") },
+        onClick = { selected = 2 }
+    )
+    PreferenceRadioButtonItem(
+        title = { Text("非官方修复补丁") },
+        selected = selected == 3,
+        description = { Text("可能会带来新的bug") },
+        onClick = { selected = 3 }
+    )
+}
+
+data class CheckItemInfo(
+    val title: String,
+    val desc: String,
+)
+
+@Composable
+private fun CheckBoxTest() {
+    val checkedMap = remember { mutableStateMapOf<Int, Boolean>() }
+    val checkItems = remember {
+        listOf(
+            CheckItemInfo("激活背包", "使用更大的背包"),
+            CheckItemInfo("天空材质", "使用更精美的天空材质贴图"),
+            CheckItemInfo("非官方修复补丁", "可能会带来新的bug")
+        )
+    }
+    checkItems.forEachIndexed { index, info ->
+        PreferenceCheckBoxItem(
+            title = { Text(info.title) },
+            checked = checkedMap[index] ?: false,
+            description = { Text(info.desc) },
+            onCheckedChange = { checkedMap[index] = it },
+            colors = LocalListItemStyle.currentSegmented.colors()
+                .copy(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+            shapes = SegmentedListItemStyleDefaults.segmentedShape(index, 3),
+        )
+    }
+}

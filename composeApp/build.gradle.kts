@@ -51,7 +51,7 @@ kotlin {
                 implementation(libs.koin.core)
 
                 implementation(projects.impl.ui)
-//                implementation(projects.impl.uiAuto)
+                implementation(projects.impl.uiAuto)
                 implementation(projects.impl.dataCore)
                 implementation(projects.impl.dataDatastore)
 

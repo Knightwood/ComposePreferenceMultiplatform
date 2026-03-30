@@ -70,7 +70,7 @@ fun MainScreen(holder: PreferenceHolder) {
             if (selected == 0) {
                 CrossComponentsTestScreen()
             } else if (selected == 1) {
-//                AutoComponentsTestScreen(holder)
+                AutoComponentsTestScreen(holder)
             } else if (selected == 2) {
                 ListItemTestScreen()
             }

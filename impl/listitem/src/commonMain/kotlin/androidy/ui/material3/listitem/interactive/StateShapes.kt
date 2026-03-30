@@ -9,6 +9,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidy.ui.material3.listitem.basic.AppPlatform
+import androidy.ui.material3.listitem.basic.appCurrentPlatform
 import org.slf4j.LoggerFactory
 
 @Immutable
@@ -111,12 +113,14 @@ class StateShapes(
 //            logger.info("interactiveState: isHovered: ${a.isHovered}; isPressed: ${a.isPressed}; isFocused: ${a.isFocused}; isDragged: ${a.isDragged} ")
 //        }
         return shapeForInteraction(
-            selected,
-            state.isPressed,
-            state.isFocused,//jvm平台下此状态永远为true，会导致shape无法回到正常状态
-            state.isHovered,
-            state.isDragged,
-            animationSpec,
+            selected = selected,
+            pressed = state.isPressed,
+            // jvm平台下此状态永远为true，会导致shape无法回到正常状态
+            // 因此, 在jvm平台下，将此状态永远传递false
+            focused = if (appCurrentPlatform == AppPlatform.Desktop) false else state.isFocused,
+            hovered = state.isHovered,
+            dragged = state.isDragged,
+            animationSpec = animationSpec,
         )
     }
 

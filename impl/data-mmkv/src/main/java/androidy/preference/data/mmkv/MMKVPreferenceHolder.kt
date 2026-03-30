@@ -28,7 +28,7 @@ class MMKVPreferenceHolder internal constructor(
     private val mmkv: MMKV
 ) : PreferenceHolder() {
 
-    override fun <T : Any> getSingleDataEditor(
+    override fun <T : Any> getOnePrefEditor(
         keyName: String,
         defaultValue: T,
     ): IPreferenceEditor<T> {

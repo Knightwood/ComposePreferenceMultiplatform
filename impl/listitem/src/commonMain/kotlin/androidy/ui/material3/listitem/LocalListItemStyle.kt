@@ -15,9 +15,8 @@ object LocalListItemStyle {
     private val LocalExpressiveListItemStyle = compositionLocalOf<ListItemStyle> { error("No style provided") }
     private val LocalSegmentedExpressiveListItemStyle = compositionLocalOf<ListItemStyle> { error("No style provided") }
 
-    @Suppress("ComposableNaming")
     @Composable
-    fun provide(
+    fun Provide(
         style: ListItemStyle = ListItemDefaults.defaultStyle,
         expressiveStyle: ListItemStyle = ExpressiveListItemDefaults.expressiveDefaultStyle,
         segmentedExpressiveStyle: ListItemStyle = SegmentedListItemStyleDefaults.segmentedDefaultStyle,
@@ -32,9 +31,8 @@ object LocalListItemStyle {
         }
     }
 
-    @Suppress("ComposableNaming")
     @Composable
-    fun provide(
+    fun Provide(
         style: ListItemStyle = ListItemDefaults.defaultStyle,
         expressiveStyle: ListItemStyle = ExpressiveListItemDefaults.expressiveDefaultStyle,
         segmentedExpressiveStyle: ListItemStyle = SegmentedListItemStyleDefaults.segmentedDefaultStyle,
@@ -51,7 +49,7 @@ object LocalListItemStyle {
         }
     }
 
-    val current
+    val currentBaseLine
         @Composable
         get() = LocalListItemStyle.current
 

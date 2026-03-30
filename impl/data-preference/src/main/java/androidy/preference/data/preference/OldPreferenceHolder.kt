@@ -28,7 +28,7 @@ class OldPreferenceHolder internal constructor(
     private val sp: SharedPreferences
 ) : PreferenceHolder() {
 
-    override fun <T : Any> getSingleDataEditor(
+    override fun <T : Any> getOnePrefEditor(
         keyName: String,
         defaultValue: T,
     ): IPreferenceEditor<T> {

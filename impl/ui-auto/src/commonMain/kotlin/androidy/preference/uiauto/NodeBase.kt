@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidy.preference.uiauto.LocalPrefs
+import androidy.preference.uiauto.domain.LocalAutoPreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -23,8 +23,8 @@ fun <T : Any> PreferenceNodeBase(
     ) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val prefStoreHolder = LocalPrefs.current
-    val pref = prefStoreHolder.getSingleDataEditor(keyName = keyName, defaultValue = defaultValue)
+    val prefStoreHolder = LocalAutoPreference.current
+    val pref = prefStoreHolder.getOnePrefEditor(keyName = keyName, defaultValue = defaultValue)
     //注册自身节点，并且获取目标节点的状态
     val dependenceState: State<Boolean> = prefStoreHolder.getDependence(
         keyName,
@@ -50,7 +50,7 @@ fun PreferenceNodeBase(
     ) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val prefStoreHolder = LocalPrefs.current
+    val prefStoreHolder = LocalAutoPreference.current
     //不注册自身节点，仅获取目标节点的状态
     val dependenceState =
         prefStoreHolder.getDependenceNotEmpty(

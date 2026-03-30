@@ -42,7 +42,7 @@ abstract class PreferenceHolder {
      * @param defaultValue T
      * @return IPreferenceReadWrite<T>
      */
-    abstract fun <T : Any> getSingleDataEditor(
+    abstract fun <T : Any> getOnePrefEditor(
         keyName: String,
         defaultValue: T,
     ): IPreferenceEditor<T>
@@ -58,7 +58,7 @@ abstract class PreferenceHolder {
     fun getDependence(
         currentKey: String,
         currentState: Boolean,
-        targetKey: String? = null
+        targetKey: String? = null,
     ): DependenceNode {
         if (!dependenceTree.contains(currentKey)) {
             val node = DependenceNode(currentState, currentKey)
@@ -87,7 +87,7 @@ abstract class PreferenceHolder {
      * 获取某个key对应的状态
      */
     fun getDependence(
-        key: String
+        key: String,
     ): DependenceNode? {
         return dependenceTree[key]
     }
@@ -112,8 +112,8 @@ class DependenceNode(
     val enableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(enable)
 
     //    val enableState = mutableStateOf(enable)
-    suspend fun setEnabled(enable: Boolean) {
-        enableStateFlow.emit(enable)
+    fun setEnabled(enable: Boolean) {
+        enableStateFlow.value = enable
     }
 
     companion object {

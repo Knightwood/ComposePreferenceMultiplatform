@@ -273,7 +273,7 @@ object SegmentedListItemStyleDefaults {
     fun segmentedShape(
         index: Int,
         count: Int,
-        defaultShapes: StateShapes = shapes(),
+        defaultShapes: StateShapes = this.shapes(),
     ): StateShapes {
         // token default shapes
         val tokenDefaultShape = ExpressiveListItemTokens.ContainerShape.value

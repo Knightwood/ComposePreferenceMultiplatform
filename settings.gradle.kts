@@ -40,7 +40,7 @@ include(":composeApp2")
 //ui实现
 include(":impl:listitem")
 include(":impl:ui")
-//include(":impl:ui-auto")
+include(":impl:ui-auto")
 //ui-auto所需的数据读写工具实现
 include(":impl:data-core")
 include(":impl:data-datastore")
@@ -62,14 +62,14 @@ include(":aop:floor-mmkv-ksp")
 //com.github.knightwood.kmp-preference:ui       :1.0.0
 
 //包名：
-//ui ： androidy.preference.ui
-//ui-auto ： androidy.preference.uiauto
+//ui ： androidy.ui.material3.preference.ui
+//ui-auto ： androidy.ui.material3.preference.uiauto
 
-//data-core : androidy.preference.data.core
-//data-datastore : androidy.preference.data.datastore
-//data-mmkv : androidy.preference.data.mmkv
-//data-preference : androidy.preference.data.preference
+//data-core : androidy.ui.material3.preference.data.core
+//data-datastore : androidy.ui.material3.preference.data.datastore
+//data-mmkv : androidy.ui.material3.preference.data.mmkv
+//data-preference : androidy.ui.material3.preference.data.preference
 
-//helper-datastore : androidy.preference.helper.datastore
-//helper-mmkv : androidy.preference.helper.mmkv
-//helper-preference : androidy.preference.helper.preference
+//helper-datastore : androidy.ui.material3.preference.helper.datastore
+//helper-mmkv : androidy.ui.material3.preference.helper.mmkv
+//helper-preference : androidy.ui.material3.preference.helper.preference

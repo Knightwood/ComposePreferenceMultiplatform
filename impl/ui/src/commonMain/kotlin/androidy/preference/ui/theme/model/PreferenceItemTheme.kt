@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.dp
 import androidy.ui.material3.listitem.LocalListItemStyle
-import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.normal_style.ListItemContentPaddingValues
 import androidy.ui.material3.listitem.normal_style.ListItemStyle
 import androidy.ui.material3.listitem.normal_style.ListItemStyleType
@@ -28,6 +27,7 @@ class PreferenceItemTheme(
      * 在主题中提供一个基础样式，通过此接口修改基础样式，使之派生出基础样式变体
      * 例如itemStyle为item的样式，使用此接口修改，派生出hintCardItem样式
      */
+    @Immutable
     fun interface StyleModifiedProvider<T> {
         /**
          * @param basicStyle preference item 的基础样式
@@ -80,7 +80,7 @@ class PreferenceItemTheme(
             titleStyle: PreferenceTitleStyle,
         ): PreferenceItemTheme {
             val itemStyle = when (itemStyleType) {
-                ListItemStyleType.BASELINE -> LocalListItemStyle.current
+                ListItemStyleType.BASELINE -> LocalListItemStyle.currentBaseLine
                 ListItemStyleType.EXPRESSIVE -> LocalListItemStyle.currentExpressive
                 ListItemStyleType.SEGMENTED -> LocalListItemStyle.currentSegmented
             }

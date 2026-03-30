@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * 默认的偏好值存储工具，其实他根本不会存储偏好值。
  */
 class DefaultPreferenceHolder internal constructor(): PreferenceHolder() {
-    override fun <T : Any> getSingleDataEditor(
+    override fun <T : Any> getOnePrefEditor(
         keyName: String,
         defaultValue: T
     ): IPreferenceEditor<T> {
@@ -19,7 +19,7 @@ class DefaultPreferenceHolder internal constructor(): PreferenceHolder() {
             tmp
         }
     }
-    
+
     companion object{
         @Volatile
         var ps: DefaultPreferenceHolder? = null

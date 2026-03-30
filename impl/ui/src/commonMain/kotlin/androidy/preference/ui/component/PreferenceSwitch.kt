@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidy.preference.ui.basic.BasicPreferenceItem
-import androidy.preference.ui.basic.ComposeSwitch
 import androidy.preference.ui.theme.LocalPreferenceTheme
 import androidy.ui.material3.listitem.interactive.StateShapes
 import androidy.ui.material3.listitem.normal_style.ListItemColors
@@ -131,7 +130,7 @@ fun PreferenceWithDividerSwitch(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
                 thickness = 2f.dp
             )
-            ComposeSwitch(isChecked = checked, onCheckedChange = onCheckedChange)
+            Switch(checked, onCheckedChange = onCheckedChange)
         }
     },
     description: @Composable (() -> Unit)? = null,

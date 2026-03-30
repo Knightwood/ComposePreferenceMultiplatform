@@ -36,7 +36,7 @@ class DataStorePreferenceHolder internal constructor(
     private val dataStore: DataStore<Preferences>,
 ) : PreferenceHolder() {
 
-    override fun <T : Any> getSingleDataEditor(
+    override fun <T : Any> getOnePrefEditor(
         keyName: String,
         defaultValue: T,
     ): DataStorePreferenceEditor<T> {

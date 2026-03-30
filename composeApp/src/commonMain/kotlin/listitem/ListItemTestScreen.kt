@@ -19,7 +19,7 @@ import listitem.ListItemComponentsDemo
 
 @Composable
 fun ListItemTestScreen() {
-    LocalListItemStyle.provide() {
+    LocalListItemStyle.Provide() {
         Box() {
             val scrollstate = rememberScrollState()
             ListItemInternal(
