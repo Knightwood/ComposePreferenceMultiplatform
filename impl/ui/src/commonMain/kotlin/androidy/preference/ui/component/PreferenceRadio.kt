@@ -28,6 +28,7 @@ fun PreferenceRadioButtonItem(
     start: @Composable (() -> Unit)? = null,
     end: @Composable (() -> Unit)? = {
         RadioButton(
+            enabled= enabled,
             selected = selected,
             onClick = onClick
         )

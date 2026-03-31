@@ -28,6 +28,7 @@ fun PreferenceCheckBoxItem(
     start: @Composable (() -> Unit)? = null,
     end: @Composable (() -> Unit)? = {
         Checkbox(
+            enabled = enabled,
             checked = checked,
             onCheckedChange = onCheckedChange
         )

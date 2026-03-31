@@ -5,16 +5,16 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidy.preference.data.core.DefaultPreferenceHolder
-import androidy.preference.data.core.PreferenceHolder
+import androidy.preference.data.core.AbstractPreferenceHolder
 
 object LocalAutoPreference {
 
     //持有偏好值
-    private val LocalPrefs = compositionLocalOf<PreferenceHolder> {
+    private val LocalPrefs = compositionLocalOf<AbstractPreferenceHolder> {
         DefaultPreferenceHolder.instance()
     }
 
-    val current: PreferenceHolder
+    val current: AbstractPreferenceHolder
         @Composable
         get() = LocalPrefs.current
 
@@ -25,7 +25,7 @@ object LocalAutoPreference {
      */
     @Composable
     fun Provide(
-        holder: PreferenceHolder = remember {
+        holder: AbstractPreferenceHolder = remember {
             DefaultPreferenceHolder.instance()
         },
         content: @Composable () -> Unit,

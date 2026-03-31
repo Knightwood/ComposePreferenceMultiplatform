@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 子类实现此接口以提供具体的每个偏好值的读写能力
  */
-interface IPreferenceEditor<T> {
+interface ISinglePrefValueEditor<T> {
 
     fun flow(): Flow<T>
 
@@ -30,8 +30,8 @@ interface IPreferenceEditor<T> {
 
     suspend fun readValueAsync(): T = readValue()
 
-    suspend fun write(data: T)
+    suspend fun write(data: T?)
 
 }
 //兼容旧名称
-typealias IPreferenceReadWrite<T> = IPreferenceEditor<T>
+typealias IPreferenceReadWrite<T> = ISinglePrefValueEditor<T>

@@ -19,32 +19,27 @@ package androidy.preference.data.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidy.preference.data.core.IPreferenceEditor
-import androidy.preference.helper.datastore.DataStoreKeyDelegate
+import androidy.preference.data.core.ISinglePrefValueEditor
 import androidy.preference.helper.datastore.DataStoreKeyUtils
+import androidy.preference.helper.datastore.remove
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 private const val TAG = "DataStoreEditor"
 
 /**
  * 提供偏好值的读写，datastore实现功能版本
  */
-class DataStorePreferenceEditor<T:Any>(
+class DataStoreSinglePrefValueEditor<T : Any>(
     val keyName: String,
     val defaultValue: T,
-    val dataStore: DataStore<Preferences>
-) : IPreferenceEditor<T> {
-    var key: Preferences.Key<T> = DataStoreKeyUtils.getKey<T>(keyName,defaultValue::class)
+    val dataStore: DataStore<Preferences>,
+) : ISinglePrefValueEditor<T> {
+    var key: Preferences.Key<T> = DataStoreKeyUtils.getKey<T>(keyName, defaultValue::class)
 
     private val flow: Flow<T> = dataStore.data.map { preferences ->
         // No type safety.
@@ -57,16 +52,20 @@ class DataStorePreferenceEditor<T:Any>(
     }
 
     override fun readValue(): T {
-        throw IllegalAccessException("data store cannot use this function, please use readValueAsync()")
+        return runBlocking { flow.last() }
     }
 
     override suspend fun readValueAsync(): T {
         return flow.last()
     }
 
-    override suspend fun write(data: T) {
+    override suspend fun write(data: T?) {
         dataStore.edit {
-            it[key] = data
+            if (data == null) {
+                it.remove(key)
+            } else {
+                it[key] = data
+            }
         }
     }
 

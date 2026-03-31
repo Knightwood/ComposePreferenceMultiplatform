@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.IntSize.Companion
@@ -41,10 +42,14 @@ fun PreferenceCollapsedItem(
     onLongClickLabel: String? = null,
     start: @Composable (() -> Unit)? = null,
     end: @Composable (() -> Unit)? = {
-        IconButton(onClick = { onExpandChange(!expand) }) {
+        IconButton(
+            onClick = { onExpandChange(!expand) },
+            enabled = enabled
+        ) {
             Icon(
-                if (expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                contentDescription = null
+                imageVector = if (expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                contentDescription = "expand button",
+                tint = style.trailingIconStyle.stateColors.get(enabled)
             )
         }
     },
@@ -60,6 +65,9 @@ fun PreferenceCollapsedItem(
     /* 展开内容 */
     content: @Composable () -> Unit,
 ) {
+    if (!enabled) {
+        onExpandChange(false)
+    }
     Column(modifier = Modifier.animateContentSize(animationSpec, finishedListener)) {
         PreferenceCheckBoxItem(
             title = title,

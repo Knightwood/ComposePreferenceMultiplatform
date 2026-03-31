@@ -16,20 +16,21 @@ import androidy.ui.material3.listitem.m3_tokens.ProvideContentColorTextStyle
 @Composable
 fun PreferenceTitle(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     style: PreferenceTitleStyle = LocalPreferenceTheme.current.titleStyle,
     content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier.padding(style.padding),
         color = style.containerColor,
-        contentColor = style.contentColor,
+        contentColor = style.contentColor(enabled),
         shape = style.shape,
         tonalElevation = style.tonalElevation,
         shadowElevation = style.shadowElevation,
         border = style.border
     ) {
         ProvideContentColorTextStyle(
-            contentColor = style.contentColor,
+            contentColor = style.contentColor(enabled),
             textStyle = style.textStyle
         ) {
             content()
@@ -40,13 +41,7 @@ fun PreferenceTitle(
 @Composable
 fun PreferenceSubTitle(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     style: PreferenceTitleStyle = LocalPreferenceTheme.current.labelTitleStyle,
     content: @Composable () -> Unit,
-) = PreferenceTitle(modifier, style, content)
-
-@Composable
-fun PreferenceLargeTitle(
-    modifier: Modifier = Modifier,
-    style: PreferenceTitleStyle = LocalPreferenceTheme.current.largeTitleStyle,
-    content: @Composable () -> Unit,
-) = PreferenceTitle(modifier, style, content)
+) = PreferenceTitle(modifier, enabled, style, content)

@@ -21,20 +21,28 @@ import androidx.compose.ui.unit.dp
 data class PreferenceTitleStyle(
     val textStyle: TextStyle,
     val contentColor: Color,
+    val disabledContentColor: Color,
     val containerColor: Color,
+    val disabledContainerColor: Color,
     val padding: PaddingValues,
     val shape: Shape,
     val tonalElevation: Dp,
     val shadowElevation: Dp,
     val border: BorderStroke? = null,
 ) {
+
+    fun contentColor(enabled: Boolean) = if (enabled) contentColor else disabledContentColor
+    fun containerColor(enabled: Boolean) = if (enabled) containerColor else disabledContainerColor
+
     companion object {
 
         @Composable
         fun style() = PreferenceTitleStyle(
             textStyle = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
             contentColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.68f),
             containerColor = MaterialTheme.colorScheme.surface,
+            disabledContainerColor = MaterialTheme.colorScheme.surface,
             padding = PaddingValues(top = 36.dp, bottom = 4.dp, start = 16.dp),
             shape = RectangleShape,
             tonalElevation = 0.dp,

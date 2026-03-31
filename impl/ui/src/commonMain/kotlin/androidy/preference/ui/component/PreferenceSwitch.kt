@@ -36,6 +36,7 @@ fun PreferenceSwitchItem(
     start: @Composable (() -> Unit)? = null,
     end: @Composable (() -> Unit)? = {
         Switch(
+            enabled = enabled,
             checked = checked,
             onCheckedChange = onCheckedChange
         )
@@ -77,6 +78,7 @@ fun PreferenceSwitchWithContainer(
     start: @Composable (() -> Unit)? = null,
     end: @Composable (() -> Unit)? = {
         Switch(
+            enabled = enabled,
             checked = checked,
             onCheckedChange = onCheckedChange
         )
@@ -113,7 +115,7 @@ fun PreferenceWithDividerSwitch(
     interactionSource: MutableInteractionSource? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    onClick: () -> Unit={},
+    onClick: () -> Unit = {},
     onLongClick: (() -> Unit)? = null,
     onLongClickLabel: String? = null,
     start: @Composable (() -> Unit)? = null,
@@ -130,7 +132,11 @@ fun PreferenceWithDividerSwitch(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
                 thickness = 2f.dp
             )
-            Switch(checked, onCheckedChange = onCheckedChange)
+            Switch(
+                checked = checked,
+                enabled = enabled,
+                onCheckedChange = onCheckedChange
+            )
         }
     },
     description: @Composable (() -> Unit)? = null,

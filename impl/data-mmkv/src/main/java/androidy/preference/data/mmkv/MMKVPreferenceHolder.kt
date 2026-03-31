@@ -17,27 +17,25 @@
 
 package androidy.preference.data.mmkv
 
-import androidy.preference.data.core.IPreferenceEditor
-import androidy.preference.data.core.PreferenceHolder
+import androidy.preference.data.core.ISinglePrefValueEditor
+import androidy.preference.data.core.AbstractPreferenceHolder
 import com.tencent.mmkv.MMKV
+import kotlin.reflect.KClass
 
 /**
  * 向界面提供、管理PreferenceProvider
  */
 class MMKVPreferenceHolder internal constructor(
-    private val mmkv: MMKV
-) : PreferenceHolder() {
+    private val mmkv: MMKV,
+) : AbstractPreferenceHolder() {
 
-    override fun <T : Any> getOnePrefEditor(
-        keyName: String,
-        defaultValue: T,
-    ): IPreferenceEditor<T> {
-        return hashMap[keyName]?.let {
-            it as IPreferenceEditor<T>
-        } ?: let {
-            val tmp = MMKVPreferenceEditor(mmkv, keyName, defaultValue)
-            hashMap[keyName] = tmp
-            tmp
+    override val editorProvider: ISinglePrefValueEditorProvider = object : ISinglePrefValueEditorProvider {
+        override fun <T : Any> createOnePrefEditor(
+            keyName: String,
+            defaultValue: T,
+            cls: KClass<T>,
+        ): ISinglePrefValueEditor<T> {
+            return MMKVSinglePrefValueEditor(mmkv, keyName, defaultValue)
         }
     }
 
@@ -45,7 +43,7 @@ class MMKVPreferenceHolder internal constructor(
         @Volatile
         var ps: MMKVPreferenceHolder? = null
         fun instance(
-            mmkv: MMKV
+            mmkv: MMKV,
         ): MMKVPreferenceHolder {
             return ps ?: synchronized(this) {
                 ps ?: MMKVPreferenceHolder(mmkv).also { ps = it }

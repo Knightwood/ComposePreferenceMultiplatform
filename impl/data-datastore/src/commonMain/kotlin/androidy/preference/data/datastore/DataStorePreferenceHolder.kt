@@ -19,7 +19,9 @@ package androidy.preference.data.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidy.preference.data.core.PreferenceHolder
+import androidy.preference.data.core.AbstractPreferenceHolder
+import androidy.preference.data.core.ISinglePrefValueEditor
+import kotlin.reflect.KClass
 
 /**
  * 向界面提供、管理PreferenceProvider
@@ -34,16 +36,14 @@ import androidy.preference.data.core.PreferenceHolder
  */
 class DataStorePreferenceHolder internal constructor(
     private val dataStore: DataStore<Preferences>,
-) : PreferenceHolder() {
-
-    override fun <T : Any> getOnePrefEditor(
-        keyName: String,
-        defaultValue: T,
-    ): DataStorePreferenceEditor<T> {
-        return (hashMap[keyName] as? DataStorePreferenceEditor<T>) ?: let {
-            val tmp = DataStorePreferenceEditor(keyName, defaultValue, dataStore)
-            hashMap[keyName] = tmp
-            tmp
+) : AbstractPreferenceHolder() {
+    override val editorProvider: ISinglePrefValueEditorProvider = object : ISinglePrefValueEditorProvider {
+        override fun <T : Any> createOnePrefEditor(
+            keyName: String,
+            defaultValue: T,
+            cls: KClass<T>,
+        ): ISinglePrefValueEditor<T> {
+            return DataStoreSinglePrefValueEditor(keyName, defaultValue, dataStore)
         }
     }
 
@@ -53,7 +53,7 @@ class DataStorePreferenceHolder internal constructor(
         var ps: DataStorePreferenceHolder? = null
 
         fun instance(
-            dataStore: DataStore<Preferences>
+            dataStore: DataStore<Preferences>,
         ): DataStorePreferenceHolder {
             return ps ?: synchronized(this) {
                 ps ?: DataStorePreferenceHolder(dataStore).also {

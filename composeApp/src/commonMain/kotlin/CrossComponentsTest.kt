@@ -47,37 +47,40 @@ fun CrossComponentsTest(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        var checked by remember { mutableStateOf(true) }
         PreferenceSubTitle(content = { Text("Item") })
         PreferenceItemTest()
-        PreferenceSubTitle(content = { Text("滑动条") })
+        PreferenceSubTitle(content = { Text("滑动条") }, enabled = checked)
         var progress by remember {
             mutableStateOf(0f)
         }
         PreferenceItem(
+            enabled = checked,
             description = {
-                Slider(value = progress, onValueChange = { progress = it })
+                Slider(value = progress, enabled = checked, onValueChange = { progress = it })
             },
             title = { Text("伽马值") },
         )
         PreferenceSubTitle(content = { Text("杂项") })
-        Others()
+        Others(checked)
         PreferenceSubTitle(content = { Text("开关") })
-        SwitchTest()
+        SwitchTest(checked, { checked = it })
         PreferenceSubTitle(content = { Text("多选框") })
-        CheckBoxTest()
+        CheckBoxTest(checked)
         PreferenceSubTitle(content = { Text("单选框") })
-        RadioTest()
+        RadioTest(checked)
     }
 
 }
 
 @Composable
-private fun Others() {
+private fun Others(collapsedEnabled: Boolean) {
     var expand by remember { mutableStateOf(false) }
     PreferenceCollapsedItem(
         title = { Text("折叠菜单") },
         description = { Text("折叠菜单") },
         expand = expand,
+        enabled = collapsedEnabled,
         onExpandChange = { expand = it },
     ) {
         Column(modifier = Modifier.padding(vertical = 16.dp)) {
@@ -153,29 +156,33 @@ private fun PreferenceItemTest() {
 }
 
 @Composable
-private fun SwitchTest() {
-    var checked by remember { mutableStateOf(false) }
-    PreferenceWithDividerSwitch(
-        start = { Icon(Icons.Outlined.CloudSync, null) },
-        checked = checked,
-        title = { Text("同步") },
-        description = { Text("同步您的账户数据") },
-        onCheckedChange = { checked = it }
-    )
-
-    var checked2 by remember { mutableStateOf(false) }
+private fun SwitchTest(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
     PreferenceSwitchItem(
         start = { Icon(Icons.Outlined.LocalDining, null) },
-        checked = checked2,
-        title = { Text("餐馆") },
-        description = { Text("查找附近的餐馆") },
-        onCheckedChange = { checked2 = it }
+        checked = checked,
+        title = { Text("enable状态") },
+        description = { Text("关闭将使某些组件置于禁用状态") },
+        onCheckedChange = onCheckedChange
     )
 
+    var checked1 by remember { mutableStateOf(true) }
+    PreferenceWithDividerSwitch(
+        start = { Icon(Icons.Outlined.CloudSync, null) },
+        checked = checked1,
+        enabled = checked,
+        title = { Text("同步") },
+        description = { Text("同步您的账户数据") },
+        onCheckedChange = { checked1 = it }
+    )
+    var checked2 by remember { mutableStateOf(false) }
     PreferenceSwitchWithContainer(
         title = { Text("调整您的设置信息") },
         description = { Text("账户、翻译、帮助信息等") },
         checked = checked2,
+        enabled = checked,
         start = { Icon(Icons.Outlined.AccountCircle, null) },
         onCheckedChange = { checked2 = it }
     )
@@ -183,7 +190,7 @@ private fun SwitchTest() {
 }
 
 @Composable
-private fun RadioTest() {
+private fun RadioTest(enabled: Boolean = true) {
 
     var selected by remember {
         mutableStateOf(1)
@@ -191,25 +198,31 @@ private fun RadioTest() {
     PreferenceRadioButtonItem(
         title = { Text("激活背包") },
         selected = selected == 1,
+        enabled = enabled,
         description = { Text("使用更大的背包") },
         onClick = { selected = 1 }
     )
     PreferenceRadioButtonItem(
         title = { Text("天空材质") },
         selected = selected == 2,
+        enabled = enabled,
         description = { Text("使用更精美的天空材质贴图") },
         onClick = { selected = 2 }
     )
     PreferenceRadioButtonItem(
         title = { Text("非官方修复补丁") },
         selected = selected == 3,
+        enabled = enabled,
         description = { Text("可能会带来新的bug") },
         onClick = { selected = 3 }
     )
 }
-
+data class CheckItemInfo(
+    val title: String,
+    val desc: String,
+)
 @Composable
-private fun CheckBoxTest() {
+private fun CheckBoxTest(enabled: Boolean = true) {
     val checkedMap = remember { mutableStateMapOf<Int, Boolean>() }
     val checkItems = remember {
         listOf(
@@ -222,6 +235,7 @@ private fun CheckBoxTest() {
         PreferenceCheckBoxItem(
             title = { Text(info.title) },
             checked = checkedMap[index] ?: false,
+            enabled = enabled,
             description = { Text(info.desc) },
             onCheckedChange = { checkedMap[index] = it },
             colors = LocalListItemStyle.currentSegmented.colors()

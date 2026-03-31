@@ -17,28 +17,29 @@
 
 package androidy.preference.data.mmkv
 
-import androidy.preference.data.core.IPreferenceEditor
+import androidy.preference.data.core.ISinglePrefValueEditor
 import androidy.preference.helper.mmkv.MMKVEditor
 import androidy.preference.helper.mmkv.MMKVEditors
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * 提供偏好值的读写，MMKV实现功能版本
  */
-class MMKVPreferenceEditor<T : Any>(
+class MMKVSinglePrefValueEditor<T : Any>(
     val kv: MMKV,
     val keyName: String,
     val defaultValue: T,
-) : IPreferenceEditor<T> {
+) : ISinglePrefValueEditor<T> {
     val TAG = "mmkv_tool"
 
-    private val flow: MutableSharedFlow<T> = MutableSharedFlow<T>(1)
+    private val flow: MutableStateFlow<T> = MutableStateFlow<T>(defaultValue)
     var readWrite: MMKVEditor<T> = MMKVEditors.parseEditor(defaultValue::class)
 
     init {
-        flow.tryEmit(readWrite.read(kv, keyName)?:defaultValue)
+        flow.value = readWrite.read(kv, keyName) ?: defaultValue
     }
 
     override fun flow(): Flow<T> {
@@ -46,11 +47,16 @@ class MMKVPreferenceEditor<T : Any>(
     }
 
     override fun readValue(): T {
-        return readWrite.read(kv, keyName)?:defaultValue
+        return readWrite.read(kv, keyName) ?: defaultValue
     }
 
-    override suspend fun write(data: T) {
-        readWrite.write(kv, keyName,data)
+    override suspend fun write(data: T?) {
+        if (data == null) {
+            kv.removeValueForKey(keyName)
+            flow.emit(defaultValue)
+            return
+        }
+        readWrite.write(kv, keyName, data)
         flow.emit(data)
     }
 }

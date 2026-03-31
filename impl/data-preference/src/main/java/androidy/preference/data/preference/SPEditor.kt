@@ -18,10 +18,12 @@
 package androidy.preference.data.preference
 
 import android.content.SharedPreferences
-import androidy.preference.data.core.IPreferenceEditor
+import androidy.preference.data.core.ISinglePrefValueEditor
 import androidy.preference.helper.preference.PrefEditors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.core.content.edit
 
 /**
  * 提供偏好值的读写，MMsp实现功能版本
@@ -30,14 +32,14 @@ class SPEditor<T : Any>(
     private val sp: SharedPreferences,
     val keyName: String,
     val defaultValue: T,
-) : IPreferenceEditor<T> {
+) : ISinglePrefValueEditor<T> {
     val TAG = "prefs_tool"
 
-    private val flow: MutableSharedFlow<T> = MutableSharedFlow<T>(1)
+    private val flow: MutableStateFlow<T> = MutableStateFlow<T>(defaultValue)
     var readWrite = PrefEditors.parseEditor<T>(defaultValue::class)
 
     init {
-        flow.tryEmit(readWrite.read(sp, keyName)?: defaultValue)
+        flow.value = readWrite.read(sp, keyName) ?: defaultValue
     }
 
     override fun flow(): Flow<T> {
@@ -45,11 +47,16 @@ class SPEditor<T : Any>(
     }
 
     override fun readValue(): T {
-        return readWrite.read(sp,keyName)?: defaultValue
+        return readWrite.read(sp, keyName) ?: defaultValue
     }
 
-    override suspend fun write(data: T) {
-        readWrite.write(sp, keyName,data)
-        flow.emit(data)
+    override suspend fun write(data: T?) {
+        if (data == null) {
+            sp.edit { remove(keyName) }
+            flow.emit(defaultValue)
+        } else {
+            readWrite.write(sp, keyName, data)
+            flow.emit(data)
+        }
     }
 }
