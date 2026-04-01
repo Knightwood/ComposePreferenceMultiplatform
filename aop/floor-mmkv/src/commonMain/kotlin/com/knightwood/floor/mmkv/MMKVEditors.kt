@@ -5,56 +5,61 @@ import com.tencent.mmkv.MMKV
 import kotlin.reflect.KClass
 
 
-class MMKVEditor<T>(
+/**
+ * 使用统一的形式读写任意类型键值对
+ */
+interface MMKVEditor<T> {
+    fun read(mmkv: MMKV, key: String): T?
+    fun write(mmkv: MMKV, key: String, value: T): Boolean
+}
+
+@PublishedApi
+internal fun <T> mmkvEditor(
     /* MMKV, key */
-    private val reader: (MMKV, String) -> T?,
+    reader: (MMKV, String) -> T?,
     /* MMKV, key, value */
-    private val writer: (MMKV, String, T) -> Boolean,
-) {
-    fun read(mmkv: MMKV, key: String): T? {
+    writer: (MMKV, String, T) -> Boolean,
+) = object : MMKVEditor<T> {
+    override fun read(mmkv: MMKV, key: String): T? {
         return reader(mmkv, key)
     }
 
-    fun write(mmkv: MMKV, key: String, value: T?): Boolean {
-        if (value == null) {
-            mmkv.removeValueForKey(key)
-            return true
-        }
+    override fun write(mmkv: MMKV, key: String, value: T): Boolean {
         return writer(mmkv, key, value)
     }
 }
 
 object MMKVEditors {
-    val intMMKVEditor = MMKVEditor(
+    val intMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeInt(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
-    val longMMKVEditor = MMKVEditor(
+    val longMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeLong(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
-    val stringMMKVEditor = MMKVEditor(
+    val stringMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeString(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
-    val floatMMKVEditor = MMKVEditor(
+    val floatMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeFloat(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
-    val doubleMMKVEditor = MMKVEditor(
+    val doubleMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeDouble(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
-    val booleanMMKVEditor = MMKVEditor(
+    val booleanMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeBool(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
-    val bytesMMKVEditor = MMKVEditor(
+    val bytesMMKVEditor = mmkvEditor(
         reader = { mmkv, key -> mmkv.decodeBytes(key) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )
 
-    inline fun <reified T : Parcelable> parcelableMMKVEditor() = MMKVEditor<T>(
+    inline fun <reified T : Parcelable> parcelableMMKVEditor() = mmkvEditor<T>(
         reader = { mmkv, key -> mmkv.decodeParcelable(key, T::class.java) },
         writer = { mmkv, key, value -> mmkv.encode(key, value) }
     )

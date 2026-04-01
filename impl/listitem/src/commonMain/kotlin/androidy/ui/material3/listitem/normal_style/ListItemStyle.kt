@@ -57,12 +57,13 @@ constructor(
     /* 整体样式 */
 
     /**
+     * ListItem整体的内边距
      * 我们只设置内边距。外边距效果让用户自己来实现。
      * 在单行时垂直边距应为8dp
      * 当多行或者item比较臃肿时，垂直边距应为12dp
      * 默认为10dp
      */
-    val contentPadding: ListItemContentPaddingValues = ListItemContentPaddingValues.default(),
+    val boxPadding: ListItemContentPaddingValues = ListItemContentPaddingValues.default(),
 
     val leadingPadding: PaddingValues = PaddingValues(end = ListItemTokens.LeadingContentEndPadding),
     /**
@@ -72,7 +73,9 @@ constructor(
      */
     val leadingSize: DpSize = DpSize.Unspecified,
     val leadingPercent: Float? = null,
-
+    /**
+     * overline、headline、supporting所在Column的内边距
+     */
     val bodyPadding: PaddingValues = PaddingValues(0.dp),
     val bodyItemSpace: Dp? = null, /* overline,headline,supporting的间隔 */
     val bodyPercent: Float = 1f,
@@ -179,7 +182,7 @@ constructor(
         containerHeightMin = containerHeightMin,
         containerHeightMax = containerHeightMax,
         alignment = alignment,
-        contentPadding = contentPadding,
+        boxPadding = contentPadding,
         leadingPadding = leadingPadding,
         leadingSize = leadingSize,
         leadingPercent = leadingPercent,
@@ -310,7 +313,7 @@ constructor(
             containerHeightMax = containerHeightMax ?: this.containerHeightMax,
 
             alignment = alignment ?: this.alignment,
-            contentPadding = contentPadding ?: this.contentPadding,
+            contentPadding = contentPadding ?: this.boxPadding,
             leadingPadding = leadingPadding ?: this.leadingPadding,
             leadingSize = leadingSize invalidUse { this.leadingSize },
             leadingPercent = leadingPercent ?: this.leadingPercent,
@@ -393,7 +396,7 @@ constructor(
             containerHeightMin = containerHeightMin ?: this.containerHeightMin,
             containerHeightMax = containerHeightMax ?: this.containerHeightMax,
             alignment = alignment ?: this.alignment,
-            contentPadding = contentPadding ?: this.contentPadding,
+            boxPadding = contentPadding ?: this.boxPadding,
             leadingPadding = leadingPadding ?: this.leadingPadding,
             leadingSize = leadingSize invalidUse { this.leadingSize },
             leadingPercent = leadingPercent ?: this.leadingPercent,
@@ -428,10 +431,10 @@ constructor(
         listItemType: ListItemType = ListItemType.Companion.OneLine,
     ): PaddingValues {
         return when (listItemType) {
-            ListItemType.Companion.OneLine -> contentPadding.oneline
-            ListItemType.Companion.TwoLine -> contentPadding.twoline
-            ListItemType.Companion.ThreeLine -> contentPadding.threeline
-            else -> contentPadding.oneline
+            ListItemType.Companion.OneLine -> boxPadding.oneline
+            ListItemType.Companion.TwoLine -> boxPadding.twoline
+            ListItemType.Companion.ThreeLine -> boxPadding.threeline
+            else -> boxPadding.oneline
         }
     }
 

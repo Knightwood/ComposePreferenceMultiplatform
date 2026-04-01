@@ -39,5 +39,4 @@ kotlin{
 
 dependencies {
     implementation(libs.kotlin.coroutines.core)
-    implementation(libs.github.mmkv)
 }
