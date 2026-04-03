@@ -30,7 +30,7 @@ abstract class MMKVDao<T : Any>(val dbFileName: String? = null) : IPreferenceDao
     }
 
     override suspend fun update(value: T) {
-        value.modify(mmkv)
+        value.writeTo(mmkv)
         updateFlow()
     }
 
@@ -51,7 +51,7 @@ abstract class MMKVDao<T : Any>(val dbFileName: String? = null) : IPreferenceDao
     abstract fun MMKV.asT(): T
 
     /**
-     * 用于将T数据转换成Preferences
+     * 用于将T数据写入mmkv
      */
-    abstract fun T.modify(target: MMKV)
+    abstract fun T.writeTo(target: MMKV)
 }

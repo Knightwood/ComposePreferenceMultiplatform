@@ -8,7 +8,7 @@ import java.util.UUID
 @KVStore(type = KVStore.MMKV)
 data class MMKVBean(
     @KVField(defaultValue = "\"jack\"") val name: String,
-    @KVField val age: Int?,
+    @KVField(key="year") val age: Int?,
     /**
      * 非基本类型需要使用TypeConvertor转换成字符串存储
      * 所以这里的默认值需要使用字符串

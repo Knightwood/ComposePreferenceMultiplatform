@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  */
 interface MMKVEditor<T> {
     fun read(mmkv: MMKV, key: String): T?
-    fun write(mmkv: MMKV, key: String, value: T): Boolean
+    fun write(mmkv: MMKV, key: String, value: T?): Boolean
 }
 
 @PublishedApi
@@ -24,7 +24,11 @@ internal fun <T> mmkvEditor(
         return reader(mmkv, key)
     }
 
-    override fun write(mmkv: MMKV, key: String, value: T): Boolean {
+    override fun write(mmkv: MMKV, key: String, value: T?): Boolean {
+        if (value == null) {
+            mmkv.removeValueForKey(key)
+            return true
+        }
         return writer(mmkv, key, value)
     }
 }

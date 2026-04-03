@@ -26,7 +26,7 @@ abstract class DatastoreDao<T : Any>(val dbFileName: String? = null) : IPreferen
 
     override suspend fun update(value: T) {
         ds.edit { preferences ->
-            value.modify(preferences)
+            value.writeTo(preferences)
         }
     }
 
@@ -49,7 +49,7 @@ abstract class DatastoreDao<T : Any>(val dbFileName: String? = null) : IPreferen
     abstract fun Preferences.asT(): T
 
     /**
-     * 用于将T数据转换成Preferences
+     * 用于将T数据写入Preferences
      */
-    abstract fun T.modify(target: MutablePreferences): Preferences
+    abstract fun T.writeTo(target: MutablePreferences): Unit
 }

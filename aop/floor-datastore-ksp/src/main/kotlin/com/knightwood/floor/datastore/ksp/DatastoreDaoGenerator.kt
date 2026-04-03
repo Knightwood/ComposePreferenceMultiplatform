@@ -64,12 +64,12 @@ import java.lang.StringBuilder
  *           id = floor.TypeConvertors.string2Uuid(this[Keys.id]!!),
  *   )
  *
- *   public override fun AppSettingsBean.modify(target: MutablePreferences): Preferences = target.apply {
- *        this[Keys.isDebug] = isDebug
- *        this[Keys.name] = name
- *        this[Keys.fuck_age] = age
- *        this[Keys.sex] = sex
- *        this[Keys.id] = floor.TypeConvertors.uuid2String (id)
+ *   public override fun AppSettingsBean.writeTo(target: MutablePreferences): Unit {
+ *        target[Keys.isDebug] = isDebug
+ *        target[Keys.name] = name
+ *        target[Keys.fuck_age] = age
+ *        target[Keys.sex] = sex
+ *        target[Keys.id] = floor.TypeConvertors.uuid2String (id)
  *   }
  *
  *   public object Keys {
@@ -188,8 +188,8 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
         val allDataStoreKeys = mutableListOf<String>()
         //用于辅助生成 asT 方法
         val asTFunction = StringBuilder().append("return ${entityClsName.simpleName}(\n")
-        //用于辅助生成modify 方法
-        val modifyFunction = StringBuilder().append("return target.apply {\n")
+        //用于辅助生成writeTo 方法
+        val writeToFunction = StringBuilder()
 
 
         //构建一个object类，用于存储所有生成的数据键
@@ -225,7 +225,7 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                             builder.addProperty(
                                 PropertySpec
                                     .builder(
-                                        name = keyName,
+                                        name = propertyName,
                                         type = preferenceKeyClassName.parameterizedBy(noNullPropertyClsName),
                                         KModifier.PUBLIC,
                                     )
@@ -233,19 +233,19 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                                     .initializer("DataStoreUtils.getKeyInternal(\"$keyName\",${propertyClsName.reflectionName()}::class)")
                                     .build()
                             )
-                            asTFunction.append("        $propertyName = this[Keys.$keyName]$defaultValueStr,\n")
+                            asTFunction.append("        $propertyName = this[Keys.$propertyName]$defaultValueStr,\n")
                             if (propertyNullable) {
-                                // DataStoreUtils.setOrRemove<Int>(this,Keys.age,age)
-                                modifyFunction.append("     DataStoreUtils.setOrRemove<${propertyClsName.simpleName}>(this,Keys.$keyName,$propertyName)\n")
+                                // DataStoreUtils.setOrRemove<Int>(target,Keys.age,age)
+                                writeToFunction.append("     DataStoreUtils.setOrRemove<${propertyClsName.simpleName}>(target,Keys.$propertyName,$propertyName)\n")
                             } else {
-                                // this[Keys.age] = age
-                                modifyFunction.append("     this[Keys.$keyName] = $propertyName\n")
+                                // target[Keys.age] = age
+                                writeToFunction.append("     target[Keys.$propertyName] = $propertyName\n")
                             }
                         } else {
                             builder.addProperty(
                                 PropertySpec
                                     .builder(
-                                        name = keyName,
+                                        name = propertyName,
                                         type = preferenceKeyClassName.parameterizedBy(stringClassName),
                                         KModifier.PUBLIC,
                                     )
@@ -265,7 +265,7 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                             // 从数据库读取出来给变量赋值，需要将String类型转换成非基本类型
                             // 读取出来的值未必存在，默认值也未必存在。变量类型又是nullable的
                             // 因此转换函数的入参必须是String?，返回值也自然得是Nullable的。
-                            asTFunction.append("        $propertyName = ${toFieldFun.qualifiedName!!.asString()}(this[Keys.$keyName]$defaultValueStr),\n")
+                            asTFunction.append("        $propertyName = ${toFieldFun.qualifiedName!!.asString()}(this[Keys.$propertyName]$defaultValueStr),\n")
 
                             // 给datastore某key赋值
                             //根据数据类字段是否nullable 查找 SomeCls->String 或者SomeCls?->String?
@@ -276,14 +276,14 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                             if (propertyNullable) {
                                 // 如果数据类字段是nullable的
                                 // 转换函数入参就得是nullable的，返回值规定为String?，setOrRemove会自动处理nullable的值。
-                                // DataStoreUtils.setOrRemove<String>(this,Keys.uuid,SomeTypeConverts.nullableUUID2String(uuid))
-                                modifyFunction.append("     DataStoreUtils.setOrRemove<String>(this,Keys.$keyName,${toBasicFun.qualifiedName!!.asString()} ($propertyName))\n")
+                                // DataStoreUtils.setOrRemove<String>(target,Keys.uuid,SomeTypeConverts.nullableUUID2String(uuid))
+                                writeToFunction.append("     DataStoreUtils.setOrRemove<String>(target,Keys.$propertyName,${toBasicFun.qualifiedName!!.asString()} ($propertyName))\n")
                             } else {
-                                // this[Keys.uuid] = SomeTypeConverts.uuid2String(uuid)
-                                modifyFunction.append("     this[Keys.$keyName] = ${toBasicFun.qualifiedName!!.asString()} ($propertyName)\n")
+                                // target[Keys.uuid] = SomeTypeConverts.uuid2String(uuid)
+                                writeToFunction.append("     target[Keys.$propertyName] = ${toBasicFun.qualifiedName!!.asString()} ($propertyName)\n")
                             }
                         }
-                        allDataStoreKeys.add(keyName)
+                        allDataStoreKeys.add(propertyName)
                     }
                 }
             }
@@ -307,7 +307,7 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
             .build()
         builder.addProperty(keysProperty)
         asTFunction.append(")")
-        modifyFunction.append("}")
+
         //添加asT方法
         builder.addFunction(
             FunSpec
@@ -318,15 +318,15 @@ open class DatastoreDaoGenerator public constructor() : IDaoGenerator {
                 .addCode(asTFunction.toString())
                 .build()
         )
-        //添加modify方法
+        //添加writeTo方法
         builder.addFunction(
             FunSpec
-                .builder("modify")
+                .builder("writeTo")
                 .addModifiers(KModifier.PUBLIC, KModifier.OVERRIDE)
                 .addParameter("target", MutablePreferences::class)
                 .receiver(entityClsName)
-                .returns(Preferences::class)
-                .addCode(modifyFunction.toString())
+                .returns(Unit::class)
+                .addCode(writeToFunction.toString())
                 .build()
         )
     }
