@@ -17,46 +17,53 @@
 
 package androidy.preference.data.mmkv
 
-import androidy.preference.data.core.ISinglePrefValueEditor
+import androidy.preference.data.core.ISingleValueEditor
 import androidy.preference.helper.mmkv.MMKVEditor
 import androidy.preference.helper.mmkv.MMKVEditors
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlin.reflect.KClass
 
 /**
  * 提供偏好值的读写，MMKV实现功能版本
  */
-class MMKVSinglePrefValueEditor<T : Any>(
+class MMKVSingleValueEditor<T : Any>(
     val kv: MMKV,
     val keyName: String,
-    val defaultValue: T,
-) : ISinglePrefValueEditor<T> {
+    val cls: KClass<T>,
+    val scope: CoroutineScope,
+) : ISingleValueEditor<T> {
     val TAG = "mmkv_tool"
 
-    private val flow: MutableStateFlow<T> = MutableStateFlow<T>(defaultValue)
-    var readWrite: MMKVEditor<T> = MMKVEditors.parseEditor(defaultValue::class)
+    private val _flow = MutableStateFlow<T?>(null)
+    override val flow: Flow<T?> get() = _flow
+    var mMKVEditor: MMKVEditor<T> = MMKVEditors.parseEditor(cls)
 
     init {
-        flow.value = readWrite.read(kv, keyName) ?: defaultValue
+        _flow.value = mMKVEditor.read(kv, keyName)
     }
 
-    override fun flow(): Flow<T> {
-        return flow
+    override fun readValue(): T? {
+        return mMKVEditor.read(kv, keyName)
     }
 
-    override fun readValue(): T {
-        return readWrite.read(kv, keyName) ?: defaultValue
-    }
-
-    override suspend fun write(data: T?) {
+    override fun write(data: T?) {
         if (data == null) {
             kv.removeValueForKey(keyName)
-            flow.emit(defaultValue)
+            _flow.value = null
             return
         }
-        readWrite.write(kv, keyName, data)
-        flow.emit(data)
+        mMKVEditor.write(kv, keyName, data)
+        _flow.value = data
+    }
+
+    override suspend fun readValueAsync(): T? {
+        return readValue()
+    }
+
+    override suspend fun writeAsync(data: T?) {
+        write(data)
     }
 }

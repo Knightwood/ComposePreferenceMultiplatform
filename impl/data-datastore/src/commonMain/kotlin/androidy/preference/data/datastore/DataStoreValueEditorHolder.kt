@@ -15,38 +15,49 @@
  *
  */
 
-package androidy.preference.data.mmkv
+package androidy.preference.data.datastore
 
-import androidy.preference.data.core.ISinglePrefValueEditor
-import androidy.preference.data.core.AbstractPreferenceHolder
-import com.tencent.mmkv.MMKV
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidy.preference.data.core.AbstractValueEditorHolder
+import androidy.preference.data.core.ISingleValueEditor
 import kotlin.reflect.KClass
 
 /**
  * 向界面提供、管理PreferenceProvider
+ * ```
+ * val Context.store by preferencesDataStore(name = "test")
+ *
+ * fun example(context: Context){
+ *     val holder = DataStorePreferenceHolder.instance(context.store)
+ * }
+ *
+ * ```
  */
-class MMKVPreferenceHolder internal constructor(
-    private val mmkv: MMKV,
-) : AbstractPreferenceHolder() {
-
+class DataStoreValueEditorHolder internal constructor(
+    private val dataStore: DataStore<Preferences>,
+) : AbstractValueEditorHolder() {
     override val editorProvider: ISinglePrefValueEditorProvider = object : ISinglePrefValueEditorProvider {
         override fun <T : Any> createOnePrefEditor(
             keyName: String,
-            defaultValue: T,
             cls: KClass<T>,
-        ): ISinglePrefValueEditor<T> {
-            return MMKVSinglePrefValueEditor(mmkv, keyName, defaultValue)
+        ): ISingleValueEditor<T> {
+            return DataStoreSingleValueEditor(keyName, cls, dataStore, scope)
         }
     }
 
     companion object {
+
         @Volatile
-        var ps: MMKVPreferenceHolder? = null
+        var ps: DataStoreValueEditorHolder? = null
+
         fun instance(
-            mmkv: MMKV,
-        ): MMKVPreferenceHolder {
+            dataStore: DataStore<Preferences>,
+        ): DataStoreValueEditorHolder {
             return ps ?: synchronized(this) {
-                ps ?: MMKVPreferenceHolder(mmkv).also { ps = it }
+                ps ?: DataStoreValueEditorHolder(dataStore).also {
+                    ps = it
+                }
             }
         }
     }

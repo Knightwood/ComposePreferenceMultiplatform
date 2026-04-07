@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import androidy.preference.data.datastore.DataStorePreferenceHolder
+import androidy.preference.data.datastore.DataStoreValueEditorHolder
 import androidy.preference.helper.datastore.getDataStore
 
 fun main() = application {
@@ -40,6 +40,6 @@ fun main() = application {
 fun preferenceTest() {
     val desktopPath = System.getProperty("user.home") + "/Desktop"
     val dataStore = getDataStore("$desktopPath/ee.preferences_pb")
-    val holder = DataStorePreferenceHolder.instance(dataStore)
+    val holder = DataStoreValueEditorHolder.instance(dataStore)
     MainScreen(holder)
 }

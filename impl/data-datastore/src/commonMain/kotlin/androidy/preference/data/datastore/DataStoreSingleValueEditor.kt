@@ -20,51 +20,51 @@ package androidy.preference.data.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidy.preference.data.core.ISinglePrefValueEditor
+import androidy.preference.data.core.ISingleValueEditor
 import androidy.preference.helper.datastore.DataStoreKeyUtils
-import androidy.preference.helper.datastore.remove
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import kotlin.reflect.KClass
 
 private const val TAG = "DataStoreEditor"
 
 /**
  * 提供偏好值的读写，datastore实现功能版本
  */
-class DataStoreSinglePrefValueEditor<T : Any>(
+class DataStoreSingleValueEditor<T : Any>(
     val keyName: String,
-    val defaultValue: T,
+    val cls: KClass<T>,
     val dataStore: DataStore<Preferences>,
-) : ISinglePrefValueEditor<T> {
-    var key: Preferences.Key<T> = DataStoreKeyUtils.getKey<T>(keyName, defaultValue::class)
+    val scope: CoroutineScope,
+) : ISingleValueEditor<T> {
+    var key: Preferences.Key<T> = DataStoreKeyUtils.getKey<T>(keyName, cls)
 
-    private val flow: Flow<T> = dataStore.data.map { preferences ->
-        // No type safety.
-        val tmp = preferences[key] ?: defaultValue
-        tmp
-    }
+    override val flow: Flow<T?> = dataStore.data.map { preferences -> preferences[key] }
 
-    override fun flow(): Flow<T> {
-        return flow
-    }
-
-    override fun readValue(): T {
-        return runBlocking { flow.last() }
-    }
-
-    override suspend fun readValueAsync(): T {
+    override suspend fun readValueAsync(): T? {
         return flow.last()
     }
 
-    override suspend fun write(data: T?) {
+    override suspend fun writeAsync(data: T?) {
         dataStore.edit {
             if (data == null) {
                 it.remove(key)
             } else {
                 it[key] = data
+            }
+        }
+    }
+
+    override fun write(data: T?) {
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                writeAsync(data)
             }
         }
     }

@@ -23,7 +23,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
-import androidy.preference.data.datastore.DataStorePreferenceHolder
+import androidy.preference.data.datastore.DataStoreValueEditorHolder
 import androidy.preference.helper.datastore.getDataStore
 
 private const val TAG = "MainActivity"
@@ -39,10 +39,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun getHolder(): DataStorePreferenceHolder {
+    fun getHolder(): DataStoreValueEditorHolder {
         //1. 使用dataStore存储偏好值
         val ds = getDataStore(applicationContext, "test.preferences_pb")
-        val holder = DataStorePreferenceHolder.instance(ds)
+        val holder = DataStoreValueEditorHolder.instance(ds)
 
         //2. 使用mmkv存储偏好值
 //        val holder = MMKVPreferenceHolder.instance(MMKV.defaultMMKV())

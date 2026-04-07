@@ -15,13 +15,13 @@ plugins {
     alias(libs.plugins.ksp) apply false
 
 }
-//val jarGroup = "com.github.knightwood.kmp-preference"
-// 改名为
-val jarGroup = "androidy.ui.material3.preference"
-val jarVersion = "2.1.0"
-
-ext {
-    this["group"] =jarGroup
-    this["version"] = jarVersion
-}
+////val jarGroup = "com.github.knightwood.kmp-preference"
+//// 改名为
+//val jarGroup = "androidy.ui.material3.preference"
+//val jarVersion = "2.1.0"
+//
+//ext {
+//    this["group"] =jarGroup
+//    this["version"] = jarVersion
+//}
 

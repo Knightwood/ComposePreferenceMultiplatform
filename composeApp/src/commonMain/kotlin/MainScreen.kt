@@ -17,10 +17,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidy.preference.data.core.AbstractPreferenceHolder
+import androidy.preference.data.core.AbstractValueEditorHolder
 
 @Composable
-fun MainScreen(holder: AbstractPreferenceHolder) {
+fun MainScreen(holder: AbstractValueEditorHolder) {
     var selected by remember { mutableIntStateOf(0) }
     Scaffold(bottomBar = {
         NavigationBar {

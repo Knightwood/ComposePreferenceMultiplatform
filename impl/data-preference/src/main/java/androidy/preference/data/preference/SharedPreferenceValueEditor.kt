@@ -18,45 +18,52 @@
 package androidy.preference.data.preference
 
 import android.content.SharedPreferences
-import androidy.preference.data.core.ISinglePrefValueEditor
+import androidy.preference.data.core.ISingleValueEditor
 import androidy.preference.helper.preference.PrefEditors
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.core.content.edit
+import kotlinx.coroutines.CoroutineScope
+import kotlin.reflect.KClass
 
 /**
  * 提供偏好值的读写，MMsp实现功能版本
  */
-class SPEditor<T : Any>(
+class SharedPreferenceValueEditor<T : Any>(
     private val sp: SharedPreferences,
     val keyName: String,
-    val defaultValue: T,
-) : ISinglePrefValueEditor<T> {
+    val cls: KClass<T>,
+    val scope: CoroutineScope,
+) : ISingleValueEditor<T> {
     val TAG = "prefs_tool"
 
-    private val flow: MutableStateFlow<T> = MutableStateFlow<T>(defaultValue)
-    var readWrite = PrefEditors.parseEditor<T>(defaultValue::class)
+    private val _flow = MutableStateFlow<T?>(null)
+    override val flow: Flow<T?> get() = _flow
+    var prefEditor = PrefEditors.parseEditor<T>(cls)
 
     init {
-        flow.value = readWrite.read(sp, keyName) ?: defaultValue
+        _flow.value = prefEditor.read(sp, keyName)
     }
 
-    override fun flow(): Flow<T> {
-        return flow
+
+    override fun readValue(): T? {
+        return prefEditor.read(sp, keyName)
     }
 
-    override fun readValue(): T {
-        return readWrite.read(sp, keyName) ?: defaultValue
-    }
-
-    override suspend fun write(data: T?) {
+    override fun write(data: T?) {
         if (data == null) {
             sp.edit { remove(keyName) }
-            flow.emit(defaultValue)
+            _flow.value = null
         } else {
-            readWrite.write(sp, keyName, data)
-            flow.emit(data)
+            prefEditor.write(sp, keyName, data)
+            _flow.value = data
         }
+    }
+
+    override suspend fun readValueAsync(): T? {
+        return readValue()
+    }
+    override suspend fun writeAsync(data: T?) {
+        write(data)
     }
 }

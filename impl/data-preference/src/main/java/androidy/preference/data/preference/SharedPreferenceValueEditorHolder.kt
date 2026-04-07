@@ -18,35 +18,34 @@
 package androidy.preference.data.preference
 
 import android.content.SharedPreferences
-import androidy.preference.data.core.ISinglePrefValueEditor
-import androidy.preference.data.core.AbstractPreferenceHolder
+import androidy.preference.data.core.ISingleValueEditor
+import androidy.preference.data.core.AbstractValueEditorHolder
 import kotlin.reflect.KClass
 
 /**
  * 向界面提供、管理PreferenceProvider
  */
-class OldPreferenceHolder internal constructor(
+class SharedPreferenceValueEditorHolder internal constructor(
     private val sp: SharedPreferences,
-) : AbstractPreferenceHolder() {
+) : AbstractValueEditorHolder() {
 
     override val editorProvider: ISinglePrefValueEditorProvider = object : ISinglePrefValueEditorProvider {
         override fun <T : Any> createOnePrefEditor(
             keyName: String,
-            defaultValue: T,
             cls: KClass<T>,
-        ): ISinglePrefValueEditor<T> {
-            return SPEditor(sp, keyName, defaultValue)
+        ): ISingleValueEditor<T> {
+            return SharedPreferenceValueEditor(sp, keyName, cls)
         }
     }
 
     companion object {
         @Volatile
-        var ps: AbstractPreferenceHolder? = null
+        var ps: AbstractValueEditorHolder? = null
         fun instance(
             sp: SharedPreferences,
-        ): AbstractPreferenceHolder {
+        ): AbstractValueEditorHolder {
             return ps ?: synchronized(this) {
-                ps ?: OldPreferenceHolder(sp)
+                ps ?: SharedPreferenceValueEditorHolder(sp)
                     .also { ps = it }
             }
         }

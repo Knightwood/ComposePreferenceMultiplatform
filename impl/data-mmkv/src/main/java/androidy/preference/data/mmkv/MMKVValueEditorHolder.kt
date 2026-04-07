@@ -15,50 +15,37 @@
  *
  */
 
-package androidy.preference.data.datastore
+package androidy.preference.data.mmkv
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidy.preference.data.core.AbstractPreferenceHolder
-import androidy.preference.data.core.ISinglePrefValueEditor
+import androidy.preference.data.core.ISingleValueEditor
+import androidy.preference.data.core.AbstractValueEditorHolder
+import com.tencent.mmkv.MMKV
 import kotlin.reflect.KClass
 
 /**
  * 向界面提供、管理PreferenceProvider
- * ```
- * val Context.store by preferencesDataStore(name = "test")
- *
- * fun example(context: Context){
- *     val holder = DataStorePreferenceHolder.instance(context.store)
- * }
- *
- * ```
  */
-class DataStorePreferenceHolder internal constructor(
-    private val dataStore: DataStore<Preferences>,
-) : AbstractPreferenceHolder() {
+class MMKVValueEditorHolder internal constructor(
+    private val mmkv: MMKV,
+) : AbstractValueEditorHolder() {
+
     override val editorProvider: ISinglePrefValueEditorProvider = object : ISinglePrefValueEditorProvider {
         override fun <T : Any> createOnePrefEditor(
             keyName: String,
-            defaultValue: T,
             cls: KClass<T>,
-        ): ISinglePrefValueEditor<T> {
-            return DataStoreSinglePrefValueEditor(keyName, defaultValue, dataStore)
+        ): ISingleValueEditor<T> {
+            return MMKVSingleValueEditor(mmkv, keyName, cls, scope)
         }
     }
 
     companion object {
-
         @Volatile
-        var ps: DataStorePreferenceHolder? = null
-
+        var ps: MMKVValueEditorHolder? = null
         fun instance(
-            dataStore: DataStore<Preferences>,
-        ): DataStorePreferenceHolder {
+            mmkv: MMKV,
+        ): MMKVValueEditorHolder {
             return ps ?: synchronized(this) {
-                ps ?: DataStorePreferenceHolder(dataStore).also {
-                    ps = it
-                }
+                ps ?: MMKVValueEditorHolder(mmkv).also { ps = it }
             }
         }
     }
