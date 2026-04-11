@@ -18,10 +18,8 @@
 package androidy.preference.data.core
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
-import kotlin.reflect.KClass
 
 /**
  * 子类实现此接口以提供具体的每个偏好值的读写能力
@@ -42,7 +40,7 @@ interface ISingleValueEditor<T> {
 /**
  * collect preference value flow
  */
-inline fun <reified T : Any> ISingleValueEditor<T>.observe(keyName: String): Flow<T?> {
+inline fun <reified T : Any> ISingleValueEditor<T>.observe(): Flow<T?> {
     val editor = this
     return editor.flow
 }
@@ -50,8 +48,8 @@ inline fun <reified T : Any> ISingleValueEditor<T>.observe(keyName: String): Flo
 /**
  * collect preference value flow with default value
  */
-inline fun <reified T : Any> ISingleValueEditor<T>.observe(keyName: String, defaultValue: T?): Flow<T?> {
-    return observe<T>(keyName).map { v -> v ?: defaultValue }
+inline fun <reified T : Any> ISingleValueEditor<T>.observe(defaultValue: T?): Flow<T?> {
+    return observe<T>().map { v -> v ?: defaultValue }
 }
 
 

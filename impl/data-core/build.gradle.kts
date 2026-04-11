@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.library)
     id("publish")
 }
@@ -30,7 +32,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.coroutines.core)
-                compileOnly("com.github.skydoves:compose-stable-marker:1.0.7")
+                implementation(compose.runtime)
             }
         }
         val jvmMain by getting {}
