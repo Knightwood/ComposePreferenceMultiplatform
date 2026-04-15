@@ -125,7 +125,7 @@ PreferencesScope(holder = holder) {
         PreferenceSwitch(
             keyName = "bol2",
             title = "启用下面全部",
-            dependenceKey = DependenceNode.rootName,//指定依赖为根结点，这样自身就不会受到影响
+            dependenceKey = EnableStateNode.rootName,//指定依赖为根结点，这样自身就不会受到影响
             description = "关闭开关以禁用下面内容",
         ) {
             node.enableStateFlow.tryEmit(it)
@@ -139,7 +139,7 @@ PreferencesScope(holder = holder) {
             PreferenceSwitch(
                 keyName = "bol",
                 title = "title",
-                dependenceKey = DependenceNode.rootName,//指定依赖为根结点，这样自身就不会受到影响
+                dependenceKey = EnableStateNode.rootName,//指定依赖为根结点，这样自身就不会受到影响
                 description = "description",
                 icon = Icons.Filled.AccountCircle
             ) { state ->
