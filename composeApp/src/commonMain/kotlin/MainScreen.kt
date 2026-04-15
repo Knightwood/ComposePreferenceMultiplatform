@@ -69,7 +69,7 @@ fun MainScreen(holder: AbstractValueEditorHolder) {
             if (selected == 0) {
                 CrossComponentsTestScreen()
             } else if (selected == 1) {
-//                AutoComponentsTestScreen(holder)
+                AutoComponentsTestScreen(holder)
             } else if (selected == 2) {
                 ListItemTestScreen()
             }

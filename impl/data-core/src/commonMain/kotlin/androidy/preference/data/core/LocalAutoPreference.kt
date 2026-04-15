@@ -1,10 +1,8 @@
-package androidy.preference.uiauto
+package androidy.preference.data.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.remember
-import androidy.preference.data.core.AbstractValueEditorHolder
 import java.lang.NullPointerException
 
 object LocalAutoPreference {

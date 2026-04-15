@@ -17,6 +17,8 @@
 
 package androidy.preference.data.core
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -38,18 +40,13 @@ interface ISingleValueEditor<T> {
 }
 
 /**
- * collect preference value flow
+ * @param defaultValue 组件的enabled状态
+ * @return 若节点存在，则返回节点的enabled状态，否则返回组件输入的enabled状态
  */
-inline fun <reified T : Any> ISingleValueEditor<T>.observe(): Flow<T?> {
-    val editor = this
-    return editor.flow
+@Composable
+inline fun <reified T : Any> ISingleValueEditor<T>?.state(defaultValue: T): T {
+    if (this == null) {
+        return defaultValue
+    }
+    return this.flow.collectAsState(defaultValue).value ?: defaultValue
 }
-
-/**
- * collect preference value flow with default value
- */
-inline fun <reified T : Any> ISingleValueEditor<T>.observe(defaultValue: T?): Flow<T?> {
-    return observe<T>().map { v -> v ?: defaultValue }
-}
-
-

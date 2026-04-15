@@ -19,6 +19,7 @@ kotlin {
     }
 
     jvm() {
+        //这里的会重写top level中的配置
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
@@ -39,10 +40,16 @@ kotlin {
         val androidMain by getting {}
     }
 }
-
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
 android {
     compileSdk = 36
     namespace = "androidy.preference.data.core"
+//    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+//    buildFeatures {
+//        buildConfig = false
+//    }
     defaultConfig {
         minSdk = 21
         lint.targetSdk = 33

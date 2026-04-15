@@ -40,7 +40,7 @@ include(":composeApp2")
 //ui实现
 include(":impl:listitem")
 include(":impl:ui")
-include(":impl:ui-auto")
+//include(":impl:ui-auto")
 //ui-auto所需的数据读写工具实现
 include(":impl:data-core")
 include(":impl:data-datastore")

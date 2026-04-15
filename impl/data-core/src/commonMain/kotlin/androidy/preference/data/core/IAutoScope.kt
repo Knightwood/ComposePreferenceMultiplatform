@@ -1,13 +1,7 @@
-package androidy.preference.uiauto
+package androidy.preference.data.core
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
-import androidy.preference.data.core.DependenceNode
-import androidy.preference.data.core.DependenceTree
-import androidy.preference.data.core.EmptyValueEditorHodler
-import androidy.preference.data.core.ISingleValueEditor
-import androidy.preference.ui.component.PreferenceSwitchItem
 
 @Composable
 inline fun <reified T : Any> IAutoScope(
@@ -15,14 +9,9 @@ inline fun <reified T : Any> IAutoScope(
     content: @Composable (ISingleValueEditor<T>, DependenceTree) -> Unit,
 ) {
     val holder = LocalAutoPreference.current
-    val scope = holder.getOnePrefEditor<T>(key)
+    val editor = holder.getOnePrefEditor<T>(key)
     val dependenceTree = holder.dependenceTree
-    DisposableEffect(key) {
-        onDispose {
-            dependenceTree.unRegister(key)
-        }
-    }
-    content(scope, dependenceTree)
+    content(editor, dependenceTree)
 }
 
 @Composable
@@ -49,14 +38,5 @@ private fun Example() {
     }
 }
 
-/**
- * @param enabled 组件的enabled状态
- * @return 若节点存在，则返回节点的enabled状态，否则返回组件输入的enabled状态
- */
 @Composable
-fun DependenceNode?.state(enabled: Boolean = true): Boolean {
-    if (this == null) {
-        return enabled
-    }
-    return this.flow.collectAsState(enabled).value ?: enabled
-}
+private fun PreferenceSwitchItem(checked: Boolean, onCheckedChange: (Boolean) -> Unit, enabled: Boolean, title: () -> Unit) {}

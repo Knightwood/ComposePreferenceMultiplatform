@@ -1,6 +1,7 @@
 package androidy.preference.data.core
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +32,7 @@ class DependenceTree(
     }
 
     fun get(key: String): DependenceNode {
-        return cache.getOrPut(key, { DependenceNode(key, this) })
+        return cache.getOrPut(key) { DependenceNode(key, this) }
     }
 
     @Composable
@@ -40,12 +41,8 @@ class DependenceTree(
         action: DependenceNode.(preferenceHolder: AbstractValueEditorHolder) -> Unit,
     ): DependenceNode {
         return remember(key) {
-            derivedStateOf {
-                val node = cache.getOrPut(key, { DependenceNode(key, this) })
-                node.action(editorHolder)
-                node
-            }
-        }.value
+            get(key).apply { action(editorHolder) }
+        }
     }
 }
 
@@ -58,9 +55,9 @@ class DependenceTree(
  *
  * 方案1 状态节点组织成树结构，B,C,D依赖A节点状态，A修改自身状态，B,C,D观察
  * 方案2 状态节点分散，B,C,D各自有状态节点，A直接修改B,C,D状态
- * 方案3 状态节点分散，B,C,D各自有状态节点，并在scope中collectA的状态或偏好值，以此根据条件修改自身状态
  *
- * B\C\D collect A的状态值和偏好值只能二选一，且此时B\C\D自身状态值不可手动修改
+ * 方案3 状态节点分散，B,C,D各自有状态节点，并在scope中collectA的状态或偏好值，以此根据条件修改自身状态
+ *       B\C\D collect A的状态值和偏好值只能二选一，且此时B\C\D自身状态值不可手动修改
  */
 class DependenceNode(val key: String, val tree: DependenceTree) {
     private val stateFlow = MutableStateFlow<Boolean>(true)
@@ -84,6 +81,9 @@ class DependenceNode(val key: String, val tree: DependenceTree) {
         conditionFlow.value = defaultProducer
     }
 
+    /**
+     *
+     */
     fun dependenceStateFrom(string: String, function: (Boolean?) -> Boolean) {
         val t = tree.cache.get(string)?.flow?.map { value -> function(value) }
         if (t != null) {
@@ -102,4 +102,16 @@ class DependenceNode(val key: String, val tree: DependenceTree) {
 
 fun interface DependenceStateProducer {
     fun provide(): Flow<Boolean>
+}
+
+/**
+ * @param enabled 组件的enabled状态
+ * @return 若节点存在，则返回节点的enabled状态，否则返回组件输入的enabled状态
+ */
+@Composable
+fun DependenceNode?.state(enabled: Boolean = true): Boolean {
+    if (this == null) {
+        return enabled
+    }
+    return this.flow.collectAsState(enabled).value ?: enabled
 }

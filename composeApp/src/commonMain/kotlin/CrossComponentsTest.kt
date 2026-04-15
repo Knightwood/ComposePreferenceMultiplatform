@@ -46,7 +46,8 @@ fun CrossComponentsTest(
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
+    )
+    {
         var checked by remember { mutableStateOf(true) }
         PreferenceSubTitle(content = { Text("Item") })
         PreferenceItemTest()
@@ -217,27 +218,36 @@ private fun RadioTest(enabled: Boolean = true) {
         onClick = { selected = 3 }
     )
 }
+
 data class CheckItemInfo(
+    val key: String,
     val title: String,
     val desc: String,
 )
+
 @Composable
 private fun CheckBoxTest(enabled: Boolean = true) {
-    val checkedMap = remember { mutableStateMapOf<Int, Boolean>() }
+    val selected = remember { mutableStateSetOf<String>() }
     val checkItems = remember {
         listOf(
-            CheckItemInfo("激活背包", "使用更大的背包"),
-            CheckItemInfo("天空材质", "使用更精美的天空材质贴图"),
-            CheckItemInfo("非官方修复补丁", "可能会带来新的bug")
+            CheckItemInfo("1", "激活背包", "使用更大的背包"),
+            CheckItemInfo("2", "天空材质", "使用更精美的天空材质贴图"),
+            CheckItemInfo("3", "非官方修复补丁", "可能会带来新的bug")
         )
     }
     checkItems.forEachIndexed { index, info ->
         PreferenceCheckBoxItem(
             title = { Text(info.title) },
-            checked = checkedMap[index] ?: false,
+            checked = selected.contains(info.key),
             enabled = enabled,
             description = { Text(info.desc) },
-            onCheckedChange = { checkedMap[index] = it },
+            onCheckedChange = {
+                if (it) {
+                    selected.add(info.key)
+                } else {
+                    selected.remove(info.key)
+                }
+            },
             colors = LocalListItemStyle.currentSegmented.colors()
                 .copy(containerColor = MaterialTheme.colorScheme.surfaceContainer),
             shapes = SegmentedListItemStyleDefaults.segmentedShape(index, 3),
