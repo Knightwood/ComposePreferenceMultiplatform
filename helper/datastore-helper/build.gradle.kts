@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
     id("publish")
 }
 
 kotlin {
     jvmToolchain(17)
-    jvm(){
+    jvm() {
         //这里的会重写top level中的配置
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
@@ -24,6 +25,8 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastore.preferences)
+                implementation(libs.kotlin.serialization)
+                implementation(projects.helper.helperCommon)
             }
         }
     }

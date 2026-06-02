@@ -16,13 +16,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlin.coroutines.core)
-                api(projects.helper.helperCommon)
             }
         }
     }
 }
 android {
-    namespace = "com.knightwood.floor.core"
+    namespace = "androidy.preference.helper.common"
     compileSdk = 33
     defaultConfig {
         minSdk = 24

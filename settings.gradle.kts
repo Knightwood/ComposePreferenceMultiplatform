@@ -47,6 +47,7 @@ include(":impl:data-datastore")
 include(":impl:data-mmkv")
 include(":impl:data-preference")
 //各类属性委托工具
+include(":helper:helper-common")
 include(":helper:datastore-helper")
 include(":helper:mmkv-helper")
 include(":helper:preference-helper")

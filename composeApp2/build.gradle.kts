@@ -42,6 +42,7 @@ kotlin {
 
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastore.preferences)
+                implementation(projects.helper.datastoreHelper)
 
                 implementation(projects.aop.floorCore)
                 implementation(projects.aop.floorDatastore)

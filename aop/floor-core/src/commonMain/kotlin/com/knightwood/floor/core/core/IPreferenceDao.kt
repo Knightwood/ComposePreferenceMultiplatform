@@ -1,10 +1,6 @@
 package com.knightwood.floor.core.core
 
-import kotlinx.coroutines.flow.Flow
+import androidy.preference.helper.common.IPreferenceProvider
 
-interface IPreferenceDao<T : Any> {
-    val flow: Flow<T>
-    val value: T
-    suspend fun update(value: T)
-    suspend fun clear()
-}
+
+typealias IPreferenceDao<T> = IPreferenceProvider<T>
